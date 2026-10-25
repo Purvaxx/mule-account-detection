@@ -29,3 +29,6 @@ data/raw/
 data/processed/
 data/external/
 *.csv.zip
+
+# Static demo site build output (scripts/static_site/export_static.py)
+dist/
