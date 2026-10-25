@@ -1,0 +1,120 @@
+<!--
+    Application shell
+    =================
+    One bar for every view.  Brand, dataset context, the condensed global
+    readout and the navigation actions each own a slot and wrap independently,
+    so none of them can collide at any width.
+-->
+<header class="app-bar glass">
+    <div class="mx-auto max-w-[1600px] px-4 md:px-8 py-3 flex flex-wrap items-center gap-x-5 gap-y-3">
+
+        <!-- Brand -->
+        <button @click="openDatasetHub()"
+                class="flex items-center gap-3 min-w-0 text-left rounded-sm"
+                title="Dataset Hub">
+            <span class="relative flex-none w-7 h-7 rounded-sm border border-system-primary/50 bg-system-primary/15 flex items-center justify-center">
+                <span class="w-2 h-2 rounded-[1px] bg-system-primary"></span>
+            </span>
+            <span class="min-w-0">
+                <span class="block text-[0.8125rem] font-bold tracking-[0.16em] uppercase text-system-heading leading-none">Sentinel<span class="text-system-primary">AML</span></span>
+                <span class="block eyebrow mt-1 truncate">Financial Intelligence Console</span>
+            </span>
+        </button>
+
+        <span class="hidden md:block w-px h-8 bg-system-border"></span>
+
+        <!-- Workspace / dataset context -->
+        <div class="relative min-w-0 w-full order-last md:order-none md:w-72" @click.away="workspaceDropdownOpen = false">
+            <button @click="workspaceDropdownOpen = !workspaceDropdownOpen"
+                    :aria-expanded="workspaceDropdownOpen"
+                    aria-haspopup="listbox"
+                    class="w-full well px-3 py-2 flex items-center justify-between gap-3 hover:border-system-border-strong transition-colors">
+                <span class="min-w-0 text-left">
+                    <span class="block eyebrow">Active Dataset</span>
+                    <span class="block text-xs font-bold text-system-accent truncate mt-1"
+                          x-text="activeWorkspaceName"></span>
+                </span>
+                <svg class="w-3 h-3 flex-none text-system-faint transition-transform"
+                     :class="workspaceDropdownOpen ? 'rotate-180' : ''"
+                     viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+                    <path d="M2.5 4.5L6 8l3.5-3.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </button>
+
+            <div x-show="workspaceDropdownOpen" x-cloak x-transition.opacity.duration.150ms
+                 role="listbox"
+                 class="absolute z-50 mt-2 w-full md:w-96 glass border border-system-border-strong rounded-md shadow-overlay overflow-hidden left-0">
+                <button @click="openDatasetHub(); workspaceDropdownOpen = false"
+                        class="w-full text-left px-4 py-3 border-b border-system-border hover:bg-system-hover/60 transition-colors flex items-center justify-between">
+                    <span class="text-[0.6875rem] font-bold text-system-heading uppercase tracking-[0.16em]">Dataset Hub</span>
+                    <span class="text-system-faint text-xs">&rarr;</span>
+                </button>
+
+                <button @click="selectWorkspace('default'); workspaceDropdownOpen = false"
+                        class="w-full text-left px-4 py-3 border-b border-system-border hover:bg-system-hover/60 transition-colors flex items-center gap-3">
+                    <span class="w-1.5 h-1.5 rounded-full flex-none"
+                          :class="selectedWorkspaceId === 'default' ? 'bg-system-accent' : 'bg-system-faint'"></span>
+                    <span class="min-w-0 flex-grow">
+                        <span class="block text-xs font-bold truncate"
+                              :class="selectedWorkspaceId === 'default' ? 'text-system-accent' : 'text-system-heading'">Reference Dataset</span>
+                        <span class="block text-[0.625rem] text-system-faint font-mono mt-0.5">System dataset &middot; trained distribution</span>
+                    </span>
+                    <span class="badge border-system-success/40 text-system-success">Trusted</span>
+                </button>
+
+                <div class="max-h-72 overflow-y-auto scroller">
+                    <template x-for="ws in workspaces" :key="ws.id">
+                        <button @click="selectWorkspace(ws.id); workspaceDropdownOpen = false"
+                                class="w-full text-left px-4 py-3 border-b border-system-border hover:bg-system-hover/60 transition-colors flex items-center gap-3">
+                            <span class="w-1.5 h-1.5 rounded-full flex-none"
+                                  :class="selectedWorkspaceId === ws.id ? 'bg-system-accent' : 'bg-system-faint'"></span>
+                            <span class="min-w-0 flex-grow">
+                                <span class="block text-xs font-bold truncate"
+                                      :class="selectedWorkspaceId === ws.id ? 'text-system-accent' : 'text-system-heading'"
+                                      x-text="ws.name"></span>
+                                <span class="block text-[0.625rem] text-system-faint font-mono mt-0.5 num"
+                                      x-text="(ws.records || 0).toLocaleString() + ' records'"></span>
+                            </span>
+                            <span class="badge" :class="toneBadgeClass(ws.manifest_status)" x-text="ws.manifest_status"></span>
+                        </button>
+                    </template>
+                    <p x-show="workspaces.length === 0" class="px-4 py-6 text-center text-[0.6875rem] text-system-faint">
+                        No uploaded datasets yet.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Condensed global metrics. Full tiles live in the dashboard;
+             this is the always-on readout for the active context. -->
+        <div class="hidden xl:flex items-center gap-4 ml-auto text-[0.6875rem] font-mono num text-system-muted"
+             x-show="currentView === 'dashboard' && !workspaceNotReadyStatus">
+            <span class="flex items-baseline gap-1.5">
+                <span class="text-system-heading font-bold" x-text="fmtInt(overview.total_entities)"></span>
+                <span class="eyebrow">Entities</span>
+            </span>
+            <span class="w-px h-4 bg-system-border"></span>
+            <span class="flex items-baseline gap-1.5">
+                <span class="text-system-heading font-bold" x-text="fmtInt(overview.total_transactions)"></span>
+                <span class="eyebrow">Transactions</span>
+            </span>
+            <span class="w-px h-4 bg-system-border"></span>
+            <span class="flex items-baseline gap-1.5">
+                <span class="text-system-critical font-bold" x-text="fmtInt(overview.suspicious_count)"></span>
+                <span class="eyebrow">Flagged</span>
+            </span>
+        </div>
+
+        <!-- Actions -->
+        <div class="flex items-center gap-2"
+             :class="(currentView === 'dashboard' && !workspaceNotReadyStatus) ? 'xl:ml-0 ml-auto' : 'ml-auto'">
+            <button @click="openDatasetHub()" class="btn btn-ghost"
+                    :class="currentView === 'hub' ? 'text-system-heading border-system-border-strong' : ''">
+                Datasets
+            </button>
+            <button @click="openHelp('global_guide')" class="btn btn-ghost" title="Open the analyst guide">
+                Guide
+            </button>
+        </div>
+    </div>
+</header>

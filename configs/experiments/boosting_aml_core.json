@@ -1,0 +1,64 @@
+{
+  "name": "boosting_aml_core",
+  "description": "Gradient-boosted trees on aml_core_v1. Backend is resolved at fit time and recorded; xgboost/lightgbm are optional.",
+  "tags": [
+    "baseline",
+    "trees"
+  ],
+  "seed": 42,
+  "dataset": {
+    "name": "reference_dkdata",
+    "version": "resolved-at-run-time",
+    "provenance": "file:../dkdata.json",
+    "label_definition": "positive = graph node attribute 'core' is True",
+    "synthetic": false
+  },
+  "features": {
+    "sets": [
+      "aml_core_v1"
+    ],
+    "scope": "global"
+  },
+  "split": {
+    "strategy": "stratified_kfold",
+    "params": {
+      "n_folds": 4
+    },
+    "seed": 42
+  },
+  "model": {
+    "family": "gradient_boosting",
+    "params": {
+      "backend": "auto",
+      "n_estimators": 300,
+      "learning_rate": 0.05,
+      "max_depth": 4
+    },
+    "imbalance": "class_weight"
+  },
+  "threshold": {
+    "strategy": "alert_budget",
+    "params": {
+      "rate": 0.01
+    }
+  },
+  "calibration": {
+    "method": "none",
+    "min_val_positives": 20
+  },
+  "evaluation": {
+    "k_values": [
+      10,
+      20,
+      50,
+      100
+    ],
+    "alert_rates": [
+      0.001,
+      0.005,
+      0.01,
+      0.05
+    ],
+    "calibration_bins": 10
+  }
+}

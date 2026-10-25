@@ -1,0 +1,1177 @@
+{
+  "schema_version": "1.0",
+  "experiment": {
+    "name": "ibm_cal_heuristic_floor",
+    "description": "The label-free floor under the calendar-forward regime. Calendar-forward regime: every entity with history is scored at fixed origins (train 2022-09-05, validation 2022-09-07, test 2022-09-09) from transactions before the origin; label = involvement in a flagged transaction in [origin, origin + 2 days).",
+    "tags": [
+      "unsupervised",
+      "calendar-forward",
+      "ibm"
+    ],
+    "seed": 42,
+    "dataset": {
+      "name": "ibm_aml_hi_small",
+      "version": "size475664283-c9a6aae1",
+      "provenance": "file:C:\\Users\\bhara\\Downloads\\Laundering Data\\HI-Small_Trans.csv",
+      "label_definition": "positive = the (bank, account) entity is the payer or the payee of at least one transaction whose published 'Is Laundering' flag is 1. IBM labels transactions; this entity label is derived, and it makes a launderer's counterparty positive as well",
+      "synthetic": true,
+      "notes": [
+        "SYNTHETIC: IBM AMLworld virtual-world simulator (Altman et al., NeurIPS 2023 Datasets and Benchmarks). Not evidence about real-world detection.",
+        "Entity is the (bank, account) pair; account strings are not globally unique (8 collisions across banks).",
+        "Amounts are native across 15 currencies (37% USD) and are not FX-converted; the amount column is 'amount', not 'amount_usd'.",
+        "The typology names live in the separate HI-Small_Patterns.txt and are deliberately not loaded: their group headers state the generating mechanism and its degree/hop parameter.",
+        "Version is derived from file size and mtime, not a content hash; the content hash is in data/manifests/ibm_aml_hi_small.json."
+      ]
+    },
+    "features": {
+      "sets": [
+        "aml_txn_v1",
+        "aml_temporal_v1",
+        "aml_flow_v1",
+        "aml_context_v1",
+        "aml_network_v1",
+        "aml_cycle_v1"
+      ],
+      "scope": "origin_window"
+    },
+    "split": {
+      "strategy": "calendar_forward",
+      "params": {
+        "origins": [
+          "2022-09-05",
+          "2022-09-07",
+          "2022-09-09"
+        ],
+        "horizon_days": 2,
+        "lookback_days": null,
+        "max_label_end": "2022-09-11"
+      },
+      "seed": 42
+    },
+    "model": {
+      "family": "structural_heuristic",
+      "params": {
+        "signals": [
+          [
+            "pass_through_ratio",
+            1
+          ],
+          [
+            "fan_in",
+            1
+          ],
+          [
+            "fan_out",
+            1
+          ],
+          [
+            "reciprocal_ratio",
+            1
+          ],
+          [
+            "txn_per_active_day",
+            1
+          ],
+          [
+            "burstiness",
+            1
+          ],
+          [
+            "min_in_to_out_hours",
+            -1
+          ],
+          [
+            "counterparty_diversity",
+            1
+          ],
+          [
+            "layering_share",
+            1
+          ],
+          [
+            "rapid_turnover_share",
+            1
+          ]
+        ]
+      },
+      "imbalance": "none"
+    },
+    "threshold": {
+      "strategy": "alert_budget",
+      "params": {
+        "rate": 0.01
+      }
+    },
+    "calibration": {
+      "method": "none",
+      "min_val_positives": 20
+    },
+    "evaluation": {
+      "k_values": [
+        100,
+        500,
+        1000,
+        5000
+      ],
+      "alert_rates": [
+        0.001,
+        0.005,
+        0.01,
+        0.05
+      ],
+      "calibration_bins": 10
+    }
+  },
+  "dataset": {
+    "spec": {
+      "name": "ibm_aml_hi_small",
+      "version": "size475664283-c9a6aae1",
+      "provenance": "file:C:\\Users\\bhara\\Downloads\\Laundering Data\\HI-Small_Trans.csv",
+      "label_definition": "positive = the (bank, account) entity is the payer or the payee of at least one transaction whose published 'Is Laundering' flag is 1. IBM labels transactions; this entity label is derived, and it makes a launderer's counterparty positive as well",
+      "synthetic": true,
+      "notes": [
+        "SYNTHETIC: IBM AMLworld virtual-world simulator (Altman et al., NeurIPS 2023 Datasets and Benchmarks). Not evidence about real-world detection.",
+        "Entity is the (bank, account) pair; account strings are not globally unique (8 collisions across banks).",
+        "Amounts are native across 15 currencies (37% USD) and are not FX-converted; the amount column is 'amount', not 'amount_usd'.",
+        "The typology names live in the separate HI-Small_Patterns.txt and are deliberately not loaded: their group headers state the generating mechanism and its degree/hop parameter.",
+        "Version is derived from file size and mtime, not a content hash; the content hash is in data/manifests/ibm_aml_hi_small.json."
+      ]
+    },
+    "n_entities": 515088,
+    "n_positive": 6357,
+    "n_negative": 508731,
+    "prevalence": 0.01234158046780356,
+    "n_edges": 5078345,
+    "has_graph": false,
+    "has_time": true,
+    "has_transaction_labels": true
+  },
+  "features": {
+    "scope": "origin_window",
+    "as_of": {
+      "train": "2022-09-05 00:00:00",
+      "val": "2022-09-07 00:00:00",
+      "test": "2022-09-09 00:00:00"
+    },
+    "windows": {
+      "train": [
+        null,
+        "2022-09-05 00:00:00"
+      ],
+      "val": [
+        null,
+        "2022-09-07 00:00:00"
+      ],
+      "test": [
+        null,
+        "2022-09-09 00:00:00"
+      ]
+    },
+    "n_columns": 68,
+    "sets": [
+      {
+        "name": "aml_txn_v1",
+        "version": "1.0",
+        "family": "transaction",
+        "time_scopable": true,
+        "n_columns": 17,
+        "columns": [
+          "aml_txn_v1::txn_in",
+          "aml_txn_v1::txn_out",
+          "aml_txn_v1::txn_total",
+          "aml_txn_v1::in_out_txn_ratio",
+          "aml_txn_v1::amount_in_sum",
+          "aml_txn_v1::amount_out_sum",
+          "aml_txn_v1::amount_total",
+          "aml_txn_v1::amount_in_mean",
+          "aml_txn_v1::amount_out_mean",
+          "aml_txn_v1::amount_mean",
+          "aml_txn_v1::amount_max",
+          "aml_txn_v1::amount_min",
+          "aml_txn_v1::amount_std",
+          "aml_txn_v1::amount_cv",
+          "aml_txn_v1::amount_log_mean",
+          "aml_txn_v1::amount_top1_share",
+          "aml_txn_v1::round_amount_share"
+        ]
+      },
+      {
+        "name": "aml_temporal_v1",
+        "version": "1.0",
+        "family": "temporal",
+        "time_scopable": true,
+        "n_columns": 16,
+        "columns": [
+          "aml_temporal_v1::active_days",
+          "aml_temporal_v1::span_days",
+          "aml_temporal_v1::txn_per_active_day",
+          "aml_temporal_v1::txn_per_span_day",
+          "aml_temporal_v1::mean_iat_hours",
+          "aml_temporal_v1::std_iat_hours",
+          "aml_temporal_v1::min_iat_hours",
+          "aml_temporal_v1::max_gap_days",
+          "aml_temporal_v1::burstiness",
+          "aml_temporal_v1::max_daily_txn",
+          "aml_temporal_v1::daily_concentration",
+          "aml_temporal_v1::night_share",
+          "aml_temporal_v1::weekend_share",
+          "aml_temporal_v1::second_half_share",
+          "aml_temporal_v1::recency_days",
+          "aml_temporal_v1::tenure_days"
+        ]
+      },
+      {
+        "name": "aml_flow_v1",
+        "version": "1.0",
+        "family": "flow",
+        "time_scopable": true,
+        "n_columns": 12,
+        "columns": [
+          "aml_flow_v1::fan_in",
+          "aml_flow_v1::fan_out",
+          "aml_flow_v1::fan_ratio",
+          "aml_flow_v1::fan_product_norm",
+          "aml_flow_v1::fan_min",
+          "aml_flow_v1::inflow_outflow_ratio",
+          "aml_flow_v1::flow_imbalance",
+          "aml_flow_v1::pass_through_ratio",
+          "aml_flow_v1::min_in_to_out_hours",
+          "aml_flow_v1::median_in_to_out_hours",
+          "aml_flow_v1::rapid_turnover_share",
+          "aml_flow_v1::instant_turnaround_share"
+        ]
+      },
+      {
+        "name": "aml_context_v1",
+        "version": "1.0",
+        "family": "context",
+        "time_scopable": true,
+        "n_columns": 6,
+        "columns": [
+          "aml_context_v1::n_payment_types",
+          "aml_context_v1::top_payment_type_share",
+          "aml_context_v1::currency_change_share",
+          "aml_context_v1::n_currencies",
+          "aml_context_v1::cross_border_share",
+          "aml_context_v1::n_counterparty_locations"
+        ]
+      },
+      {
+        "name": "aml_network_v1",
+        "version": "1.0",
+        "family": "network",
+        "time_scopable": true,
+        "n_columns": 11,
+        "columns": [
+          "aml_network_v1::counterparty_count",
+          "aml_network_v1::counterparty_diversity",
+          "aml_network_v1::top_counterparty_share",
+          "aml_network_v1::repeat_pair_mean",
+          "aml_network_v1::reciprocal_partners",
+          "aml_network_v1::reciprocal_ratio",
+          "aml_network_v1::component_size",
+          "aml_network_v1::component_edge_density",
+          "aml_network_v1::neighbour_txn_mean",
+          "aml_network_v1::neighbour_txn_max",
+          "aml_network_v1::neighbour_counterparty_mean"
+        ]
+      },
+      {
+        "name": "aml_cycle_v1",
+        "version": "1.0",
+        "family": "structure",
+        "time_scopable": true,
+        "n_columns": 6,
+        "columns": [
+          "aml_cycle_v1::two_path_through",
+          "aml_cycle_v1::cycle3_count",
+          "aml_cycle_v1::cycle4_count",
+          "aml_cycle_v1::layering_events",
+          "aml_cycle_v1::layering_share",
+          "aml_cycle_v1::layering_amount_match_share"
+        ]
+      }
+    ],
+    "snapshot_reuse": {
+      "train": [
+        "aml_txn_v1",
+        "aml_temporal_v1",
+        "aml_flow_v1",
+        "aml_context_v1",
+        "aml_network_v1",
+        "aml_cycle_v1"
+      ],
+      "val": [
+        "aml_txn_v1",
+        "aml_temporal_v1",
+        "aml_flow_v1",
+        "aml_context_v1",
+        "aml_network_v1",
+        "aml_cycle_v1"
+      ],
+      "test": [
+        "aml_txn_v1",
+        "aml_temporal_v1",
+        "aml_flow_v1",
+        "aml_context_v1",
+        "aml_network_v1",
+        "aml_cycle_v1"
+      ]
+    },
+    "notes": [
+      "3206051 NaN cells in the test snapshot were left in place; candidates impute inside their train-fitted preprocessing."
+    ]
+  },
+  "split": {
+    "strategy": "calendar_forward",
+    "params": {
+      "origins": [
+        "2022-09-05",
+        "2022-09-07",
+        "2022-09-09"
+      ],
+      "horizon_days": 2,
+      "lookback_days": null,
+      "max_label_end": "2022-09-11"
+    },
+    "seed": 42,
+    "regime": "calendar-forward",
+    "entity_disjoint": false,
+    "time_aware": true,
+    "graph_leakage_controlled": false,
+    "unit": "(entity, origin)",
+    "n_folds": 1,
+    "notes": [
+      "unit of prediction is the (entity, origin) pair: every entity with feature-window history is scored at each origin, so the same account recurs across train, validation and test with a different snapshot and label; the partitions are disjoint in time, not in entity.",
+      "label = the entity is payer or payee of at least one transaction flagged by the publisher and dated in [origin, origin + 2 days 00:00:00).",
+      "eligibility = at least one dated transaction in the feature window; window positives without one are excluded and counted, never scored.",
+      "features = transactions dated strictly before the origin; recency and tenure are measured from the origin.",
+      "train: 31 of 1459 window positives have no feature-window history and are excluded.",
+      "val: 32 of 1497 window positives have no feature-window history and are excluded.",
+      "test: 23 of 1397 window positives have no feature-window history and are excluded."
+    ],
+    "origins": {
+      "train": {
+        "role": "train",
+        "origin": "2022-09-05 00:00:00",
+        "feature_window": [
+          null,
+          "2022-09-05 00:00:00"
+        ],
+        "label_window": [
+          "2022-09-05 00:00:00",
+          "2022-09-07 00:00:00"
+        ],
+        "n_eligible": 511548,
+        "n_positive": 1428,
+        "prevalence": 0.002791526894836848,
+        "n_prior_involvement": 2215,
+        "n_positive_with_prior_involvement": 203,
+        "n_positive_new_involvement": 1225,
+        "n_window_positive": 1459,
+        "n_cold_start_positive": 31,
+        "n_feature_transactions": 2284182
+      },
+      "val": {
+        "role": "val",
+        "origin": "2022-09-07 00:00:00",
+        "feature_window": [
+          null,
+          "2022-09-07 00:00:00"
+        ],
+        "label_window": [
+          "2022-09-07 00:00:00",
+          "2022-09-09 00:00:00"
+        ],
+        "n_eligible": 512907,
+        "n_positive": 1465,
+        "prevalence": 0.002856268290352832,
+        "n_prior_involvement": 3471,
+        "n_positive_with_prior_involvement": 254,
+        "n_positive_new_involvement": 1211,
+        "n_window_positive": 1497,
+        "n_cold_start_positive": 32,
+        "n_feature_transactions": 3248921
+      },
+      "test": {
+        "role": "test",
+        "origin": "2022-09-09 00:00:00",
+        "feature_window": [
+          null,
+          "2022-09-09 00:00:00"
+        ],
+        "label_window": [
+          "2022-09-09 00:00:00",
+          "2022-09-11 00:00:00"
+        ],
+        "n_eligible": 514022,
+        "n_positive": 1374,
+        "prevalence": 0.0026730373408142064,
+        "n_prior_involvement": 4714,
+        "n_positive_with_prior_involvement": 249,
+        "n_positive_new_involvement": 1125,
+        "n_window_positive": 1397,
+        "n_cold_start_positive": 23,
+        "n_feature_transactions": 4214445
+      }
+    },
+    "folds": [
+      {
+        "fold_idx": 0,
+        "n_train": 511548,
+        "n_train_pos": 1428,
+        "n_val": 512907,
+        "n_val_pos": 1465,
+        "n_test": 514022,
+        "n_test_pos": 1374,
+        "train_window_end": "2022-09-05 00:00:00",
+        "val_window_end": "2022-09-07 00:00:00",
+        "test_window_end": "2022-09-09 00:00:00"
+      }
+    ]
+  },
+  "leakage": [
+    {
+      "check": "evaluation_regime",
+      "severity": "info",
+      "message": "split 'calendar_forward' is calendar-forward: rows are (entity, origin) samples scored at fixed calendar origins; partitions are disjoint in time, not in entity"
+    },
+    {
+      "check": "calendar_label_ordering",
+      "severity": "info",
+      "message": "train label window ends 2022-09-07 00:00:00, at or before the val origin 2022-09-07 00:00:00"
+    },
+    {
+      "check": "calendar_label_ordering",
+      "severity": "info",
+      "message": "val label window ends 2022-09-09 00:00:00, at or before the test origin 2022-09-09 00:00:00"
+    },
+    {
+      "check": "entity_overlap",
+      "severity": "info",
+      "message": "511548 of 514022 test entities were also scored at the train origin; expected under this regime, where the label and the feature snapshot, not the entity, are what is held out"
+    },
+    {
+      "check": "calendar_information_boundary",
+      "severity": "info",
+      "message": "train: 2284182 feature transactions dated 2022-09-01 00:00:00 .. 2022-09-04 23:59:00, all before the origin 2022-09-05 00:00:00"
+    },
+    {
+      "check": "calendar_information_boundary",
+      "severity": "info",
+      "message": "val: 3248921 feature transactions dated 2022-09-01 00:00:00 .. 2022-09-06 23:59:00, all before the origin 2022-09-07 00:00:00"
+    },
+    {
+      "check": "calendar_information_boundary",
+      "severity": "info",
+      "message": "test: 4214445 feature transactions dated 2022-09-01 00:00:00 .. 2022-09-08 23:59:00, all before the origin 2022-09-09 00:00:00"
+    },
+    {
+      "check": "feature_scope",
+      "severity": "info",
+      "message": "each origin's features were computed only from transactions dated before that origin"
+    }
+  ],
+  "folds": [
+    {
+      "fold_idx": 0,
+      "counts": {
+        "n_train": 511548,
+        "n_train_pos": 1428,
+        "n_val": 512907,
+        "n_val_pos": 1465,
+        "n_test": 514022,
+        "n_test_pos": 1374,
+        "n_test_no_prior_involvement": 509308,
+        "n_test_pos_no_prior_involvement": 1125,
+        "n_test_cold_start_pos_excluded": 23
+      },
+      "validation_metrics": {
+        "n": 512907,
+        "n_positive": 1465,
+        "n_negative": 511442,
+        "prevalence": 0.002856268290352832,
+        "average_precision": 0.004915812439336705,
+        "ap_lift": 1.7210611677971819,
+        "roc_auc": 0.6660715470450658,
+        "precision_at_k": {
+          "100": 0.01,
+          "500": 0.014,
+          "1000": 0.01,
+          "5000": 0.007
+        },
+        "recall_at_k": {
+          "100": 0.0006825938566552901,
+          "500": 0.00477815699658703,
+          "1000": 0.006825938566552901,
+          "5000": 0.023890784982935155
+        },
+        "precision_at_rate": {
+          "0.001": 0.01364522417153996,
+          "0.005": 0.008576998050682261,
+          "0.01": 0.007212475633528265,
+          "0.05": 0.005536925836387741
+        },
+        "recall_at_rate": {
+          "0.001": 0.00477815699658703,
+          "0.005": 0.015017064846416382,
+          "0.01": 0.025255972696245733,
+          "0.05": 0.09692832764505119
+        },
+        "at_threshold": {
+          "threshold": 0.6936113642635925,
+          "precision": 0.007212475633528265,
+          "recall": 0.025255972696245733,
+          "f1": 0.011220621683093252,
+          "confusion": [
+            [
+              506349,
+              5093
+            ],
+            [
+              1428,
+              37
+            ]
+          ],
+          "alerts": 5130,
+          "alert_rate": 0.010001813194204798,
+          "false_positive_burden": 137.64864864864865
+        },
+        "calibration": null,
+        "undefined": {
+          "calibration": "scores are not on a probability scale"
+        }
+      },
+      "test_metrics": {
+        "n": 514022,
+        "n_positive": 1374,
+        "n_negative": 512648,
+        "prevalence": 0.0026730373408142064,
+        "average_precision": 0.00458537741621993,
+        "ap_lift": 1.715418391732315,
+        "roc_auc": 0.6519469241155782,
+        "precision_at_k": {
+          "100": 0.0,
+          "500": 0.014,
+          "1000": 0.015,
+          "5000": 0.008
+        },
+        "recall_at_k": {
+          "100": 0.0,
+          "500": 0.005094614264919942,
+          "1000": 0.010917030567685589,
+          "5000": 0.02911208151382824
+        },
+        "precision_at_rate": {
+          "0.001": 0.015533980582524271,
+          "0.005": 0.010112796577207312,
+          "0.01": 0.007780587434351294,
+          "0.05": 0.006030659092677613
+        },
+        "recall_at_rate": {
+          "0.001": 0.005822416302765648,
+          "0.005": 0.018922852983988356,
+          "0.01": 0.02911208151382824,
+          "0.05": 0.11280931586608442
+        },
+        "at_threshold": {
+          "threshold": 0.6936113642635925,
+          "precision": 0.008044554455445545,
+          "recall": 0.028384279475982533,
+          "f1": 0.012536162005785919,
+          "confusion": [
+            [
+              507839,
+              4809
+            ],
+            [
+              1335,
+              39
+            ]
+          ],
+          "alerts": 4848,
+          "alert_rate": 0.00943150293178113,
+          "false_positive_burden": 123.3076923076923
+        },
+        "calibration": null,
+        "undefined": {
+          "calibration": "scores are not on a probability scale"
+        }
+      },
+      "threshold": {
+        "value": 0.6936113642635925,
+        "strategy": "alert_budget",
+        "params": {
+          "rate": 0.01
+        },
+        "selected_on": "validation",
+        "objective": "val_alert_rate",
+        "objective_value": 0.010001813194204798,
+        "reason": null,
+        "n_val_positives": 1465
+      },
+      "calibration": {
+        "method": "none",
+        "fitted": true,
+        "produces_probabilities": false,
+        "diagnostics": {}
+      },
+      "leakage": [
+        {
+          "check": "evaluation_regime",
+          "severity": "info",
+          "message": "split 'calendar_forward' is calendar-forward: rows are (entity, origin) samples scored at fixed calendar origins; partitions are disjoint in time, not in entity"
+        },
+        {
+          "check": "calendar_label_ordering",
+          "severity": "info",
+          "message": "train label window ends 2022-09-07 00:00:00, at or before the val origin 2022-09-07 00:00:00"
+        },
+        {
+          "check": "calendar_label_ordering",
+          "severity": "info",
+          "message": "val label window ends 2022-09-09 00:00:00, at or before the test origin 2022-09-09 00:00:00"
+        },
+        {
+          "check": "entity_overlap",
+          "severity": "info",
+          "message": "511548 of 514022 test entities were also scored at the train origin; expected under this regime, where the label and the feature snapshot, not the entity, are what is held out"
+        },
+        {
+          "check": "calendar_information_boundary",
+          "severity": "info",
+          "message": "train: 2284182 feature transactions dated 2022-09-01 00:00:00 .. 2022-09-04 23:59:00, all before the origin 2022-09-05 00:00:00"
+        },
+        {
+          "check": "calendar_information_boundary",
+          "severity": "info",
+          "message": "val: 3248921 feature transactions dated 2022-09-01 00:00:00 .. 2022-09-06 23:59:00, all before the origin 2022-09-07 00:00:00"
+        },
+        {
+          "check": "calendar_information_boundary",
+          "severity": "info",
+          "message": "test: 4214445 feature transactions dated 2022-09-01 00:00:00 .. 2022-09-08 23:59:00, all before the origin 2022-09-09 00:00:00"
+        },
+        {
+          "check": "feature_scope",
+          "severity": "info",
+          "message": "each origin's features were computed only from transactions dated before that origin"
+        }
+      ],
+      "fit_report": {
+        "status": "no_parameters_to_fit",
+        "signals_used": [
+          "aml_cycle_v1::layering_share",
+          "aml_flow_v1::fan_in",
+          "aml_flow_v1::fan_out",
+          "aml_flow_v1::min_in_to_out_hours",
+          "aml_flow_v1::pass_through_ratio",
+          "aml_flow_v1::rapid_turnover_share",
+          "aml_network_v1::counterparty_diversity",
+          "aml_network_v1::reciprocal_ratio",
+          "aml_temporal_v1::burstiness",
+          "aml_temporal_v1::txn_per_active_day"
+        ],
+        "signals_missing": [],
+        "labels_used": false
+      },
+      "runtime_seconds": {
+        "features": 4.446213599992916,
+        "fit": 0.00020349991973489523,
+        "score": 1.6179063000017777
+      },
+      "checkpoint": null,
+      "notes": [],
+      "subgroup_test_metrics": {
+        "no_prior_involvement": {
+          "definition": "test entities with no flagged transaction before the test origin; the population for which the task is forecasting first involvement",
+          "n": 509308,
+          "n_positive": 1125,
+          "metrics": {
+            "n": 509308,
+            "n_positive": 1125,
+            "n_negative": 508183,
+            "prevalence": 0.002208879499242109,
+            "average_precision": 0.003080367716106332,
+            "ap_lift": 1.3945385962263854,
+            "roc_auc": 0.6248154009262193,
+            "precision_at_k": {
+              "100": 0.0,
+              "500": 0.002,
+              "1000": 0.003,
+              "5000": 0.0024
+            },
+            "recall_at_k": {
+              "100": 0.0,
+              "500": 0.0008888888888888889,
+              "1000": 0.0026666666666666666,
+              "5000": 0.010666666666666666
+            },
+            "precision_at_rate": {
+              "0.001": 0.00196078431372549,
+              "0.005": 0.002355712603062426,
+              "0.01": 0.002355712603062426,
+              "0.05": 0.00353412392994581
+            },
+            "recall_at_rate": {
+              "0.001": 0.0008888888888888889,
+              "0.005": 0.005333333333333333,
+              "0.01": 0.010666666666666666,
+              "0.05": 0.08
+            },
+            "at_threshold": {
+              "threshold": 0.6936113642635925,
+              "precision": 0.00240858331508649,
+              "recall": 0.009777777777777778,
+              "f1": 0.0038650737877723115,
+              "confusion": [
+                [
+                  503627,
+                  4556
+                ],
+                [
+                  1114,
+                  11
+                ]
+              ],
+              "alerts": 4567,
+              "alert_rate": 0.008967069042701076,
+              "false_positive_burden": 414.1818181818182
+            },
+            "calibration": null,
+            "undefined": {
+              "calibration": "scores are not on a probability scale"
+            }
+          }
+        }
+      }
+    }
+  ],
+  "aggregate": {
+    "n": {
+      "mean": 514022.0,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 1
+    },
+    "n_positive": {
+      "mean": 1374.0,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 1
+    },
+    "n_negative": {
+      "mean": 512648.0,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 1
+    },
+    "prevalence": {
+      "mean": 0.0026730373408142064,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 1
+    },
+    "average_precision": {
+      "mean": 0.00458537741621993,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 1
+    },
+    "ap_lift": {
+      "mean": 1.715418391732315,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 1
+    },
+    "roc_auc": {
+      "mean": 0.6519469241155782,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 1
+    },
+    "precision_at_k.100": {
+      "mean": 0.0,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 1
+    },
+    "precision_at_k.500": {
+      "mean": 0.014,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 1
+    },
+    "precision_at_k.1000": {
+      "mean": 0.015,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 1
+    },
+    "precision_at_k.5000": {
+      "mean": 0.008,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 1
+    },
+    "recall_at_k.100": {
+      "mean": 0.0,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 1
+    },
+    "recall_at_k.500": {
+      "mean": 0.005094614264919942,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 1
+    },
+    "recall_at_k.1000": {
+      "mean": 0.010917030567685589,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 1
+    },
+    "recall_at_k.5000": {
+      "mean": 0.02911208151382824,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 1
+    },
+    "precision_at_rate.0.001": {
+      "mean": 0.015533980582524271,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 1
+    },
+    "precision_at_rate.0.005": {
+      "mean": 0.010112796577207312,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 1
+    },
+    "precision_at_rate.0.01": {
+      "mean": 0.007780587434351294,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 1
+    },
+    "precision_at_rate.0.05": {
+      "mean": 0.006030659092677613,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 1
+    },
+    "recall_at_rate.0.001": {
+      "mean": 0.005822416302765648,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 1
+    },
+    "recall_at_rate.0.005": {
+      "mean": 0.018922852983988356,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 1
+    },
+    "recall_at_rate.0.01": {
+      "mean": 0.02911208151382824,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 1
+    },
+    "recall_at_rate.0.05": {
+      "mean": 0.11280931586608442,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 1
+    },
+    "at_threshold.threshold": {
+      "mean": 0.6936113642635925,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 1
+    },
+    "at_threshold.precision": {
+      "mean": 0.008044554455445545,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 1
+    },
+    "at_threshold.recall": {
+      "mean": 0.028384279475982533,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 1
+    },
+    "at_threshold.f1": {
+      "mean": 0.012536162005785919,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 1
+    },
+    "at_threshold.alerts": {
+      "mean": 4848.0,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 1
+    },
+    "at_threshold.alert_rate": {
+      "mean": 0.00943150293178113,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 1
+    },
+    "at_threshold.false_positive_burden": {
+      "mean": 123.3076923076923,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 1
+    },
+    "calibration": {
+      "mean": null,
+      "std": null,
+      "n_defined": 0,
+      "n_folds": 1
+    }
+  },
+  "validation_aggregate": {
+    "n": {
+      "mean": 512907.0,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 1
+    },
+    "n_positive": {
+      "mean": 1465.0,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 1
+    },
+    "n_negative": {
+      "mean": 511442.0,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 1
+    },
+    "prevalence": {
+      "mean": 0.002856268290352832,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 1
+    },
+    "average_precision": {
+      "mean": 0.004915812439336705,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 1
+    },
+    "ap_lift": {
+      "mean": 1.7210611677971819,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 1
+    },
+    "roc_auc": {
+      "mean": 0.6660715470450658,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 1
+    },
+    "precision_at_k.100": {
+      "mean": 0.01,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 1
+    },
+    "precision_at_k.500": {
+      "mean": 0.014,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 1
+    },
+    "precision_at_k.1000": {
+      "mean": 0.01,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 1
+    },
+    "precision_at_k.5000": {
+      "mean": 0.007,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 1
+    },
+    "recall_at_k.100": {
+      "mean": 0.0006825938566552901,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 1
+    },
+    "recall_at_k.500": {
+      "mean": 0.00477815699658703,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 1
+    },
+    "recall_at_k.1000": {
+      "mean": 0.006825938566552901,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 1
+    },
+    "recall_at_k.5000": {
+      "mean": 0.023890784982935155,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 1
+    },
+    "precision_at_rate.0.001": {
+      "mean": 0.01364522417153996,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 1
+    },
+    "precision_at_rate.0.005": {
+      "mean": 0.008576998050682261,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 1
+    },
+    "precision_at_rate.0.01": {
+      "mean": 0.007212475633528265,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 1
+    },
+    "precision_at_rate.0.05": {
+      "mean": 0.005536925836387741,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 1
+    },
+    "recall_at_rate.0.001": {
+      "mean": 0.00477815699658703,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 1
+    },
+    "recall_at_rate.0.005": {
+      "mean": 0.015017064846416382,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 1
+    },
+    "recall_at_rate.0.01": {
+      "mean": 0.025255972696245733,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 1
+    },
+    "recall_at_rate.0.05": {
+      "mean": 0.09692832764505119,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 1
+    },
+    "at_threshold.threshold": {
+      "mean": 0.6936113642635925,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 1
+    },
+    "at_threshold.precision": {
+      "mean": 0.007212475633528265,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 1
+    },
+    "at_threshold.recall": {
+      "mean": 0.025255972696245733,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 1
+    },
+    "at_threshold.f1": {
+      "mean": 0.011220621683093252,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 1
+    },
+    "at_threshold.alerts": {
+      "mean": 5130.0,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 1
+    },
+    "at_threshold.alert_rate": {
+      "mean": 0.010001813194204798,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 1
+    },
+    "at_threshold.false_positive_burden": {
+      "mean": 137.64864864864865,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 1
+    },
+    "calibration": {
+      "mean": null,
+      "std": null,
+      "n_defined": 0,
+      "n_folds": 1
+    }
+  },
+  "environment": {
+    "python": "3.11.8",
+    "platform": "Windows-10-10.0.26200-SP0",
+    "processor": "Intel64 Family 6 Model 190 Stepping 0, GenuineIntel",
+    "packages": {
+      "numpy": "2.3.5",
+      "pandas": "3.0.5",
+      "networkx": "3.6.1",
+      "sklearn": "1.9.0",
+      "torch": "2.13.0+cpu",
+      "torch_geometric": "2.8.0.post1",
+      "xgboost": null,
+      "lightgbm": null
+    },
+    "seeding": {
+      "seed": 42,
+      "python_random": true,
+      "numpy": true,
+      "torch": true,
+      "torch_deterministic_algorithms": false
+    }
+  },
+  "determinism": {
+    "seeded_sources": [
+      "python_random",
+      "numpy",
+      "torch (if installed)"
+    ],
+    "not_controlled": [
+      "floating-point reduction order across CPU threads",
+      "BLAS / MKL version differences",
+      "GPU kernel selection when CUDA is used"
+    ],
+    "torch_version": "2.13.0+cpu",
+    "torch_num_threads": 4,
+    "cuda_available": false
+  },
+  "notes": [
+    "unit of prediction is the (entity, origin) pair: every entity with feature-window history is scored at each origin, so the same account recurs across train, validation and test with a different snapshot and label; the partitions are disjoint in time, not in entity.",
+    "label = the entity is payer or payee of at least one transaction flagged by the publisher and dated in [origin, origin + 2 days 00:00:00).",
+    "eligibility = at least one dated transaction in the feature window; window positives without one are excluded and counted, never scored.",
+    "features = transactions dated strictly before the origin; recency and tenure are measured from the origin.",
+    "train: 31 of 1459 window positives have no feature-window history and are excluded.",
+    "val: 32 of 1497 window positives have no feature-window history and are excluded.",
+    "test: 23 of 1397 window positives have no feature-window history and are excluded.",
+    "SYNTHETIC DATASET: these numbers describe generated data and are not evidence about real-world detection performance."
+  ],
+  "started_at": "2026-09-11T13:48:48+00:00",
+  "finished_at": "2026-09-11T13:48:59+00:00",
+  "total_runtime_seconds": 10.396891799988225,
+  "git_commit": "fb09935837ba46e98fe19650c6c49564a884ac2f"
+}

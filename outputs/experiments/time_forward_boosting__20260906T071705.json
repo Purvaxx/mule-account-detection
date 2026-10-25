@@ -1,0 +1,1764 @@
+{
+  "schema_version": "1.0",
+  "experiment": {
+    "name": "time_forward_boosting",
+    "description": "The operational question: train only on transactions that had already happened, and score entities the model meets later. Numbers here are not comparable with the transductive configs.",
+    "tags": [
+      "operational",
+      "time-aware"
+    ],
+    "seed": 42,
+    "dataset": {
+      "name": "reference_dkdata",
+      "version": "size13479193-d205a64d",
+      "provenance": "file:C:\\Users\\bhara\\Downloads\\SIH\\dkdata.json",
+      "label_definition": "positive = graph node attribute 'core' is True, set by Layer 3 from the payer_core / beneficiary_core flags carried by the source records; it marks entities named as core to the published investigation, not a supervised fraud adjudication",
+      "synthetic": false,
+      "notes": [
+        "Version is derived from file size and mtime, not a content hash.",
+        "The positive class is extremely rare; see the split plan's notes for which folds can support label-dependent metrics."
+      ]
+    },
+    "features": {
+      "sets": [
+        "aml_core_v1"
+      ],
+      "scope": "train_window"
+    },
+    "split": {
+      "strategy": "time_forward_rolling",
+      "params": {
+        "n_folds": 3,
+        "initial_quantile": 0.5,
+        "time_reference": "first"
+      },
+      "seed": 42
+    },
+    "model": {
+      "family": "gradient_boosting",
+      "params": {
+        "backend": "auto",
+        "n_estimators": 300,
+        "learning_rate": 0.05,
+        "max_depth": 4
+      },
+      "imbalance": "class_weight"
+    },
+    "threshold": {
+      "strategy": "alert_budget",
+      "params": {
+        "rate": 0.01
+      }
+    },
+    "calibration": {
+      "method": "none",
+      "min_val_positives": 20
+    },
+    "evaluation": {
+      "k_values": [
+        10,
+        20,
+        50,
+        100
+      ],
+      "alert_rates": [
+        0.001,
+        0.005,
+        0.01,
+        0.05
+      ],
+      "calibration_bins": 10
+    }
+  },
+  "dataset": {
+    "spec": {
+      "name": "reference_dkdata",
+      "version": "size13479193-d205a64d",
+      "provenance": "file:C:\\Users\\bhara\\Downloads\\SIH\\dkdata.json",
+      "label_definition": "positive = graph node attribute 'core' is True, set by Layer 3 from the payer_core / beneficiary_core flags carried by the source records; it marks entities named as core to the published investigation, not a supervised fraud adjudication",
+      "synthetic": false,
+      "notes": [
+        "Version is derived from file size and mtime, not a content hash.",
+        "The positive class is extremely rare; see the split plan's notes for which folds can support label-dependent metrics."
+      ]
+    },
+    "n_entities": 3440,
+    "n_positive": 4,
+    "n_negative": 3436,
+    "prevalence": 0.0011627906976744186,
+    "n_edges": 16940,
+    "has_graph": true,
+    "has_time": true
+  },
+  "features": {
+    "scope": "train_window",
+    "as_of": "2013-05-27 00:00:00",
+    "n_columns": 29,
+    "sets": [
+      {
+        "name": "aml_core_v1",
+        "version": "1.0",
+        "family": "composite",
+        "time_scopable": true,
+        "n_columns": 29,
+        "columns": [
+          "aml_core_v1::txn_in",
+          "aml_core_v1::txn_out",
+          "aml_core_v1::txn_total",
+          "aml_core_v1::amount_in_sum",
+          "aml_core_v1::amount_out_sum",
+          "aml_core_v1::amount_in_mean",
+          "aml_core_v1::amount_out_mean",
+          "aml_core_v1::amount_max",
+          "aml_core_v1::amount_std",
+          "aml_core_v1::active_days",
+          "aml_core_v1::span_days",
+          "aml_core_v1::txn_per_active_day",
+          "aml_core_v1::mean_iat_days",
+          "aml_core_v1::std_iat_days",
+          "aml_core_v1::burstiness",
+          "aml_core_v1::fan_in",
+          "aml_core_v1::fan_out",
+          "aml_core_v1::inflow_outflow_ratio",
+          "aml_core_v1::flow_imbalance",
+          "aml_core_v1::pass_through_ratio",
+          "aml_core_v1::min_in_to_out_gap_days",
+          "aml_core_v1::same_day_in_out",
+          "aml_core_v1::degree_total",
+          "aml_core_v1::counterparty_count",
+          "aml_core_v1::counterparty_diversity",
+          "aml_core_v1::reciprocal_partners",
+          "aml_core_v1::reciprocal_ratio",
+          "aml_core_v1::clustering",
+          "aml_core_v1::degree_centrality"
+        ]
+      }
+    ],
+    "notes": [
+      "45995 NaN cells remained after computation and were left in place; candidates are responsible for imputing them inside their train-fitted preprocessing."
+    ]
+  },
+  "split": {
+    "strategy": "time_forward_rolling",
+    "params": {
+      "n_folds": 3,
+      "initial_quantile": 0.5,
+      "time_reference": "first"
+    },
+    "seed": 42,
+    "regime": "time-forward",
+    "entity_disjoint": true,
+    "time_aware": true,
+    "graph_leakage_controlled": false,
+    "n_folds": 3,
+    "notes": [
+      "expanding window over first activity date; cuts at quantiles [0.5, 0.625, 0.75, 0.875, 1.0].",
+      "fold 0: test partition contains no positives; label-dependent metrics are undefined there.",
+      "fold 1: validation partition contains no positives; label-dependent metrics are undefined there.",
+      "fold 1: test partition contains no positives; label-dependent metrics are undefined there.",
+      "fold 2: validation partition contains no positives; label-dependent metrics are undefined there.",
+      "fold 2: test partition contains no positives; label-dependent metrics are undefined there."
+    ],
+    "folds": [
+      {
+        "fold_idx": 0,
+        "n_train": 1715,
+        "n_train_pos": 2,
+        "n_val": 423,
+        "n_val_pos": 2,
+        "n_test": 439,
+        "n_test_pos": 0,
+        "train_window_end": "2013-05-27 00:00:00",
+        "val_window_end": "2013-07-05 00:00:00"
+      },
+      {
+        "fold_idx": 1,
+        "n_train": 2138,
+        "n_train_pos": 4,
+        "n_val": 439,
+        "n_val_pos": 0,
+        "n_test": 432,
+        "n_test_pos": 0,
+        "train_window_end": "2013-07-05 00:00:00",
+        "val_window_end": "2013-10-18 00:00:00"
+      },
+      {
+        "fold_idx": 2,
+        "n_train": 2577,
+        "n_train_pos": 4,
+        "n_val": 432,
+        "n_val_pos": 0,
+        "n_test": 431,
+        "n_test_pos": 0,
+        "train_window_end": "2013-10-18 00:00:00",
+        "val_window_end": "2014-03-18 00:00:00"
+      }
+    ]
+  },
+  "leakage": [
+    {
+      "check": "evaluation_regime",
+      "severity": "info",
+      "message": "split 'time_forward_rolling' is time-forward: entity_disjoint=True, time_aware=True, graph_leakage_controlled=False"
+    },
+    {
+      "check": "feature_scope",
+      "severity": "info",
+      "message": "features were computed only from transactions before 2013-05-27 00:00:00",
+      "fold_idx": 0
+    },
+    {
+      "check": "constant_or_perfect_features",
+      "severity": "warning",
+      "message": "14 feature column(s) separate the training classes perfectly; on a rare-positive dataset that is more often a leak than a discovery",
+      "detail": {
+        "columns": [
+          "aml_core_v1::txn_in",
+          "aml_core_v1::txn_out",
+          "aml_core_v1::txn_total",
+          "aml_core_v1::amount_in_sum",
+          "aml_core_v1::amount_out_sum",
+          "aml_core_v1::active_days",
+          "aml_core_v1::span_days",
+          "aml_core_v1::txn_per_active_day",
+          "aml_core_v1::fan_in",
+          "aml_core_v1::fan_out",
+          "aml_core_v1::same_day_in_out",
+          "aml_core_v1::degree_total",
+          "aml_core_v1::counterparty_count",
+          "aml_core_v1::reciprocal_partners"
+        ],
+        "n_train_positive": 2
+      },
+      "fold_idx": 0
+    },
+    {
+      "check": "feature_scope",
+      "severity": "info",
+      "message": "features were computed only from transactions before 2013-07-05 00:00:00",
+      "fold_idx": 1
+    },
+    {
+      "check": "constant_or_perfect_features",
+      "severity": "warning",
+      "message": "5 feature column(s) separate the training classes perfectly; on a rare-positive dataset that is more often a leak than a discovery",
+      "detail": {
+        "columns": [
+          "aml_core_v1::txn_out",
+          "aml_core_v1::txn_per_active_day",
+          "aml_core_v1::fan_out",
+          "aml_core_v1::same_day_in_out",
+          "aml_core_v1::counterparty_count"
+        ],
+        "n_train_positive": 4
+      },
+      "fold_idx": 1
+    },
+    {
+      "check": "feature_scope",
+      "severity": "info",
+      "message": "features were computed only from transactions before 2013-10-18 00:00:00",
+      "fold_idx": 2
+    },
+    {
+      "check": "constant_or_perfect_features",
+      "severity": "warning",
+      "message": "8 feature column(s) separate the training classes perfectly; on a rare-positive dataset that is more often a leak than a discovery",
+      "detail": {
+        "columns": [
+          "aml_core_v1::txn_out",
+          "aml_core_v1::txn_total",
+          "aml_core_v1::amount_in_sum",
+          "aml_core_v1::txn_per_active_day",
+          "aml_core_v1::fan_out",
+          "aml_core_v1::same_day_in_out",
+          "aml_core_v1::degree_total",
+          "aml_core_v1::counterparty_count"
+        ],
+        "n_train_positive": 4
+      },
+      "fold_idx": 2
+    }
+  ],
+  "folds": [
+    {
+      "fold_idx": 0,
+      "counts": {
+        "n_train": 1715,
+        "n_train_pos": 2,
+        "n_val": 423,
+        "n_val_pos": 2,
+        "n_test": 439,
+        "n_test_pos": 0
+      },
+      "validation_metrics": {
+        "n": 423,
+        "n_positive": 2,
+        "n_negative": 421,
+        "prevalence": 0.004728132387706856,
+        "average_precision": 0.004728132387706856,
+        "ap_lift": 1.0,
+        "roc_auc": 0.5,
+        "precision_at_k": {
+          "10": 0.0,
+          "20": 0.0,
+          "50": 0.0,
+          "100": 0.0
+        },
+        "recall_at_k": {
+          "10": 0.0,
+          "20": 0.0,
+          "50": 0.0,
+          "100": 0.0
+        },
+        "precision_at_rate": {
+          "0.001": 0.0,
+          "0.005": 0.0,
+          "0.01": 0.0,
+          "0.05": 0.0
+        },
+        "recall_at_rate": {
+          "0.001": 0.0,
+          "0.005": 0.0,
+          "0.01": 0.0,
+          "0.05": 0.0
+        },
+        "at_threshold": {
+          "threshold": 1.497933767933278e-07,
+          "precision": 0.004728132387706856,
+          "recall": 1.0,
+          "f1": 0.009411764705882352,
+          "confusion": [
+            [
+              0,
+              421
+            ],
+            [
+              0,
+              2
+            ]
+          ],
+          "alerts": 423,
+          "alert_rate": 1.0,
+          "false_positive_burden": 210.5
+        },
+        "calibration": {
+          "brier": 0.00472813097124346,
+          "expected_calibration_error": 0.004727982594330062,
+          "bins": [
+            {
+              "lower": 0.0,
+              "upper": 0.1,
+              "count": 423,
+              "mean_predicted": 1.497933767933278e-07,
+              "observed_rate": 0.004728132387706856
+            },
+            {
+              "lower": 0.1,
+              "upper": 0.2,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            },
+            {
+              "lower": 0.2,
+              "upper": 0.30000000000000004,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            },
+            {
+              "lower": 0.30000000000000004,
+              "upper": 0.4,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            },
+            {
+              "lower": 0.4,
+              "upper": 0.5,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            },
+            {
+              "lower": 0.5,
+              "upper": 0.6000000000000001,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            },
+            {
+              "lower": 0.6000000000000001,
+              "upper": 0.7000000000000001,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            },
+            {
+              "lower": 0.7000000000000001,
+              "upper": 0.8,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            },
+            {
+              "lower": 0.8,
+              "upper": 0.9,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            },
+            {
+              "lower": 0.9,
+              "upper": 1.0,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            }
+          ]
+        },
+        "undefined": {}
+      },
+      "test_metrics": {
+        "n": 439,
+        "n_positive": 0,
+        "n_negative": 439,
+        "prevalence": 0.0,
+        "average_precision": null,
+        "ap_lift": null,
+        "roc_auc": null,
+        "precision_at_k": {
+          "10": 0.0,
+          "20": 0.0,
+          "50": 0.0,
+          "100": 0.0
+        },
+        "recall_at_k": {
+          "10": null,
+          "20": null,
+          "50": null,
+          "100": null
+        },
+        "precision_at_rate": {
+          "0.001": 0.0,
+          "0.005": 0.0,
+          "0.01": 0.0,
+          "0.05": 0.0
+        },
+        "recall_at_rate": {
+          "0.001": null,
+          "0.005": null,
+          "0.01": null,
+          "0.05": null
+        },
+        "at_threshold": {
+          "threshold": 1.497933767933278e-07,
+          "precision": 0.0,
+          "recall": null,
+          "f1": null,
+          "confusion": [
+            [
+              0,
+              439
+            ],
+            [
+              0,
+              0
+            ]
+          ],
+          "alerts": 439,
+          "alert_rate": 1.0,
+          "false_positive_burden": null
+        },
+        "calibration": {
+          "brier": 2.2438055734174628e-14,
+          "expected_calibration_error": 1.497933767933278e-07,
+          "bins": [
+            {
+              "lower": 0.0,
+              "upper": 0.1,
+              "count": 439,
+              "mean_predicted": 1.497933767933278e-07,
+              "observed_rate": 0.0
+            },
+            {
+              "lower": 0.1,
+              "upper": 0.2,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            },
+            {
+              "lower": 0.2,
+              "upper": 0.30000000000000004,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            },
+            {
+              "lower": 0.30000000000000004,
+              "upper": 0.4,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            },
+            {
+              "lower": 0.4,
+              "upper": 0.5,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            },
+            {
+              "lower": 0.5,
+              "upper": 0.6000000000000001,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            },
+            {
+              "lower": 0.6000000000000001,
+              "upper": 0.7000000000000001,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            },
+            {
+              "lower": 0.7000000000000001,
+              "upper": 0.8,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            },
+            {
+              "lower": 0.8,
+              "upper": 0.9,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            },
+            {
+              "lower": 0.9,
+              "upper": 1.0,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            }
+          ]
+        },
+        "undefined": {
+          "average_precision": "no positives in partition",
+          "roc_auc": "no positives in partition",
+          "ap_lift": "no positives in partition",
+          "recall_at_10": "no positives in partition",
+          "recall_at_20": "no positives in partition",
+          "recall_at_50": "no positives in partition",
+          "recall_at_100": "no positives in partition",
+          "threshold.recall": "no positives in partition",
+          "threshold.f1": "precision or recall undefined (or both zero) at this threshold",
+          "threshold.false_positive_burden": "no true positives at this threshold; false positives per true positive is unbounded"
+        }
+      },
+      "threshold": {
+        "value": 1.497933767933278e-07,
+        "strategy": "alert_budget",
+        "params": {
+          "rate": 0.01
+        },
+        "selected_on": "validation",
+        "objective": "val_alert_rate",
+        "objective_value": 1.0,
+        "reason": null,
+        "n_val_positives": 2
+      },
+      "calibration": {
+        "method": "none",
+        "fitted": true,
+        "produces_probabilities": true,
+        "diagnostics": {}
+      },
+      "leakage": [
+        {
+          "check": "feature_scope",
+          "severity": "info",
+          "message": "features were computed only from transactions before 2013-05-27 00:00:00"
+        },
+        {
+          "check": "constant_or_perfect_features",
+          "severity": "warning",
+          "message": "14 feature column(s) separate the training classes perfectly; on a rare-positive dataset that is more often a leak than a discovery",
+          "detail": {
+            "columns": [
+              "aml_core_v1::txn_in",
+              "aml_core_v1::txn_out",
+              "aml_core_v1::txn_total",
+              "aml_core_v1::amount_in_sum",
+              "aml_core_v1::amount_out_sum",
+              "aml_core_v1::active_days",
+              "aml_core_v1::span_days",
+              "aml_core_v1::txn_per_active_day",
+              "aml_core_v1::fan_in",
+              "aml_core_v1::fan_out",
+              "aml_core_v1::same_day_in_out",
+              "aml_core_v1::degree_total",
+              "aml_core_v1::counterparty_count",
+              "aml_core_v1::reciprocal_partners"
+            ],
+            "n_train_positive": 2
+          }
+        }
+      ],
+      "fit_report": {
+        "early_stopping_note": "early stopping disabled: only 2 training positives, an internal validation split would likely contain none",
+        "status": "fitted",
+        "backend": "sklearn_hist",
+        "backend_version": "1.9.0",
+        "n_train": 1715,
+        "n_train_positive": 2,
+        "n_features": 29
+      },
+      "runtime_seconds": {
+        "features": 2.2651980000082403,
+        "fit": 2.620116899954155,
+        "score": 0.10890550003387034
+      },
+      "checkpoint": null,
+      "notes": []
+    },
+    {
+      "fold_idx": 1,
+      "counts": {
+        "n_train": 2138,
+        "n_train_pos": 4,
+        "n_val": 439,
+        "n_val_pos": 0,
+        "n_test": 432,
+        "n_test_pos": 0
+      },
+      "validation_metrics": {
+        "n": 439,
+        "n_positive": 0,
+        "n_negative": 439,
+        "prevalence": 0.0,
+        "average_precision": null,
+        "ap_lift": null,
+        "roc_auc": null,
+        "precision_at_k": {
+          "10": 0.0,
+          "20": 0.0,
+          "50": 0.0,
+          "100": 0.0
+        },
+        "recall_at_k": {
+          "10": null,
+          "20": null,
+          "50": null,
+          "100": null
+        },
+        "precision_at_rate": {
+          "0.001": 0.0,
+          "0.005": 0.0,
+          "0.01": 0.0,
+          "0.05": 0.0
+        },
+        "recall_at_rate": {
+          "0.001": null,
+          "0.005": null,
+          "0.01": null,
+          "0.05": null
+        },
+        "at_threshold": {
+          "threshold": 2.0854728752008075e-07,
+          "precision": 0.0,
+          "recall": null,
+          "f1": null,
+          "confusion": [
+            [
+              0,
+              439
+            ],
+            [
+              0,
+              0
+            ]
+          ],
+          "alerts": 439,
+          "alert_rate": 1.0,
+          "false_positive_burden": null
+        },
+        "calibration": {
+          "brier": 4.3491971138254877e-14,
+          "expected_calibration_error": 2.085472875200807e-07,
+          "bins": [
+            {
+              "lower": 0.0,
+              "upper": 0.1,
+              "count": 439,
+              "mean_predicted": 2.085472875200807e-07,
+              "observed_rate": 0.0
+            },
+            {
+              "lower": 0.1,
+              "upper": 0.2,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            },
+            {
+              "lower": 0.2,
+              "upper": 0.30000000000000004,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            },
+            {
+              "lower": 0.30000000000000004,
+              "upper": 0.4,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            },
+            {
+              "lower": 0.4,
+              "upper": 0.5,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            },
+            {
+              "lower": 0.5,
+              "upper": 0.6000000000000001,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            },
+            {
+              "lower": 0.6000000000000001,
+              "upper": 0.7000000000000001,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            },
+            {
+              "lower": 0.7000000000000001,
+              "upper": 0.8,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            },
+            {
+              "lower": 0.8,
+              "upper": 0.9,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            },
+            {
+              "lower": 0.9,
+              "upper": 1.0,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            }
+          ]
+        },
+        "undefined": {
+          "average_precision": "no positives in partition",
+          "roc_auc": "no positives in partition",
+          "ap_lift": "no positives in partition",
+          "recall_at_10": "no positives in partition",
+          "recall_at_20": "no positives in partition",
+          "recall_at_50": "no positives in partition",
+          "recall_at_100": "no positives in partition",
+          "threshold.recall": "no positives in partition",
+          "threshold.f1": "precision or recall undefined (or both zero) at this threshold",
+          "threshold.false_positive_burden": "no true positives at this threshold; false positives per true positive is unbounded"
+        }
+      },
+      "test_metrics": {
+        "n": 432,
+        "n_positive": 0,
+        "n_negative": 432,
+        "prevalence": 0.0,
+        "average_precision": null,
+        "ap_lift": null,
+        "roc_auc": null,
+        "precision_at_k": {
+          "10": 0.0,
+          "20": 0.0,
+          "50": 0.0,
+          "100": 0.0
+        },
+        "recall_at_k": {
+          "10": null,
+          "20": null,
+          "50": null,
+          "100": null
+        },
+        "precision_at_rate": {
+          "0.001": 0.0,
+          "0.005": 0.0,
+          "0.01": 0.0,
+          "0.05": 0.0
+        },
+        "recall_at_rate": {
+          "0.001": null,
+          "0.005": null,
+          "0.01": null,
+          "0.05": null
+        },
+        "at_threshold": {
+          "threshold": 2.0854728752008075e-07,
+          "precision": 0.0,
+          "recall": null,
+          "f1": null,
+          "confusion": [
+            [
+              0,
+              432
+            ],
+            [
+              0,
+              0
+            ]
+          ],
+          "alerts": 432,
+          "alert_rate": 1.0,
+          "false_positive_burden": null
+        },
+        "calibration": {
+          "brier": 4.3491971138254877e-14,
+          "expected_calibration_error": 2.085472875200807e-07,
+          "bins": [
+            {
+              "lower": 0.0,
+              "upper": 0.1,
+              "count": 432,
+              "mean_predicted": 2.085472875200807e-07,
+              "observed_rate": 0.0
+            },
+            {
+              "lower": 0.1,
+              "upper": 0.2,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            },
+            {
+              "lower": 0.2,
+              "upper": 0.30000000000000004,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            },
+            {
+              "lower": 0.30000000000000004,
+              "upper": 0.4,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            },
+            {
+              "lower": 0.4,
+              "upper": 0.5,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            },
+            {
+              "lower": 0.5,
+              "upper": 0.6000000000000001,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            },
+            {
+              "lower": 0.6000000000000001,
+              "upper": 0.7000000000000001,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            },
+            {
+              "lower": 0.7000000000000001,
+              "upper": 0.8,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            },
+            {
+              "lower": 0.8,
+              "upper": 0.9,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            },
+            {
+              "lower": 0.9,
+              "upper": 1.0,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            }
+          ]
+        },
+        "undefined": {
+          "average_precision": "no positives in partition",
+          "roc_auc": "no positives in partition",
+          "ap_lift": "no positives in partition",
+          "recall_at_10": "no positives in partition",
+          "recall_at_20": "no positives in partition",
+          "recall_at_50": "no positives in partition",
+          "recall_at_100": "no positives in partition",
+          "threshold.recall": "no positives in partition",
+          "threshold.f1": "precision or recall undefined (or both zero) at this threshold",
+          "threshold.false_positive_burden": "no true positives at this threshold; false positives per true positive is unbounded"
+        }
+      },
+      "threshold": {
+        "value": 2.0854728752008075e-07,
+        "strategy": "alert_budget",
+        "params": {
+          "rate": 0.01
+        },
+        "selected_on": "validation",
+        "objective": "val_alert_rate",
+        "objective_value": 1.0,
+        "reason": null,
+        "n_val_positives": 0
+      },
+      "calibration": {
+        "method": "none",
+        "fitted": true,
+        "produces_probabilities": true,
+        "diagnostics": {}
+      },
+      "leakage": [
+        {
+          "check": "feature_scope",
+          "severity": "info",
+          "message": "features were computed only from transactions before 2013-07-05 00:00:00"
+        },
+        {
+          "check": "constant_or_perfect_features",
+          "severity": "warning",
+          "message": "5 feature column(s) separate the training classes perfectly; on a rare-positive dataset that is more often a leak than a discovery",
+          "detail": {
+            "columns": [
+              "aml_core_v1::txn_out",
+              "aml_core_v1::txn_per_active_day",
+              "aml_core_v1::fan_out",
+              "aml_core_v1::same_day_in_out",
+              "aml_core_v1::counterparty_count"
+            ],
+            "n_train_positive": 4
+          }
+        }
+      ],
+      "fit_report": {
+        "early_stopping_note": "early stopping disabled: only 4 training positives, an internal validation split would likely contain none",
+        "status": "fitted",
+        "backend": "sklearn_hist",
+        "backend_version": "1.9.0",
+        "n_train": 2138,
+        "n_train_positive": 4,
+        "n_features": 29
+      },
+      "runtime_seconds": {
+        "features": 4.116541500086896,
+        "fit": 5.809791099978611,
+        "score": 0.050279099959880114
+      },
+      "checkpoint": null,
+      "notes": []
+    },
+    {
+      "fold_idx": 2,
+      "counts": {
+        "n_train": 2577,
+        "n_train_pos": 4,
+        "n_val": 432,
+        "n_val_pos": 0,
+        "n_test": 431,
+        "n_test_pos": 0
+      },
+      "validation_metrics": {
+        "n": 432,
+        "n_positive": 0,
+        "n_negative": 432,
+        "prevalence": 0.0,
+        "average_precision": null,
+        "ap_lift": null,
+        "roc_auc": null,
+        "precision_at_k": {
+          "10": 0.0,
+          "20": 0.0,
+          "50": 0.0,
+          "100": 0.0
+        },
+        "recall_at_k": {
+          "10": null,
+          "20": null,
+          "50": null,
+          "100": null
+        },
+        "precision_at_rate": {
+          "0.001": 0.0,
+          "0.005": 0.0,
+          "0.01": 0.0,
+          "0.05": 0.0
+        },
+        "recall_at_rate": {
+          "0.001": null,
+          "0.005": null,
+          "0.01": null,
+          "0.05": null
+        },
+        "at_threshold": {
+          "threshold": 1.4956793903764362e-07,
+          "precision": 0.0,
+          "recall": null,
+          "f1": null,
+          "confusion": [
+            [
+              0,
+              432
+            ],
+            [
+              0,
+              0
+            ]
+          ],
+          "alerts": 432,
+          "alert_rate": 1.0,
+          "false_positive_burden": null
+        },
+        "calibration": {
+          "brier": 2.237056838742014e-14,
+          "expected_calibration_error": 1.4956793903764362e-07,
+          "bins": [
+            {
+              "lower": 0.0,
+              "upper": 0.1,
+              "count": 432,
+              "mean_predicted": 1.4956793903764362e-07,
+              "observed_rate": 0.0
+            },
+            {
+              "lower": 0.1,
+              "upper": 0.2,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            },
+            {
+              "lower": 0.2,
+              "upper": 0.30000000000000004,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            },
+            {
+              "lower": 0.30000000000000004,
+              "upper": 0.4,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            },
+            {
+              "lower": 0.4,
+              "upper": 0.5,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            },
+            {
+              "lower": 0.5,
+              "upper": 0.6000000000000001,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            },
+            {
+              "lower": 0.6000000000000001,
+              "upper": 0.7000000000000001,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            },
+            {
+              "lower": 0.7000000000000001,
+              "upper": 0.8,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            },
+            {
+              "lower": 0.8,
+              "upper": 0.9,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            },
+            {
+              "lower": 0.9,
+              "upper": 1.0,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            }
+          ]
+        },
+        "undefined": {
+          "average_precision": "no positives in partition",
+          "roc_auc": "no positives in partition",
+          "ap_lift": "no positives in partition",
+          "recall_at_10": "no positives in partition",
+          "recall_at_20": "no positives in partition",
+          "recall_at_50": "no positives in partition",
+          "recall_at_100": "no positives in partition",
+          "threshold.recall": "no positives in partition",
+          "threshold.f1": "precision or recall undefined (or both zero) at this threshold",
+          "threshold.false_positive_burden": "no true positives at this threshold; false positives per true positive is unbounded"
+        }
+      },
+      "test_metrics": {
+        "n": 431,
+        "n_positive": 0,
+        "n_negative": 431,
+        "prevalence": 0.0,
+        "average_precision": null,
+        "ap_lift": null,
+        "roc_auc": null,
+        "precision_at_k": {
+          "10": 0.0,
+          "20": 0.0,
+          "50": 0.0,
+          "100": 0.0
+        },
+        "recall_at_k": {
+          "10": null,
+          "20": null,
+          "50": null,
+          "100": null
+        },
+        "precision_at_rate": {
+          "0.001": 0.0,
+          "0.005": 0.0,
+          "0.01": 0.0,
+          "0.05": 0.0
+        },
+        "recall_at_rate": {
+          "0.001": null,
+          "0.005": null,
+          "0.01": null,
+          "0.05": null
+        },
+        "at_threshold": {
+          "threshold": 1.4956793903764362e-07,
+          "precision": 0.0,
+          "recall": null,
+          "f1": null,
+          "confusion": [
+            [
+              0,
+              431
+            ],
+            [
+              0,
+              0
+            ]
+          ],
+          "alerts": 431,
+          "alert_rate": 1.0,
+          "false_positive_burden": null
+        },
+        "calibration": {
+          "brier": 2.237056838742014e-14,
+          "expected_calibration_error": 1.4956793903764368e-07,
+          "bins": [
+            {
+              "lower": 0.0,
+              "upper": 0.1,
+              "count": 431,
+              "mean_predicted": 1.4956793903764368e-07,
+              "observed_rate": 0.0
+            },
+            {
+              "lower": 0.1,
+              "upper": 0.2,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            },
+            {
+              "lower": 0.2,
+              "upper": 0.30000000000000004,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            },
+            {
+              "lower": 0.30000000000000004,
+              "upper": 0.4,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            },
+            {
+              "lower": 0.4,
+              "upper": 0.5,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            },
+            {
+              "lower": 0.5,
+              "upper": 0.6000000000000001,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            },
+            {
+              "lower": 0.6000000000000001,
+              "upper": 0.7000000000000001,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            },
+            {
+              "lower": 0.7000000000000001,
+              "upper": 0.8,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            },
+            {
+              "lower": 0.8,
+              "upper": 0.9,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            },
+            {
+              "lower": 0.9,
+              "upper": 1.0,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            }
+          ]
+        },
+        "undefined": {
+          "average_precision": "no positives in partition",
+          "roc_auc": "no positives in partition",
+          "ap_lift": "no positives in partition",
+          "recall_at_10": "no positives in partition",
+          "recall_at_20": "no positives in partition",
+          "recall_at_50": "no positives in partition",
+          "recall_at_100": "no positives in partition",
+          "threshold.recall": "no positives in partition",
+          "threshold.f1": "precision or recall undefined (or both zero) at this threshold",
+          "threshold.false_positive_burden": "no true positives at this threshold; false positives per true positive is unbounded"
+        }
+      },
+      "threshold": {
+        "value": 1.4956793903764362e-07,
+        "strategy": "alert_budget",
+        "params": {
+          "rate": 0.01
+        },
+        "selected_on": "validation",
+        "objective": "val_alert_rate",
+        "objective_value": 1.0,
+        "reason": null,
+        "n_val_positives": 0
+      },
+      "calibration": {
+        "method": "none",
+        "fitted": true,
+        "produces_probabilities": true,
+        "diagnostics": {}
+      },
+      "leakage": [
+        {
+          "check": "feature_scope",
+          "severity": "info",
+          "message": "features were computed only from transactions before 2013-10-18 00:00:00"
+        },
+        {
+          "check": "constant_or_perfect_features",
+          "severity": "warning",
+          "message": "8 feature column(s) separate the training classes perfectly; on a rare-positive dataset that is more often a leak than a discovery",
+          "detail": {
+            "columns": [
+              "aml_core_v1::txn_out",
+              "aml_core_v1::txn_total",
+              "aml_core_v1::amount_in_sum",
+              "aml_core_v1::txn_per_active_day",
+              "aml_core_v1::fan_out",
+              "aml_core_v1::same_day_in_out",
+              "aml_core_v1::degree_total",
+              "aml_core_v1::counterparty_count"
+            ],
+            "n_train_positive": 4
+          }
+        }
+      ],
+      "fit_report": {
+        "early_stopping_note": "early stopping disabled: only 4 training positives, an internal validation split would likely contain none",
+        "status": "fitted",
+        "backend": "sklearn_hist",
+        "backend_version": "1.9.0",
+        "n_train": 2577,
+        "n_train_positive": 4,
+        "n_features": 29
+      },
+      "runtime_seconds": {
+        "features": 3.911096299998462,
+        "fit": 3.8571402999805287,
+        "score": 0.05830139992758632
+      },
+      "checkpoint": null,
+      "notes": []
+    }
+  ],
+  "aggregate": {
+    "n": {
+      "mean": 434.0,
+      "std": 3.559026084010437,
+      "n_defined": 3,
+      "n_folds": 3
+    },
+    "n_positive": {
+      "mean": 0.0,
+      "std": 0.0,
+      "n_defined": 3,
+      "n_folds": 3
+    },
+    "n_negative": {
+      "mean": 434.0,
+      "std": 3.559026084010437,
+      "n_defined": 3,
+      "n_folds": 3
+    },
+    "prevalence": {
+      "mean": 0.0,
+      "std": 0.0,
+      "n_defined": 3,
+      "n_folds": 3
+    },
+    "average_precision": {
+      "mean": null,
+      "std": null,
+      "n_defined": 0,
+      "n_folds": 3
+    },
+    "ap_lift": {
+      "mean": null,
+      "std": null,
+      "n_defined": 0,
+      "n_folds": 3
+    },
+    "roc_auc": {
+      "mean": null,
+      "std": null,
+      "n_defined": 0,
+      "n_folds": 3
+    },
+    "precision_at_k.10": {
+      "mean": 0.0,
+      "std": 0.0,
+      "n_defined": 3,
+      "n_folds": 3
+    },
+    "precision_at_k.20": {
+      "mean": 0.0,
+      "std": 0.0,
+      "n_defined": 3,
+      "n_folds": 3
+    },
+    "precision_at_k.50": {
+      "mean": 0.0,
+      "std": 0.0,
+      "n_defined": 3,
+      "n_folds": 3
+    },
+    "precision_at_k.100": {
+      "mean": 0.0,
+      "std": 0.0,
+      "n_defined": 3,
+      "n_folds": 3
+    },
+    "recall_at_k.10": {
+      "mean": null,
+      "std": null,
+      "n_defined": 0,
+      "n_folds": 3
+    },
+    "recall_at_k.20": {
+      "mean": null,
+      "std": null,
+      "n_defined": 0,
+      "n_folds": 3
+    },
+    "recall_at_k.50": {
+      "mean": null,
+      "std": null,
+      "n_defined": 0,
+      "n_folds": 3
+    },
+    "recall_at_k.100": {
+      "mean": null,
+      "std": null,
+      "n_defined": 0,
+      "n_folds": 3
+    },
+    "precision_at_rate.0.001": {
+      "mean": 0.0,
+      "std": 0.0,
+      "n_defined": 3,
+      "n_folds": 3
+    },
+    "precision_at_rate.0.005": {
+      "mean": 0.0,
+      "std": 0.0,
+      "n_defined": 3,
+      "n_folds": 3
+    },
+    "precision_at_rate.0.01": {
+      "mean": 0.0,
+      "std": 0.0,
+      "n_defined": 3,
+      "n_folds": 3
+    },
+    "precision_at_rate.0.05": {
+      "mean": 0.0,
+      "std": 0.0,
+      "n_defined": 3,
+      "n_folds": 3
+    },
+    "recall_at_rate.0.001": {
+      "mean": null,
+      "std": null,
+      "n_defined": 0,
+      "n_folds": 3
+    },
+    "recall_at_rate.0.005": {
+      "mean": null,
+      "std": null,
+      "n_defined": 0,
+      "n_folds": 3
+    },
+    "recall_at_rate.0.01": {
+      "mean": null,
+      "std": null,
+      "n_defined": 0,
+      "n_folds": 3
+    },
+    "recall_at_rate.0.05": {
+      "mean": null,
+      "std": null,
+      "n_defined": 0,
+      "n_folds": 3
+    },
+    "at_threshold.threshold": {
+      "mean": 1.6930286778368405e-07,
+      "std": 2.7750147938107572e-08,
+      "n_defined": 3,
+      "n_folds": 3
+    },
+    "at_threshold.precision": {
+      "mean": 0.0,
+      "std": 0.0,
+      "n_defined": 3,
+      "n_folds": 3
+    },
+    "at_threshold.recall": {
+      "mean": null,
+      "std": null,
+      "n_defined": 0,
+      "n_folds": 3
+    },
+    "at_threshold.f1": {
+      "mean": null,
+      "std": null,
+      "n_defined": 0,
+      "n_folds": 3
+    },
+    "at_threshold.alerts": {
+      "mean": 434.0,
+      "std": 3.559026084010437,
+      "n_defined": 3,
+      "n_folds": 3
+    },
+    "at_threshold.alert_rate": {
+      "mean": 1.0,
+      "std": 0.0,
+      "n_defined": 3,
+      "n_folds": 3
+    },
+    "at_threshold.false_positive_burden": {
+      "mean": null,
+      "std": null,
+      "n_defined": 0,
+      "n_folds": 3
+    },
+    "calibration.brier": {
+      "mean": 2.943353175328322e-14,
+      "std": 9.940856002416988e-15,
+      "n_defined": 3,
+      "n_folds": 3
+    },
+    "calibration.expected_calibration_error": {
+      "mean": 1.6930286778368405e-07,
+      "std": 2.7750147938107535e-08,
+      "n_defined": 3,
+      "n_folds": 3
+    }
+  },
+  "validation_aggregate": {
+    "n": {
+      "mean": 431.3333333333333,
+      "std": 6.548960901462833,
+      "n_defined": 3,
+      "n_folds": 3
+    },
+    "n_positive": {
+      "mean": 0.6666666666666666,
+      "std": 0.9428090415820634,
+      "n_defined": 3,
+      "n_folds": 3
+    },
+    "n_negative": {
+      "mean": 430.6666666666667,
+      "std": 7.408703590297622,
+      "n_defined": 3,
+      "n_folds": 3
+    },
+    "prevalence": {
+      "mean": 0.0015760441292356185,
+      "std": 0.002228862982463507,
+      "n_defined": 3,
+      "n_folds": 3
+    },
+    "average_precision": {
+      "mean": 0.004728132387706856,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 3
+    },
+    "ap_lift": {
+      "mean": 1.0,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 3
+    },
+    "roc_auc": {
+      "mean": 0.5,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 3
+    },
+    "precision_at_k.10": {
+      "mean": 0.0,
+      "std": 0.0,
+      "n_defined": 3,
+      "n_folds": 3
+    },
+    "precision_at_k.20": {
+      "mean": 0.0,
+      "std": 0.0,
+      "n_defined": 3,
+      "n_folds": 3
+    },
+    "precision_at_k.50": {
+      "mean": 0.0,
+      "std": 0.0,
+      "n_defined": 3,
+      "n_folds": 3
+    },
+    "precision_at_k.100": {
+      "mean": 0.0,
+      "std": 0.0,
+      "n_defined": 3,
+      "n_folds": 3
+    },
+    "recall_at_k.10": {
+      "mean": 0.0,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 3
+    },
+    "recall_at_k.20": {
+      "mean": 0.0,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 3
+    },
+    "recall_at_k.50": {
+      "mean": 0.0,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 3
+    },
+    "recall_at_k.100": {
+      "mean": 0.0,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 3
+    },
+    "precision_at_rate.0.001": {
+      "mean": 0.0,
+      "std": 0.0,
+      "n_defined": 3,
+      "n_folds": 3
+    },
+    "precision_at_rate.0.005": {
+      "mean": 0.0,
+      "std": 0.0,
+      "n_defined": 3,
+      "n_folds": 3
+    },
+    "precision_at_rate.0.01": {
+      "mean": 0.0,
+      "std": 0.0,
+      "n_defined": 3,
+      "n_folds": 3
+    },
+    "precision_at_rate.0.05": {
+      "mean": 0.0,
+      "std": 0.0,
+      "n_defined": 3,
+      "n_folds": 3
+    },
+    "recall_at_rate.0.001": {
+      "mean": 0.0,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 3
+    },
+    "recall_at_rate.0.005": {
+      "mean": 0.0,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 3
+    },
+    "recall_at_rate.0.01": {
+      "mean": 0.0,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 3
+    },
+    "recall_at_rate.0.05": {
+      "mean": 0.0,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 3
+    },
+    "at_threshold.threshold": {
+      "mean": 1.6930286778368405e-07,
+      "std": 2.7750147938107572e-08,
+      "n_defined": 3,
+      "n_folds": 3
+    },
+    "at_threshold.precision": {
+      "mean": 0.0015760441292356185,
+      "std": 0.002228862982463507,
+      "n_defined": 3,
+      "n_folds": 3
+    },
+    "at_threshold.recall": {
+      "mean": 1.0,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 3
+    },
+    "at_threshold.f1": {
+      "mean": 0.009411764705882352,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 3
+    },
+    "at_threshold.alerts": {
+      "mean": 431.3333333333333,
+      "std": 6.548960901462833,
+      "n_defined": 3,
+      "n_folds": 3
+    },
+    "at_threshold.alert_rate": {
+      "mean": 1.0,
+      "std": 0.0,
+      "n_defined": 3,
+      "n_folds": 3
+    },
+    "at_threshold.false_positive_burden": {
+      "mean": 210.5,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 3
+    },
+    "calibration.brier": {
+      "mean": 0.0015760436571031079,
+      "std": 0.0022288623147207346,
+      "n_defined": 3,
+      "n_folds": 3
+    },
+    "calibration.expected_calibration_error": {
+      "mean": 0.0015761135698522065,
+      "std": 0.0022287079607501863,
+      "n_defined": 3,
+      "n_folds": 3
+    }
+  },
+  "environment": {
+    "python": "3.11.8",
+    "platform": "Windows-10-10.0.26200-SP0",
+    "processor": "Intel64 Family 6 Model 190 Stepping 0, GenuineIntel",
+    "packages": {
+      "numpy": "2.3.5",
+      "pandas": "3.0.5",
+      "networkx": "3.6.1",
+      "sklearn": "1.9.0",
+      "torch": "2.13.0+cpu",
+      "torch_geometric": "2.8.0.post1",
+      "xgboost": null,
+      "lightgbm": null
+    },
+    "seeding": {
+      "seed": 42,
+      "python_random": true,
+      "numpy": true,
+      "torch": true,
+      "torch_deterministic_algorithms": false
+    }
+  },
+  "determinism": {
+    "seeded_sources": [
+      "python_random",
+      "numpy",
+      "torch (if installed)"
+    ],
+    "not_controlled": [
+      "floating-point reduction order across CPU threads",
+      "BLAS / MKL version differences",
+      "GPU kernel selection when CUDA is used"
+    ],
+    "torch_version": "2.13.0+cpu",
+    "torch_num_threads": 4,
+    "cuda_available": false
+  },
+  "notes": [
+    "expanding window over first activity date; cuts at quantiles [0.5, 0.625, 0.75, 0.875, 1.0].",
+    "fold 0: test partition contains no positives; label-dependent metrics are undefined there.",
+    "fold 1: validation partition contains no positives; label-dependent metrics are undefined there.",
+    "fold 1: test partition contains no positives; label-dependent metrics are undefined there.",
+    "fold 2: validation partition contains no positives; label-dependent metrics are undefined there.",
+    "fold 2: test partition contains no positives; label-dependent metrics are undefined there."
+  ],
+  "started_at": "2026-09-06T07:16:42+00:00",
+  "finished_at": "2026-09-06T07:17:05+00:00",
+  "total_runtime_seconds": 23.161611299961805,
+  "git_commit": "fb09935837ba46e98fe19650c6c49564a884ac2f"
+}

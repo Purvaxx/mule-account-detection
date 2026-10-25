@@ -1,0 +1,968 @@
+{
+  "schema_version": "1.0",
+  "experiment": {
+    "name": "ibm_tf_ablation_d_txn_network",
+    "description": "Time-forward ablation D: transaction + network + cycle.",
+    "tags": [
+      "ablation",
+      "time-forward",
+      "ibm",
+      "ablation-d"
+    ],
+    "seed": 42,
+    "dataset": {
+      "name": "ibm_aml_hi_small",
+      "version": "size475664283-c9a6aae1",
+      "provenance": "file:C:\\Users\\bhara\\Downloads\\Laundering Data\\HI-Small_Trans.csv",
+      "label_definition": "positive = the (bank, account) entity is the payer or the payee of at least one transaction whose published 'Is Laundering' flag is 1. IBM labels transactions; this entity label is derived, and it makes a launderer's counterparty positive as well",
+      "synthetic": true,
+      "notes": [
+        "SYNTHETIC: IBM AMLworld virtual-world simulator (Altman et al., NeurIPS 2023 Datasets and Benchmarks). Not evidence about real-world detection.",
+        "Entity is the (bank, account) pair; account strings are not globally unique (8 collisions across banks).",
+        "Amounts are native across 15 currencies (37% USD) and are not FX-converted; the amount column is 'amount', not 'amount_usd'.",
+        "The typology names live in the separate HI-Small_Patterns.txt and are deliberately not loaded: their group headers state the generating mechanism and its degree/hop parameter.",
+        "Version is derived from file size and mtime, not a content hash; the content hash is in data/manifests/ibm_aml_hi_small.json."
+      ]
+    },
+    "features": {
+      "sets": [
+        "aml_txn_v1",
+        "aml_network_v1",
+        "aml_cycle_v1"
+      ],
+      "scope": "train_window"
+    },
+    "split": {
+      "strategy": "time_forward_holdout",
+      "params": {
+        "train_quantile": 0.6,
+        "val_quantile": 0.8,
+        "time_reference": "last"
+      },
+      "seed": 42
+    },
+    "model": {
+      "family": "gradient_boosting",
+      "params": {
+        "backend": "auto",
+        "n_estimators": 300,
+        "learning_rate": 0.05,
+        "max_depth": 6
+      },
+      "imbalance": "class_weight"
+    },
+    "threshold": {
+      "strategy": "alert_budget",
+      "params": {
+        "rate": 0.01
+      }
+    },
+    "calibration": {
+      "method": "platt",
+      "min_val_positives": 20
+    },
+    "evaluation": {
+      "k_values": [
+        100,
+        500,
+        1000,
+        5000
+      ],
+      "alert_rates": [
+        0.001,
+        0.005,
+        0.01,
+        0.05
+      ],
+      "calibration_bins": 10
+    }
+  },
+  "dataset": {
+    "spec": {
+      "name": "ibm_aml_hi_small",
+      "version": "size475664283-c9a6aae1",
+      "provenance": "file:C:\\Users\\bhara\\Downloads\\Laundering Data\\HI-Small_Trans.csv",
+      "label_definition": "positive = the (bank, account) entity is the payer or the payee of at least one transaction whose published 'Is Laundering' flag is 1. IBM labels transactions; this entity label is derived, and it makes a launderer's counterparty positive as well",
+      "synthetic": true,
+      "notes": [
+        "SYNTHETIC: IBM AMLworld virtual-world simulator (Altman et al., NeurIPS 2023 Datasets and Benchmarks). Not evidence about real-world detection.",
+        "Entity is the (bank, account) pair; account strings are not globally unique (8 collisions across banks).",
+        "Amounts are native across 15 currencies (37% USD) and are not FX-converted; the amount column is 'amount', not 'amount_usd'.",
+        "The typology names live in the separate HI-Small_Patterns.txt and are deliberately not loaded: their group headers state the generating mechanism and its degree/hop parameter.",
+        "Version is derived from file size and mtime, not a content hash; the content hash is in data/manifests/ibm_aml_hi_small.json."
+      ]
+    },
+    "n_entities": 515088,
+    "n_positive": 6357,
+    "n_negative": 508731,
+    "prevalence": 0.01234158046780356,
+    "n_edges": 5078345,
+    "has_graph": false,
+    "has_time": true
+  },
+  "features": {
+    "scope": "train_window",
+    "as_of": "2022-09-09 18:43:00",
+    "n_columns": 34,
+    "sets": [
+      {
+        "name": "aml_txn_v1",
+        "version": "1.0",
+        "family": "transaction",
+        "time_scopable": true,
+        "n_columns": 17,
+        "columns": [
+          "aml_txn_v1::txn_in",
+          "aml_txn_v1::txn_out",
+          "aml_txn_v1::txn_total",
+          "aml_txn_v1::in_out_txn_ratio",
+          "aml_txn_v1::amount_in_sum",
+          "aml_txn_v1::amount_out_sum",
+          "aml_txn_v1::amount_total",
+          "aml_txn_v1::amount_in_mean",
+          "aml_txn_v1::amount_out_mean",
+          "aml_txn_v1::amount_mean",
+          "aml_txn_v1::amount_max",
+          "aml_txn_v1::amount_min",
+          "aml_txn_v1::amount_std",
+          "aml_txn_v1::amount_cv",
+          "aml_txn_v1::amount_log_mean",
+          "aml_txn_v1::amount_top1_share",
+          "aml_txn_v1::round_amount_share"
+        ]
+      },
+      {
+        "name": "aml_network_v1",
+        "version": "1.0",
+        "family": "network",
+        "time_scopable": true,
+        "n_columns": 11,
+        "columns": [
+          "aml_network_v1::counterparty_count",
+          "aml_network_v1::counterparty_diversity",
+          "aml_network_v1::top_counterparty_share",
+          "aml_network_v1::repeat_pair_mean",
+          "aml_network_v1::reciprocal_partners",
+          "aml_network_v1::reciprocal_ratio",
+          "aml_network_v1::component_size",
+          "aml_network_v1::component_edge_density",
+          "aml_network_v1::neighbour_txn_mean",
+          "aml_network_v1::neighbour_txn_max",
+          "aml_network_v1::neighbour_counterparty_mean"
+        ]
+      },
+      {
+        "name": "aml_cycle_v1",
+        "version": "1.0",
+        "family": "structure",
+        "time_scopable": true,
+        "n_columns": 6,
+        "columns": [
+          "aml_cycle_v1::two_path_through",
+          "aml_cycle_v1::cycle3_count",
+          "aml_cycle_v1::cycle4_count",
+          "aml_cycle_v1::layering_events",
+          "aml_cycle_v1::layering_share",
+          "aml_cycle_v1::layering_amount_match_share"
+        ]
+      }
+    ],
+    "notes": [
+      "1078104 NaN cells remained after computation and were left in place; candidates are responsible for imputing them inside their train-fitted preprocessing."
+    ]
+  },
+  "split": {
+    "strategy": "time_forward_holdout",
+    "params": {
+      "train_quantile": 0.6,
+      "val_quantile": 0.8,
+      "time_reference": "last"
+    },
+    "seed": 42,
+    "regime": "time-forward",
+    "entity_disjoint": true,
+    "time_aware": true,
+    "graph_leakage_controlled": false,
+    "n_folds": 1,
+    "notes": [
+      "entities placed by last activity date; train < 2022-09-09 18:43:00, val < 2022-09-10 06:27:00, test >= 2022-09-10 06:27:00."
+    ],
+    "folds": [
+      {
+        "fold_idx": 0,
+        "n_train": 309003,
+        "n_train_pos": 2417,
+        "n_val": 102984,
+        "n_val_pos": 1217,
+        "n_test": 103101,
+        "n_test_pos": 2723,
+        "train_window_end": "2022-09-09 18:43:00",
+        "val_window_end": "2022-09-10 06:27:00"
+      }
+    ]
+  },
+  "leakage": [
+    {
+      "check": "evaluation_regime",
+      "severity": "info",
+      "message": "split 'time_forward_holdout' is time-forward: entity_disjoint=True, time_aware=True, graph_leakage_controlled=False"
+    },
+    {
+      "check": "feature_scope",
+      "severity": "info",
+      "message": "features were computed only from transactions before 2022-09-09 18:43:00",
+      "fold_idx": 0
+    }
+  ],
+  "folds": [
+    {
+      "fold_idx": 0,
+      "counts": {
+        "n_train": 309003,
+        "n_train_pos": 2417,
+        "n_val": 102984,
+        "n_val_pos": 1217,
+        "n_test": 103101,
+        "n_test_pos": 2723
+      },
+      "validation_metrics": {
+        "n": 102984,
+        "n_positive": 1217,
+        "n_negative": 101767,
+        "prevalence": 0.0118173696884953,
+        "average_precision": 0.05324148880820009,
+        "ap_lift": 4.505358655237204,
+        "roc_auc": 0.7515763387806804,
+        "precision_at_k": {
+          "100": 0.21,
+          "500": 0.118,
+          "1000": 0.106,
+          "5000": 0.0638
+        },
+        "recall_at_k": {
+          "100": 0.01725554642563681,
+          "500": 0.04847986852917009,
+          "1000": 0.08709942481511915,
+          "5000": 0.2621199671322925
+        },
+        "precision_at_rate": {
+          "0.001": 0.20388349514563106,
+          "0.005": 0.1145631067961165,
+          "0.01": 0.10388349514563107,
+          "0.05": 0.06310679611650485
+        },
+        "recall_at_rate": {
+          "0.001": 0.01725554642563681,
+          "0.005": 0.04847986852917009,
+          "0.01": 0.08792111750205424,
+          "0.05": 0.26705012325390304
+        },
+        "at_threshold": {
+          "threshold": 0.04272496568030931,
+          "precision": 0.10388349514563107,
+          "recall": 0.08792111750205424,
+          "f1": 0.09523809523809525,
+          "confusion": [
+            [
+              100844,
+              923
+            ],
+            [
+              1110,
+              107
+            ]
+          ],
+          "alerts": 1030,
+          "alert_rate": 0.010001553639400295,
+          "false_positive_burden": 8.626168224299066
+        },
+        "calibration": {
+          "brier": 0.011523279447701871,
+          "expected_calibration_error": 4.6207793593947e-05,
+          "bins": [
+            {
+              "lower": 0.0,
+              "upper": 0.1,
+              "count": 102984,
+              "mean_predicted": 0.011863577482089247,
+              "observed_rate": 0.0118173696884953
+            },
+            {
+              "lower": 0.1,
+              "upper": 0.2,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            },
+            {
+              "lower": 0.2,
+              "upper": 0.30000000000000004,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            },
+            {
+              "lower": 0.30000000000000004,
+              "upper": 0.4,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            },
+            {
+              "lower": 0.4,
+              "upper": 0.5,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            },
+            {
+              "lower": 0.5,
+              "upper": 0.6000000000000001,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            },
+            {
+              "lower": 0.6000000000000001,
+              "upper": 0.7000000000000001,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            },
+            {
+              "lower": 0.7000000000000001,
+              "upper": 0.8,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            },
+            {
+              "lower": 0.8,
+              "upper": 0.9,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            },
+            {
+              "lower": 0.9,
+              "upper": 1.0,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            }
+          ]
+        },
+        "undefined": {}
+      },
+      "test_metrics": {
+        "n": 103101,
+        "n_positive": 2723,
+        "n_negative": 100378,
+        "prevalence": 0.026410995043695016,
+        "average_precision": 0.061814817303934434,
+        "ap_lift": 2.340495585329763,
+        "roc_auc": 0.622829935308727,
+        "precision_at_k": {
+          "100": 0.25,
+          "500": 0.186,
+          "1000": 0.162,
+          "5000": 0.0878
+        },
+        "recall_at_k": {
+          "100": 0.00918105031215571,
+          "500": 0.034153507161219246,
+          "1000": 0.059493206022769,
+          "5000": 0.16121924348145428
+        },
+        "precision_at_rate": {
+          "0.001": 0.25,
+          "0.005": 0.18604651162790697,
+          "0.01": 0.1618217054263566,
+          "0.05": 0.0865011636927851
+        },
+        "recall_at_rate": {
+          "0.001": 0.009548292324641938,
+          "0.005": 0.03525523319867793,
+          "0.01": 0.06132941608520015,
+          "0.05": 0.16378993756885787
+        },
+        "at_threshold": {
+          "threshold": 0.04272496568030931,
+          "precision": 0.18029739776951673,
+          "recall": 0.035622475211164156,
+          "f1": 0.05949095369518552,
+          "confusion": [
+            [
+              99937,
+              441
+            ],
+            [
+              2626,
+              97
+            ]
+          ],
+          "alerts": 538,
+          "alert_rate": 0.005218184110726375,
+          "false_positive_burden": 4.546391752577319
+        },
+        "calibration": {
+          "brier": 0.025737047341084066,
+          "expected_calibration_error": 0.014786616646887393,
+          "bins": [
+            {
+              "lower": 0.0,
+              "upper": 0.1,
+              "count": 103101,
+              "mean_predicted": 0.011624378396807623,
+              "observed_rate": 0.026410995043695016
+            },
+            {
+              "lower": 0.1,
+              "upper": 0.2,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            },
+            {
+              "lower": 0.2,
+              "upper": 0.30000000000000004,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            },
+            {
+              "lower": 0.30000000000000004,
+              "upper": 0.4,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            },
+            {
+              "lower": 0.4,
+              "upper": 0.5,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            },
+            {
+              "lower": 0.5,
+              "upper": 0.6000000000000001,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            },
+            {
+              "lower": 0.6000000000000001,
+              "upper": 0.7000000000000001,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            },
+            {
+              "lower": 0.7000000000000001,
+              "upper": 0.8,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            },
+            {
+              "lower": 0.8,
+              "upper": 0.9,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            },
+            {
+              "lower": 0.9,
+              "upper": 1.0,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            }
+          ]
+        },
+        "undefined": {}
+      },
+      "threshold": {
+        "value": 0.04272496568030931,
+        "strategy": "alert_budget",
+        "params": {
+          "rate": 0.01
+        },
+        "selected_on": "validation",
+        "objective": "val_alert_rate",
+        "objective_value": 0.010001553639400295,
+        "reason": null,
+        "n_val_positives": 1217
+      },
+      "calibration": {
+        "method": "platt",
+        "fitted": true,
+        "produces_probabilities": true,
+        "diagnostics": {
+          "n_fit": 102984,
+          "n_fit_positive": 1217,
+          "coef": 3.9237521120786907,
+          "intercept": -6.617987286725377
+        }
+      },
+      "leakage": [
+        {
+          "check": "feature_scope",
+          "severity": "info",
+          "message": "features were computed only from transactions before 2022-09-09 18:43:00"
+        }
+      ],
+      "fit_report": {
+        "status": "fitted",
+        "backend": "sklearn_hist",
+        "backend_version": "1.9.0",
+        "n_train": 309003,
+        "n_train_positive": 2417,
+        "n_features": 34
+      },
+      "runtime_seconds": {
+        "features": 50.48497949994635,
+        "fit": 15.054339300026186,
+        "score": 2.961210999987088
+      },
+      "checkpoint": null,
+      "notes": [
+        "platt calibration fitted on 102984 validation entities (1217 positive)"
+      ]
+    }
+  ],
+  "aggregate": {
+    "n": {
+      "mean": 103101.0,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 1
+    },
+    "n_positive": {
+      "mean": 2723.0,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 1
+    },
+    "n_negative": {
+      "mean": 100378.0,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 1
+    },
+    "prevalence": {
+      "mean": 0.026410995043695016,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 1
+    },
+    "average_precision": {
+      "mean": 0.061814817303934434,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 1
+    },
+    "ap_lift": {
+      "mean": 2.340495585329763,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 1
+    },
+    "roc_auc": {
+      "mean": 0.622829935308727,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 1
+    },
+    "precision_at_k.100": {
+      "mean": 0.25,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 1
+    },
+    "precision_at_k.500": {
+      "mean": 0.186,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 1
+    },
+    "precision_at_k.1000": {
+      "mean": 0.162,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 1
+    },
+    "precision_at_k.5000": {
+      "mean": 0.0878,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 1
+    },
+    "recall_at_k.100": {
+      "mean": 0.00918105031215571,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 1
+    },
+    "recall_at_k.500": {
+      "mean": 0.034153507161219246,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 1
+    },
+    "recall_at_k.1000": {
+      "mean": 0.059493206022769,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 1
+    },
+    "recall_at_k.5000": {
+      "mean": 0.16121924348145428,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 1
+    },
+    "precision_at_rate.0.001": {
+      "mean": 0.25,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 1
+    },
+    "precision_at_rate.0.005": {
+      "mean": 0.18604651162790697,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 1
+    },
+    "precision_at_rate.0.01": {
+      "mean": 0.1618217054263566,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 1
+    },
+    "precision_at_rate.0.05": {
+      "mean": 0.0865011636927851,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 1
+    },
+    "recall_at_rate.0.001": {
+      "mean": 0.009548292324641938,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 1
+    },
+    "recall_at_rate.0.005": {
+      "mean": 0.03525523319867793,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 1
+    },
+    "recall_at_rate.0.01": {
+      "mean": 0.06132941608520015,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 1
+    },
+    "recall_at_rate.0.05": {
+      "mean": 0.16378993756885787,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 1
+    },
+    "at_threshold.threshold": {
+      "mean": 0.04272496568030931,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 1
+    },
+    "at_threshold.precision": {
+      "mean": 0.18029739776951673,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 1
+    },
+    "at_threshold.recall": {
+      "mean": 0.035622475211164156,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 1
+    },
+    "at_threshold.f1": {
+      "mean": 0.05949095369518552,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 1
+    },
+    "at_threshold.alerts": {
+      "mean": 538.0,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 1
+    },
+    "at_threshold.alert_rate": {
+      "mean": 0.005218184110726375,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 1
+    },
+    "at_threshold.false_positive_burden": {
+      "mean": 4.546391752577319,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 1
+    },
+    "calibration.brier": {
+      "mean": 0.025737047341084066,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 1
+    },
+    "calibration.expected_calibration_error": {
+      "mean": 0.014786616646887393,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 1
+    }
+  },
+  "validation_aggregate": {
+    "n": {
+      "mean": 102984.0,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 1
+    },
+    "n_positive": {
+      "mean": 1217.0,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 1
+    },
+    "n_negative": {
+      "mean": 101767.0,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 1
+    },
+    "prevalence": {
+      "mean": 0.0118173696884953,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 1
+    },
+    "average_precision": {
+      "mean": 0.05324148880820009,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 1
+    },
+    "ap_lift": {
+      "mean": 4.505358655237204,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 1
+    },
+    "roc_auc": {
+      "mean": 0.7515763387806804,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 1
+    },
+    "precision_at_k.100": {
+      "mean": 0.21,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 1
+    },
+    "precision_at_k.500": {
+      "mean": 0.118,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 1
+    },
+    "precision_at_k.1000": {
+      "mean": 0.106,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 1
+    },
+    "precision_at_k.5000": {
+      "mean": 0.0638,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 1
+    },
+    "recall_at_k.100": {
+      "mean": 0.01725554642563681,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 1
+    },
+    "recall_at_k.500": {
+      "mean": 0.04847986852917009,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 1
+    },
+    "recall_at_k.1000": {
+      "mean": 0.08709942481511915,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 1
+    },
+    "recall_at_k.5000": {
+      "mean": 0.2621199671322925,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 1
+    },
+    "precision_at_rate.0.001": {
+      "mean": 0.20388349514563106,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 1
+    },
+    "precision_at_rate.0.005": {
+      "mean": 0.1145631067961165,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 1
+    },
+    "precision_at_rate.0.01": {
+      "mean": 0.10388349514563107,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 1
+    },
+    "precision_at_rate.0.05": {
+      "mean": 0.06310679611650485,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 1
+    },
+    "recall_at_rate.0.001": {
+      "mean": 0.01725554642563681,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 1
+    },
+    "recall_at_rate.0.005": {
+      "mean": 0.04847986852917009,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 1
+    },
+    "recall_at_rate.0.01": {
+      "mean": 0.08792111750205424,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 1
+    },
+    "recall_at_rate.0.05": {
+      "mean": 0.26705012325390304,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 1
+    },
+    "at_threshold.threshold": {
+      "mean": 0.04272496568030931,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 1
+    },
+    "at_threshold.precision": {
+      "mean": 0.10388349514563107,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 1
+    },
+    "at_threshold.recall": {
+      "mean": 0.08792111750205424,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 1
+    },
+    "at_threshold.f1": {
+      "mean": 0.09523809523809525,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 1
+    },
+    "at_threshold.alerts": {
+      "mean": 1030.0,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 1
+    },
+    "at_threshold.alert_rate": {
+      "mean": 0.010001553639400295,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 1
+    },
+    "at_threshold.false_positive_burden": {
+      "mean": 8.626168224299066,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 1
+    },
+    "calibration.brier": {
+      "mean": 0.011523279447701871,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 1
+    },
+    "calibration.expected_calibration_error": {
+      "mean": 4.6207793593947e-05,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 1
+    }
+  },
+  "environment": {
+    "python": "3.11.8",
+    "platform": "Windows-10-10.0.26200-SP0",
+    "processor": "Intel64 Family 6 Model 190 Stepping 0, GenuineIntel",
+    "packages": {
+      "numpy": "2.3.5",
+      "pandas": "3.0.5",
+      "networkx": "3.6.1",
+      "sklearn": "1.9.0",
+      "torch": "2.13.0+cpu",
+      "torch_geometric": "2.8.0.post1",
+      "xgboost": null,
+      "lightgbm": null
+    },
+    "seeding": {
+      "seed": 42,
+      "python_random": true,
+      "numpy": true,
+      "torch": true,
+      "torch_deterministic_algorithms": false
+    }
+  },
+  "determinism": {
+    "seeded_sources": [
+      "python_random",
+      "numpy",
+      "torch (if installed)"
+    ],
+    "not_controlled": [
+      "floating-point reduction order across CPU threads",
+      "BLAS / MKL version differences",
+      "GPU kernel selection when CUDA is used"
+    ],
+    "torch_version": "2.13.0+cpu",
+    "torch_num_threads": 4,
+    "cuda_available": false
+  },
+  "notes": [
+    "entities placed by last activity date; train < 2022-09-09 18:43:00, val < 2022-09-10 06:27:00, test >= 2022-09-10 06:27:00.",
+    "SYNTHETIC DATASET: these numbers describe generated data and are not evidence about real-world detection performance."
+  ],
+  "started_at": "2026-09-06T14:04:02+00:00",
+  "finished_at": "2026-09-06T14:05:31+00:00",
+  "total_runtime_seconds": 89.34406189993024,
+  "git_commit": "fb09935837ba46e98fe19650c6c49564a884ac2f"
+}

@@ -1,0 +1,71 @@
+{
+  "name": "ibm_tf_logistic_aml",
+  "description": "L2 logistic regression under the time-forward, training-window regime.",
+  "tags": [
+    "baseline",
+    "linear",
+    "time-forward",
+    "ibm"
+  ],
+  "seed": 42,
+  "dataset": {
+    "name": "ibm_aml_hi_small",
+    "version": "resolved-at-run-time",
+    "provenance": "file:HI-Small_Trans.csv",
+    "label_definition": "positive = the (bank, account) entity appears on at least one transaction flagged Is Laundering",
+    "synthetic": true
+  },
+  "features": {
+    "sets": [
+      "aml_txn_v1",
+      "aml_temporal_v1",
+      "aml_flow_v1",
+      "aml_context_v1",
+      "aml_network_v1",
+      "aml_cycle_v1"
+    ],
+    "scope": "train_window"
+  },
+  "split": {
+    "strategy": "time_forward_holdout",
+    "params": {
+      "train_quantile": 0.6,
+      "val_quantile": 0.8,
+      "time_reference": "last"
+    },
+    "seed": 42
+  },
+  "model": {
+    "family": "logistic_regression",
+    "params": {
+      "C": 1.0,
+      "max_iter": 2000
+    },
+    "imbalance": "class_weight"
+  },
+  "threshold": {
+    "strategy": "alert_budget",
+    "params": {
+      "rate": 0.01
+    }
+  },
+  "calibration": {
+    "method": "platt",
+    "min_val_positives": 20
+  },
+  "evaluation": {
+    "k_values": [
+      100,
+      500,
+      1000,
+      5000
+    ],
+    "alert_rates": [
+      0.001,
+      0.005,
+      0.01,
+      0.05
+    ],
+    "calibration_bins": 10
+  }
+}

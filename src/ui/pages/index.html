@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AML Investigation Console</title>
+    <!-- Inline so the console has a tab mark without a second request, and so
+         the server stops logging a 404 for /favicon.ico on every page load --
+         noise in the terminal the operator is watching during a run. -->
+    <link rel="icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+PHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiByeD0iNyIgZmlsbD0iIzBCMDcxMCIvPjxyZWN0IHg9IjciIHk9IjciIHdpZHRoPSIxOCIgaGVpZ2h0PSIxOCIgcng9IjQiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI0NGMzY4OCIgc3Ryb2tlLXdpZHRoPSIzIi8+PHJlY3QgeD0iMTMiIHk9IjEzIiB3aWR0aD0iNiIgaGVpZ2h0PSI2IiByeD0iMS41IiBmaWxsPSIjQ0YzNjg4Ii8+PC9zdmc+">
+
+    <!-- Front-end libraries, served from this repository rather than a CDN.
+         The console is a local tool and is demonstrated on networks that may
+         not reach the public internet; loading Tailwind, Alpine and
+         Vis-Network from cdn.tailwindcss.com / jsdelivr / unpkg meant an
+         offline machine rendered an unstyled page with no interactivity and
+         no graph at all.  Versions are pinned in src/ui/vendor/README.md
+         together with the URL and SHA-256 each file was fetched from. -->
+    <!-- Tailwind CSS -->
+    <script src="/src/ui/vendor/tailwind-3.4.17.min.js"></script>
+    <!-- Alpine.js -->
+    <script defer src="/src/ui/vendor/alpine-3.17.1.min.js"></script>
+    <!-- Vis-Network for Graph Rendering -->
+    <script type="text/javascript" src="/src/ui/vendor/vis-network-9.1.9.min.js"></script>
+    <!-- Presentation vocabulary, then app logic. Plain scripts, so they run
+         in order and `AML_PRESENTATION` exists when the component is defined. -->
+    <script src="/src/ui/components/presentation.js"></script>
+    <script src="/src/ui/components/visuals.js"></script>
+    <script src="/src/ui/components/app.js"></script>
+
+    <!-- Design tokens: rendered from src/ui/theme.py and injected server-side. -->
+    <!-- THEME_VARIABLES -->
+
+    <script>
+        // Tailwind resolves its palette from the injected custom properties,
+        // so utility classes and hand-written CSS share one source of truth.
+        // Channels are unwrapped so opacity modifiers (bg-system-surface/50)
+        // keep working.
+        const amlColor = (name) => `rgb(var(--aml-${name}-rgb) / <alpha-value>)`;
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        system: {
+                            background: amlColor('background'),
+                            surface: amlColor('surface'),
+                            elevated: amlColor('surface-elevated'),
+                            deep: amlColor('surface-deep'),
+                            sunken: amlColor('surface-sunken'),
+                            hover: amlColor('surface-hover'),
+                            node: amlColor('graph-node-color'),
+                            border: amlColor('border'),
+                            'border-strong': amlColor('border-strong'),
+                            heading: amlColor('heading'),
+                            body: amlColor('body'),
+                            muted: amlColor('muted'),
+                            faint: amlColor('faint'),
+                            accent: amlColor('secondary'),
+                            'accent-soft': amlColor('secondary-soft'),
+                            primary: amlColor('primary'),
+                            'primary-soft': amlColor('primary-soft'),
+                            success: amlColor('success'),
+                            warning: amlColor('warning'),
+                            critical: amlColor('critical'),
+                            info: amlColor('info'),
+                        }
+                    },
+                    borderRadius: {
+                        none: '0px',
+                        xs: 'var(--aml-radius-xs)',
+                        sm: 'var(--aml-radius-sm)',
+                        DEFAULT: 'var(--aml-radius-sm)',
+                        md: 'var(--aml-radius-md)',
+                        lg: 'var(--aml-radius-lg)',
+                        full: 'var(--aml-radius-pill)',
+                    },
+                    boxShadow: {
+                        raise: 'var(--aml-shadow-raise)',
+                        panel: 'var(--aml-shadow-panel)',
+                        overlay: 'var(--aml-shadow-overlay)',
+                        well: 'var(--aml-shadow-inset)',
+                        focus: 'var(--aml-shadow-focus)',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'ui-monospace', 'monospace'],
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Console stylesheet.  Every value in it resolves through the custom
+         properties injected above, so the palette and the page share one
+         source. -->
+    <link rel="stylesheet" href="/src/ui/styles.css">
+</head>
+
+<body class="bg-system-background text-system-body font-sans min-h-screen" x-data="amlApp()">
+
+<div class="app-ambient" aria-hidden="true"></div>
+
+<div class="app-shell">
+
+    <!-- INCLUDE: src/ui/components/app_bar.html -->
+
+    <main class="mx-auto max-w-[1600px] px-4 md:px-8 py-6 md:py-8">
+
+        <!-- INCLUDE: src/ui/components/view_hub.html -->
+
+        <!-- INCLUDE: src/ui/components/view_upload.html -->
+
+        <!-- INCLUDE: src/ui/components/view_mapping.html -->
+
+        <!-- INCLUDE: src/ui/components/view_dashboard.html -->
+
+    </main>
+
+    <footer class="border-t border-system-border mt-10">
+        <div class="mx-auto max-w-[1600px] px-4 md:px-8 py-5 flex flex-wrap items-center justify-between gap-3 text-[0.625rem] text-system-faint">
+            <p>Inference only &middot; frozen Experiment 3 GraphSAGE checkpoint &middot; 167-feature contract</p>
+            <p>Model output is not a determination of fraud.</p>
+        </div>
+    </footer>
+</div>
+
+<!-- INCLUDE: src/ui/components/help_modal.html -->
+
+</body>
+</html>

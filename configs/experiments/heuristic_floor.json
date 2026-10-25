@@ -1,0 +1,59 @@
+{
+  "name": "heuristic_floor",
+  "description": "Unsupervised AML typology score over aml_core_v1. The floor a supervised candidate has to clear to have demonstrated anything.",
+  "tags": [
+    "baseline",
+    "unsupervised"
+  ],
+  "seed": 42,
+  "dataset": {
+    "name": "reference_dkdata",
+    "version": "resolved-at-run-time",
+    "provenance": "file:../dkdata.json",
+    "label_definition": "positive = graph node attribute 'core' is True",
+    "synthetic": false
+  },
+  "features": {
+    "sets": [
+      "aml_core_v1"
+    ],
+    "scope": "global"
+  },
+  "split": {
+    "strategy": "stratified_kfold",
+    "params": {
+      "n_folds": 4
+    },
+    "seed": 42
+  },
+  "model": {
+    "family": "structural_heuristic",
+    "params": {},
+    "imbalance": "none"
+  },
+  "threshold": {
+    "strategy": "alert_budget",
+    "params": {
+      "rate": 0.01
+    }
+  },
+  "calibration": {
+    "method": "none",
+    "min_val_positives": 20
+  },
+  "evaluation": {
+    "k_values": [
+      10,
+      20,
+      50,
+      100
+    ],
+    "alert_rates": [
+      0.001,
+      0.005,
+      0.01,
+      0.05
+    ],
+    "calibration_bins": 10
+  }
+}

@@ -1,0 +1,1372 @@
+{
+ "tool": "calendar_design_audit.py",
+ "config": "configs\\experiments\\ibm_cal_boosting_graph.json",
+ "dataset": {
+  "name": "ibm_aml_hi_small",
+  "version": "size475664283-c9a6aae1",
+  "provenance": "file:C:\\Users\\bhara\\Downloads\\Laundering Data\\HI-Small_Trans.csv",
+  "label_definition": "positive = the (bank, account) entity is the payer or the payee of at least one transaction whose published 'Is Laundering' flag is 1. IBM labels transactions; this entity label is derived, and it makes a launderer's counterparty positive as well",
+  "synthetic": true,
+  "notes": [
+   "SYNTHETIC: IBM AMLworld virtual-world simulator (Altman et al., NeurIPS 2023 Datasets and Benchmarks). Not evidence about real-world detection.",
+   "Entity is the (bank, account) pair; account strings are not globally unique (8 collisions across banks).",
+   "Amounts are native across 15 currencies (37% USD) and are not FX-converted; the amount column is 'amount', not 'amount_usd'.",
+   "The typology names live in the separate HI-Small_Patterns.txt and are deliberately not loaded: their group headers state the generating mechanism and its degree/hop parameter.",
+   "Version is derived from file size and mtime, not a content hash; the content hash is in data/manifests/ibm_aml_hi_small.json."
+  ]
+ },
+ "split_params": {
+  "origins": [
+   "2022-09-05",
+   "2022-09-07",
+   "2022-09-09"
+  ],
+  "horizon_days": 2,
+  "lookback_days": null,
+  "max_label_end": "2022-09-11"
+ },
+ "feature_sets": [
+  "aml_txn_v1",
+  "aml_temporal_v1",
+  "aml_flow_v1",
+  "aml_context_v1",
+  "aml_network_v1",
+  "aml_cycle_v1"
+ ],
+ "daily": [
+  {
+   "day": "2022-09-01",
+   "transactions": 1114921,
+   "flagged": 322,
+   "flagged_rate": 0.0002888097004182359,
+   "active_entities": 437073,
+   "flagged_format_share": {
+    "ACH": 0.6708,
+    "Bitcoin": 0.0062,
+    "Cash": 0.059,
+    "Cheque": 0.1832,
+    "Credit Card": 0.0807
+   }
+  },
+  {
+   "day": "2022-09-02",
+   "transactions": 754449,
+   "flagged": 408,
+   "flagged_rate": 0.0005407920217271148,
+   "active_entities": 353448,
+   "flagged_format_share": {
+    "ACH": 0.7475,
+    "Bitcoin": 0.0196,
+    "Cash": 0.0392,
+    "Cheque": 0.1201,
+    "Credit Card": 0.0735
+   }
+  },
+  {
+   "day": "2022-09-03",
+   "transactions": 207382,
+   "flagged": 391,
+   "flagged_rate": 0.0018854095340964981,
+   "active_entities": 147077,
+   "flagged_format_share": {
+    "ACH": 0.8798,
+    "Bitcoin": 0.0153,
+    "Cash": 0.023,
+    "Cheque": 0.0486,
+    "Credit Card": 0.0332
+   }
+  },
+  {
+   "day": "2022-09-04",
+   "transactions": 207430,
+   "flagged": 407,
+   "flagged_rate": 0.0019621076989827894,
+   "active_entities": 147157,
+   "flagged_format_share": {
+    "ACH": 0.9361,
+    "Bitcoin": 0.0074,
+    "Cash": 0.0025,
+    "Cheque": 0.0369,
+    "Credit Card": 0.0172
+   }
+  },
+  {
+   "day": "2022-09-05",
+   "transactions": 482650,
+   "flagged": 471,
+   "flagged_rate": 0.0009758624261887496,
+   "active_entities": 225040,
+   "flagged_format_share": {
+    "ACH": 0.8344,
+    "Bitcoin": 0.0149,
+    "Cash": 0.0255,
+    "Cheque": 0.0828,
+    "Credit Card": 0.0425
+   }
+  },
+  {
+   "day": "2022-09-06",
+   "transactions": 482089,
+   "flagged": 531,
+   "flagged_rate": 0.0011014563700893403,
+   "active_entities": 224616,
+   "flagged_format_share": {
+    "ACH": 0.8757,
+    "Bitcoin": 0.0151,
+    "Cash": 0.0132,
+    "Cheque": 0.0452,
+    "Credit Card": 0.0508
+   }
+  },
+  {
+   "day": "2022-09-07",
+   "transactions": 482751,
+   "flagged": 497,
+   "flagged_rate": 0.001029516251649401,
+   "active_entities": 225074,
+   "flagged_format_share": {
+    "ACH": 0.8551,
+    "Bitcoin": 0.006,
+    "Cash": 0.0282,
+    "Cheque": 0.0584,
+    "Credit Card": 0.0523
+   }
+  },
+  {
+   "day": "2022-09-08",
+   "transactions": 482773,
+   "flagged": 539,
+   "flagged_rate": 0.0011164667452405169,
+   "active_entities": 225170,
+   "flagged_format_share": {
+    "ACH": 0.8627,
+    "Bitcoin": 0.0167,
+    "Cash": 0.0204,
+    "Cheque": 0.0557,
+    "Credit Card": 0.0445
+   }
+  },
+  {
+   "day": "2022-09-09",
+   "transactions": 654467,
+   "flagged": 514,
+   "flagged_rate": 0.0007853719133279447,
+   "active_entities": 346684,
+   "flagged_format_share": {
+    "ACH": 0.8132,
+    "Bitcoin": 0.0175,
+    "Cash": 0.0272,
+    "Cheque": 0.0934,
+    "Credit Card": 0.0486
+   }
+  },
+  {
+   "day": "2022-09-10",
+   "transactions": 208325,
+   "flagged": 442,
+   "flagged_rate": 0.002121684867394696,
+   "active_entities": 148023,
+   "flagged_format_share": {
+    "ACH": 0.9412,
+    "Bitcoin": 0.0023,
+    "Cash": 0.0113,
+    "Cheque": 0.0271,
+    "Credit Card": 0.0181
+   }
+  },
+  {
+   "day": "2022-09-11",
+   "transactions": 396,
+   "flagged": 232,
+   "flagged_rate": 0.5858585858585859,
+   "active_entities": 339,
+   "flagged_format_share": {
+    "ACH": 1.0
+   }
+  },
+  {
+   "day": "2022-09-12",
+   "transactions": 281,
+   "flagged": 170,
+   "flagged_rate": 0.604982206405694,
+   "active_entities": 239,
+   "flagged_format_share": {
+    "ACH": 1.0
+   }
+  },
+  {
+   "day": "2022-09-13",
+   "transactions": 184,
+   "flagged": 106,
+   "flagged_rate": 0.5760869565217391,
+   "active_entities": 146,
+   "flagged_format_share": {
+    "ACH": 1.0
+   }
+  },
+  {
+   "day": "2022-09-14",
+   "transactions": 121,
+   "flagged": 70,
+   "flagged_rate": 0.5785123966942148,
+   "active_entities": 95,
+   "flagged_format_share": {
+    "ACH": 1.0
+   }
+  },
+  {
+   "day": "2022-09-15",
+   "transactions": 46,
+   "flagged": 28,
+   "flagged_rate": 0.6086956521739131,
+   "active_entities": 38,
+   "flagged_format_share": {
+    "ACH": 1.0
+   }
+  },
+  {
+   "day": "2022-09-16",
+   "transactions": 46,
+   "flagged": 26,
+   "flagged_rate": 0.5652173913043478,
+   "active_entities": 35,
+   "flagged_format_share": {
+    "ACH": 1.0
+   }
+  },
+  {
+   "day": "2022-09-17",
+   "transactions": 23,
+   "flagged": 15,
+   "flagged_rate": 0.6521739130434783,
+   "active_entities": 21,
+   "flagged_format_share": {
+    "ACH": 1.0
+   }
+  },
+  {
+   "day": "2022-09-18",
+   "transactions": 11,
+   "flagged": 8,
+   "flagged_rate": 0.7272727272727273,
+   "active_entities": 10,
+   "flagged_format_share": {
+    "ACH": 1.0
+   }
+  }
+ ],
+ "origin_scan": [
+  {
+   "origin": "2022-09-02 00:00:00",
+   "horizon_days": 1.0,
+   "label_window_end": "2022-09-03 00:00:00",
+   "n_eligible": 437073,
+   "n_positive": 623,
+   "prevalence": 0.0014253911817934304,
+   "n_positive_with_prior_involvement": 49,
+   "n_positive_new_involvement": 574,
+   "n_cold_start_positive": 33,
+   "n_positive_only_after_max_label_end": 0
+  },
+  {
+   "origin": "2022-09-02 00:00:00",
+   "horizon_days": 2.0,
+   "label_window_end": "2022-09-04 00:00:00",
+   "n_eligible": 437073,
+   "n_positive": 1169,
+   "prevalence": 0.002674610419769695,
+   "n_positive_with_prior_involvement": 59,
+   "n_positive_new_involvement": 1110,
+   "n_cold_start_positive": 66,
+   "n_positive_only_after_max_label_end": 0
+  },
+  {
+   "origin": "2022-09-02 00:00:00",
+   "horizon_days": 3.0,
+   "label_window_end": "2022-09-05 00:00:00",
+   "n_eligible": 437073,
+   "n_positive": 1694,
+   "prevalence": 0.0038757827639776424,
+   "n_positive_with_prior_involvement": 71,
+   "n_positive_new_involvement": 1623,
+   "n_cold_start_positive": 88,
+   "n_positive_only_after_max_label_end": 0
+  },
+  {
+   "origin": "2022-09-03 00:00:00",
+   "horizon_days": 1.0,
+   "label_window_end": "2022-09-04 00:00:00",
+   "n_eligible": 509993,
+   "n_positive": 629,
+   "prevalence": 0.0012333502616702582,
+   "n_positive_with_prior_involvement": 77,
+   "n_positive_new_involvement": 552,
+   "n_cold_start_positive": 17,
+   "n_positive_only_after_max_label_end": 0
+  },
+  {
+   "origin": "2022-09-03 00:00:00",
+   "horizon_days": 2.0,
+   "label_window_end": "2022-09-05 00:00:00",
+   "n_eligible": 509993,
+   "n_positive": 1185,
+   "prevalence": 0.002323561303782601,
+   "n_positive_with_prior_involvement": 113,
+   "n_positive_new_involvement": 1072,
+   "n_cold_start_positive": 32,
+   "n_positive_only_after_max_label_end": 0
+  },
+  {
+   "origin": "2022-09-03 00:00:00",
+   "horizon_days": 3.0,
+   "label_window_end": "2022-09-06 00:00:00",
+   "n_eligible": 509993,
+   "n_positive": 1776,
+   "prevalence": 0.00348240073883367,
+   "n_positive_with_prior_involvement": 135,
+   "n_positive_new_involvement": 1641,
+   "n_cold_start_positive": 47,
+   "n_positive_only_after_max_label_end": 0
+  },
+  {
+   "origin": "2022-09-04 00:00:00",
+   "horizon_days": 1.0,
+   "label_window_end": "2022-09-05 00:00:00",
+   "n_eligible": 510772,
+   "n_positive": 634,
+   "prevalence": 0.0012412583305271235,
+   "n_positive_with_prior_involvement": 114,
+   "n_positive_new_involvement": 520,
+   "n_cold_start_positive": 15,
+   "n_positive_only_after_max_label_end": 0
+  },
+  {
+   "origin": "2022-09-04 00:00:00",
+   "horizon_days": 2.0,
+   "label_window_end": "2022-09-06 00:00:00",
+   "n_eligible": 510772,
+   "n_positive": 1261,
+   "prevalence": 0.002468811916079973,
+   "n_positive_with_prior_involvement": 171,
+   "n_positive_new_involvement": 1090,
+   "n_cold_start_positive": 29,
+   "n_positive_only_after_max_label_end": 0
+  },
+  {
+   "origin": "2022-09-04 00:00:00",
+   "horizon_days": 3.0,
+   "label_window_end": "2022-09-07 00:00:00",
+   "n_eligible": 510772,
+   "n_positive": 1945,
+   "prevalence": 0.003807961282137627,
+   "n_positive_with_prior_involvement": 200,
+   "n_positive_new_involvement": 1745,
+   "n_cold_start_positive": 46,
+   "n_positive_only_after_max_label_end": 0
+  },
+  {
+   "origin": "2022-09-05 00:00:00",
+   "horizon_days": 1.0,
+   "label_window_end": "2022-09-06 00:00:00",
+   "n_eligible": 511548,
+   "n_positive": 701,
+   "prevalence": 0.0013703503874514219,
+   "n_positive_with_prior_involvement": 131,
+   "n_positive_new_involvement": 570,
+   "n_cold_start_positive": 14,
+   "n_positive_only_after_max_label_end": 0
+  },
+  {
+   "origin": "2022-09-05 00:00:00",
+   "horizon_days": 2.0,
+   "label_window_end": "2022-09-07 00:00:00",
+   "n_eligible": 511548,
+   "n_positive": 1428,
+   "prevalence": 0.002791526894836848,
+   "n_positive_with_prior_involvement": 203,
+   "n_positive_new_involvement": 1225,
+   "n_cold_start_positive": 31,
+   "n_positive_only_after_max_label_end": 0
+  },
+  {
+   "origin": "2022-09-05 00:00:00",
+   "horizon_days": 3.0,
+   "label_window_end": "2022-09-08 00:00:00",
+   "n_eligible": 511548,
+   "n_positive": 2029,
+   "prevalence": 0.003966392205619023,
+   "n_positive_with_prior_involvement": 230,
+   "n_positive_new_involvement": 1799,
+   "n_cold_start_positive": 50,
+   "n_positive_only_after_max_label_end": 0
+  },
+  {
+   "origin": "2022-09-06 00:00:00",
+   "horizon_days": 1.0,
+   "label_window_end": "2022-09-07 00:00:00",
+   "n_eligible": 512312,
+   "n_positive": 816,
+   "prevalence": 0.0015927794000530925,
+   "n_positive_with_prior_involvement": 161,
+   "n_positive_new_involvement": 655,
+   "n_cold_start_positive": 17,
+   "n_positive_only_after_max_label_end": 0
+  },
+  {
+   "origin": "2022-09-06 00:00:00",
+   "horizon_days": 2.0,
+   "label_window_end": "2022-09-08 00:00:00",
+   "n_eligible": 512312,
+   "n_positive": 1461,
+   "prevalence": 0.0028517778228891767,
+   "n_positive_with_prior_involvement": 230,
+   "n_positive_new_involvement": 1231,
+   "n_cold_start_positive": 34,
+   "n_positive_only_after_max_label_end": 0
+  },
+  {
+   "origin": "2022-09-06 00:00:00",
+   "horizon_days": 3.0,
+   "label_window_end": "2022-09-09 00:00:00",
+   "n_eligible": 512312,
+   "n_positive": 2128,
+   "prevalence": 0.004153718827589438,
+   "n_positive_with_prior_involvement": 263,
+   "n_positive_new_involvement": 1865,
+   "n_cold_start_positive": 50,
+   "n_positive_only_after_max_label_end": 0
+  },
+  {
+   "origin": "2022-09-07 00:00:00",
+   "horizon_days": 1.0,
+   "label_window_end": "2022-09-08 00:00:00",
+   "n_eligible": 512907,
+   "n_positive": 753,
+   "prevalence": 0.001468102404529476,
+   "n_positive_with_prior_involvement": 176,
+   "n_positive_new_involvement": 577,
+   "n_cold_start_positive": 16,
+   "n_positive_only_after_max_label_end": 0
+  },
+  {
+   "origin": "2022-09-07 00:00:00",
+   "horizon_days": 2.0,
+   "label_window_end": "2022-09-09 00:00:00",
+   "n_eligible": 512907,
+   "n_positive": 1465,
+   "prevalence": 0.002856268290352832,
+   "n_positive_with_prior_involvement": 254,
+   "n_positive_new_involvement": 1211,
+   "n_cold_start_positive": 32,
+   "n_positive_only_after_max_label_end": 0
+  },
+  {
+   "origin": "2022-09-07 00:00:00",
+   "horizon_days": 3.0,
+   "label_window_end": "2022-09-10 00:00:00",
+   "n_eligible": 512907,
+   "n_positive": 2104,
+   "prevalence": 0.004102108179455535,
+   "n_positive_with_prior_involvement": 279,
+   "n_positive_new_involvement": 1825,
+   "n_cold_start_positive": 43,
+   "n_positive_only_after_max_label_end": 0
+  },
+  {
+   "origin": "2022-09-08 00:00:00",
+   "horizon_days": 1.0,
+   "label_window_end": "2022-09-09 00:00:00",
+   "n_eligible": 513512,
+   "n_positive": 844,
+   "prevalence": 0.0016435837916153858,
+   "n_positive_with_prior_involvement": 210,
+   "n_positive_new_involvement": 634,
+   "n_cold_start_positive": 16,
+   "n_positive_only_after_max_label_end": 0
+  },
+  {
+   "origin": "2022-09-08 00:00:00",
+   "horizon_days": 2.0,
+   "label_window_end": "2022-09-10 00:00:00",
+   "n_eligible": 513512,
+   "n_positive": 1534,
+   "prevalence": 0.0029872719624857843,
+   "n_positive_with_prior_involvement": 285,
+   "n_positive_new_involvement": 1249,
+   "n_cold_start_positive": 26,
+   "n_positive_only_after_max_label_end": 0
+  },
+  {
+   "origin": "2022-09-08 00:00:00",
+   "horizon_days": 3.0,
+   "label_window_end": "2022-09-11 00:00:00",
+   "n_eligible": 513512,
+   "n_positive": 2095,
+   "prevalence": 0.004079748866628238,
+   "n_positive_with_prior_involvement": 336,
+   "n_positive_new_involvement": 1759,
+   "n_cold_start_positive": 39,
+   "n_positive_only_after_max_label_end": 0
+  },
+  {
+   "origin": "2022-09-09 00:00:00",
+   "horizon_days": 1.0,
+   "label_window_end": "2022-09-10 00:00:00",
+   "n_eligible": 514022,
+   "n_positive": 774,
+   "prevalence": 0.0015057721264848587,
+   "n_positive_with_prior_involvement": 159,
+   "n_positive_new_involvement": 615,
+   "n_cold_start_positive": 10,
+   "n_positive_only_after_max_label_end": 0
+  },
+  {
+   "origin": "2022-09-09 00:00:00",
+   "horizon_days": 2.0,
+   "label_window_end": "2022-09-11 00:00:00",
+   "n_eligible": 514022,
+   "n_positive": 1374,
+   "prevalence": 0.0026730373408142064,
+   "n_positive_with_prior_involvement": 249,
+   "n_positive_new_involvement": 1125,
+   "n_cold_start_positive": 23,
+   "n_positive_only_after_max_label_end": 0
+  },
+  {
+   "origin": "2022-09-09 00:00:00",
+   "horizon_days": 3.0,
+   "label_window_end": "2022-09-12 00:00:00",
+   "n_eligible": 514022,
+   "n_positive": 1591,
+   "prevalence": 0.003095198259996654,
+   "n_positive_with_prior_involvement": 288,
+   "n_positive_new_involvement": 1303,
+   "n_cold_start_positive": 29,
+   "n_positive_only_after_max_label_end": 217
+  },
+  {
+   "origin": "2022-09-10 00:00:00",
+   "horizon_days": 1.0,
+   "label_window_end": "2022-09-11 00:00:00",
+   "n_eligible": 514561,
+   "n_positive": 703,
+   "prevalence": 0.001366213140910407,
+   "n_positive_with_prior_involvement": 192,
+   "n_positive_new_involvement": 511,
+   "n_cold_start_positive": 12,
+   "n_positive_only_after_max_label_end": 0
+  },
+  {
+   "origin": "2022-09-10 00:00:00",
+   "horizon_days": 2.0,
+   "label_window_end": "2022-09-12 00:00:00",
+   "n_eligible": 514561,
+   "n_positive": 952,
+   "prevalence": 0.0018501207825699965,
+   "n_positive_with_prior_involvement": 262,
+   "n_positive_new_involvement": 690,
+   "n_cold_start_positive": 17,
+   "n_positive_only_after_max_label_end": 249
+  },
+  {
+   "origin": "2022-09-10 00:00:00",
+   "horizon_days": 3.0,
+   "label_window_end": "2022-09-13 00:00:00",
+   "n_eligible": 514561,
+   "n_positive": 1091,
+   "prevalence": 0.002120253964058683,
+   "n_positive_with_prior_involvement": 277,
+   "n_positive_new_involvement": 814,
+   "n_cold_start_positive": 19,
+   "n_positive_only_after_max_label_end": 388
+  },
+  {
+   "origin": "2022-09-11 00:00:00",
+   "horizon_days": 1.0,
+   "label_window_end": "2022-09-12 00:00:00",
+   "n_eligible": 515078,
+   "n_positive": 333,
+   "prevalence": 0.0006465040246331624,
+   "n_positive_with_prior_involvement": 154,
+   "n_positive_new_involvement": 179,
+   "n_cold_start_positive": 5,
+   "n_positive_only_after_max_label_end": 333
+  },
+  {
+   "origin": "2022-09-11 00:00:00",
+   "horizon_days": 2.0,
+   "label_window_end": "2022-09-13 00:00:00",
+   "n_eligible": 515078,
+   "n_positive": 504,
+   "prevalence": 0.0009784925778231646,
+   "n_positive_with_prior_involvement": 201,
+   "n_positive_new_involvement": 303,
+   "n_cold_start_positive": 7,
+   "n_positive_only_after_max_label_end": 504
+  },
+  {
+   "origin": "2022-09-11 00:00:00",
+   "horizon_days": 3.0,
+   "label_window_end": "2022-09-14 00:00:00",
+   "n_eligible": 515078,
+   "n_positive": 589,
+   "prevalence": 0.0011435161276544524,
+   "n_positive_with_prior_involvement": 212,
+   "n_positive_new_involvement": 377,
+   "n_cold_start_positive": 8,
+   "n_positive_only_after_max_label_end": 589
+  },
+  {
+   "origin": "2022-09-12 00:00:00",
+   "horizon_days": 1.0,
+   "label_window_end": "2022-09-13 00:00:00",
+   "n_eligible": 515083,
+   "n_positive": 237,
+   "prevalence": 0.0004601200194920042,
+   "n_positive_with_prior_involvement": 113,
+   "n_positive_new_involvement": 124,
+   "n_cold_start_positive": 2,
+   "n_positive_only_after_max_label_end": 237
+  },
+  {
+   "origin": "2022-09-12 00:00:00",
+   "horizon_days": 2.0,
+   "label_window_end": "2022-09-14 00:00:00",
+   "n_eligible": 515083,
+   "n_positive": 338,
+   "prevalence": 0.0006562049223134912,
+   "n_positive_with_prior_involvement": 140,
+   "n_positive_new_involvement": 198,
+   "n_cold_start_positive": 3,
+   "n_positive_only_after_max_label_end": 338
+  },
+  {
+   "origin": "2022-09-12 00:00:00",
+   "horizon_days": 3.0,
+   "label_window_end": "2022-09-15 00:00:00",
+   "n_eligible": 515083,
+   "n_positive": 397,
+   "prevalence": 0.0007707495685161421,
+   "n_positive_with_prior_involvement": 152,
+   "n_positive_new_involvement": 245,
+   "n_cold_start_positive": 4,
+   "n_positive_only_after_max_label_end": 397
+  },
+  {
+   "origin": "2022-09-13 00:00:00",
+   "horizon_days": 1.0,
+   "label_window_end": "2022-09-14 00:00:00",
+   "n_eligible": 515085,
+   "n_positive": 145,
+   "prevalence": 0.00028150693574846867,
+   "n_positive_with_prior_involvement": 71,
+   "n_positive_new_involvement": 74,
+   "n_cold_start_positive": 1,
+   "n_positive_only_after_max_label_end": 145
+  },
+  {
+   "origin": "2022-09-13 00:00:00",
+   "horizon_days": 2.0,
+   "label_window_end": "2022-09-15 00:00:00",
+   "n_eligible": 515085,
+   "n_positive": 218,
+   "prevalence": 0.0004232311171942495,
+   "n_positive_with_prior_involvement": 97,
+   "n_positive_new_involvement": 121,
+   "n_cold_start_positive": 2,
+   "n_positive_only_after_max_label_end": 218
+  },
+  {
+   "origin": "2022-09-13 00:00:00",
+   "horizon_days": 3.0,
+   "label_window_end": "2022-09-16 00:00:00",
+   "n_eligible": 515085,
+   "n_positive": 243,
+   "prevalence": 0.00047176679577157167,
+   "n_positive_with_prior_involvement": 100,
+   "n_positive_new_involvement": 143,
+   "n_cold_start_positive": 2,
+   "n_positive_only_after_max_label_end": 243
+  },
+  {
+   "origin": "2022-09-14 00:00:00",
+   "horizon_days": 1.0,
+   "label_window_end": "2022-09-15 00:00:00",
+   "n_eligible": 515086,
+   "n_positive": 94,
+   "prevalence": 0.0001824937971523202,
+   "n_positive_with_prior_involvement": 47,
+   "n_positive_new_involvement": 47,
+   "n_cold_start_positive": 1,
+   "n_positive_only_after_max_label_end": 94
+  },
+  {
+   "origin": "2022-09-14 00:00:00",
+   "horizon_days": 2.0,
+   "label_window_end": "2022-09-16 00:00:00",
+   "n_eligible": 515086,
+   "n_positive": 122,
+   "prevalence": 0.00023685365162322408,
+   "n_positive_with_prior_involvement": 53,
+   "n_positive_new_involvement": 69,
+   "n_cold_start_positive": 1,
+   "n_positive_only_after_max_label_end": 122
+  },
+  {
+   "origin": "2022-09-14 00:00:00",
+   "horizon_days": 3.0,
+   "label_window_end": "2022-09-17 00:00:00",
+   "n_eligible": 515086,
+   "n_positive": 148,
+   "prevalence": 0.00028733065934620624,
+   "n_positive_with_prior_involvement": 57,
+   "n_positive_new_involvement": 91,
+   "n_cold_start_positive": 1,
+   "n_positive_only_after_max_label_end": 148
+  },
+  {
+   "origin": "2022-09-15 00:00:00",
+   "horizon_days": 1.0,
+   "label_window_end": "2022-09-16 00:00:00",
+   "n_eligible": 515087,
+   "n_positive": 38,
+   "prevalence": 7.377394498405124e-05,
+   "n_positive_with_prior_involvement": 16,
+   "n_positive_new_involvement": 22,
+   "n_cold_start_positive": 0,
+   "n_positive_only_after_max_label_end": 38
+  },
+  {
+   "origin": "2022-09-15 00:00:00",
+   "horizon_days": 2.0,
+   "label_window_end": "2022-09-17 00:00:00",
+   "n_eligible": 515087,
+   "n_positive": 64,
+   "prevalence": 0.00012425085470998102,
+   "n_positive_with_prior_involvement": 20,
+   "n_positive_new_involvement": 44,
+   "n_cold_start_positive": 0,
+   "n_positive_only_after_max_label_end": 64
+  },
+  {
+   "origin": "2022-09-15 00:00:00",
+   "horizon_days": 3.0,
+   "label_window_end": "2022-09-18 00:00:00",
+   "n_eligible": 515087,
+   "n_positive": 80,
+   "prevalence": 0.0001553135683874763,
+   "n_positive_with_prior_involvement": 26,
+   "n_positive_new_involvement": 54,
+   "n_cold_start_positive": 0,
+   "n_positive_only_after_max_label_end": 80
+  },
+  {
+   "origin": "2022-09-16 00:00:00",
+   "horizon_days": 1.0,
+   "label_window_end": "2022-09-17 00:00:00",
+   "n_eligible": 515087,
+   "n_positive": 35,
+   "prevalence": 6.794968616952087e-05,
+   "n_positive_with_prior_involvement": 13,
+   "n_positive_new_involvement": 22,
+   "n_cold_start_positive": 0,
+   "n_positive_only_after_max_label_end": 35
+  },
+  {
+   "origin": "2022-09-16 00:00:00",
+   "horizon_days": 2.0,
+   "label_window_end": "2022-09-18 00:00:00",
+   "n_eligible": 515087,
+   "n_positive": 52,
+   "prevalence": 0.00010095381945185959,
+   "n_positive_with_prior_involvement": 20,
+   "n_positive_new_involvement": 32,
+   "n_cold_start_positive": 0,
+   "n_positive_only_after_max_label_end": 52
+  },
+  {
+   "origin": "2022-09-16 00:00:00",
+   "horizon_days": 3.0,
+   "label_window_end": "2022-09-19 00:00:00",
+   "n_eligible": 515087,
+   "n_positive": 59,
+   "prevalence": 0.00011454375668576376,
+   "n_positive_with_prior_involvement": 20,
+   "n_positive_new_involvement": 39,
+   "n_cold_start_positive": 1,
+   "n_positive_only_after_max_label_end": 59
+  },
+  {
+   "origin": "2022-09-17 00:00:00",
+   "horizon_days": 1.0,
+   "label_window_end": "2022-09-18 00:00:00",
+   "n_eligible": 515087,
+   "n_positive": 21,
+   "prevalence": 4.0769811701712526e-05,
+   "n_positive_with_prior_involvement": 11,
+   "n_positive_new_involvement": 10,
+   "n_cold_start_positive": 0,
+   "n_positive_only_after_max_label_end": 21
+  },
+  {
+   "origin": "2022-09-17 00:00:00",
+   "horizon_days": 2.0,
+   "label_window_end": "2022-09-19 00:00:00",
+   "n_eligible": 515087,
+   "n_positive": 28,
+   "prevalence": 5.43597489356167e-05,
+   "n_positive_with_prior_involvement": 11,
+   "n_positive_new_involvement": 17,
+   "n_cold_start_positive": 1,
+   "n_positive_only_after_max_label_end": 28
+  },
+  {
+   "origin": "2022-09-17 00:00:00",
+   "horizon_days": 3.0,
+   "label_window_end": "2022-09-20 00:00:00",
+   "n_eligible": 515087,
+   "n_positive": 28,
+   "prevalence": 5.43597489356167e-05,
+   "n_positive_with_prior_involvement": 11,
+   "n_positive_new_involvement": 17,
+   "n_cold_start_positive": 1,
+   "n_positive_only_after_max_label_end": 28
+  },
+  {
+   "origin": "2022-09-18 00:00:00",
+   "horizon_days": 1.0,
+   "label_window_end": "2022-09-19 00:00:00",
+   "n_eligible": 515087,
+   "n_positive": 9,
+   "prevalence": 1.7472776443591084e-05,
+   "n_positive_with_prior_involvement": 2,
+   "n_positive_new_involvement": 7,
+   "n_cold_start_positive": 1,
+   "n_positive_only_after_max_label_end": 9
+  },
+  {
+   "origin": "2022-09-18 00:00:00",
+   "horizon_days": 2.0,
+   "label_window_end": "2022-09-20 00:00:00",
+   "n_eligible": 515087,
+   "n_positive": 9,
+   "prevalence": 1.7472776443591084e-05,
+   "n_positive_with_prior_involvement": 2,
+   "n_positive_new_involvement": 7,
+   "n_cold_start_positive": 1,
+   "n_positive_only_after_max_label_end": 9
+  },
+  {
+   "origin": "2022-09-18 00:00:00",
+   "horizon_days": 3.0,
+   "label_window_end": "2022-09-21 00:00:00",
+   "n_eligible": 515087,
+   "n_positive": 9,
+   "prevalence": 1.7472776443591084e-05,
+   "n_positive_with_prior_involvement": 2,
+   "n_positive_new_involvement": 7,
+   "n_cold_start_positive": 1,
+   "n_positive_only_after_max_label_end": 9
+  }
+ ],
+ "designs": {
+  "expanding": {
+   "lookback_days": null,
+   "origins": {
+    "train": {
+     "role": "train",
+     "origin": "2022-09-05 00:00:00",
+     "feature_window": [
+      null,
+      "2022-09-05 00:00:00"
+     ],
+     "label_window": [
+      "2022-09-05 00:00:00",
+      "2022-09-07 00:00:00"
+     ],
+     "n_eligible": 511548,
+     "n_positive": 1428,
+     "prevalence": 0.002791526894836848,
+     "n_prior_involvement": 2215,
+     "n_positive_with_prior_involvement": 203,
+     "n_positive_new_involvement": 1225,
+     "n_window_positive": 1459,
+     "n_cold_start_positive": 31,
+     "n_feature_transactions": 2284182
+    },
+    "val": {
+     "role": "val",
+     "origin": "2022-09-07 00:00:00",
+     "feature_window": [
+      null,
+      "2022-09-07 00:00:00"
+     ],
+     "label_window": [
+      "2022-09-07 00:00:00",
+      "2022-09-09 00:00:00"
+     ],
+     "n_eligible": 512907,
+     "n_positive": 1465,
+     "prevalence": 0.002856268290352832,
+     "n_prior_involvement": 3471,
+     "n_positive_with_prior_involvement": 254,
+     "n_positive_new_involvement": 1211,
+     "n_window_positive": 1497,
+     "n_cold_start_positive": 32,
+     "n_feature_transactions": 3248921
+    },
+    "test": {
+     "role": "test",
+     "origin": "2022-09-09 00:00:00",
+     "feature_window": [
+      null,
+      "2022-09-09 00:00:00"
+     ],
+     "label_window": [
+      "2022-09-09 00:00:00",
+      "2022-09-11 00:00:00"
+     ],
+     "n_eligible": 514022,
+     "n_positive": 1374,
+     "prevalence": 0.0026730373408142064,
+     "n_prior_involvement": 4714,
+     "n_positive_with_prior_involvement": 249,
+     "n_positive_new_involvement": 1125,
+     "n_window_positive": 1397,
+     "n_cold_start_positive": 23,
+     "n_feature_transactions": 4214445
+    }
+   },
+   "psi": {
+    "n_defined": 66,
+    "n_above_0_25": 14,
+    "n_above_0_10": 17,
+    "median": 0.0105,
+    "median_by_family": {
+     "aml_context_v1": 0.0014,
+     "aml_cycle_v1": 0.0142,
+     "aml_flow_v1": 0.0088,
+     "aml_network_v1": 0.012,
+     "aml_temporal_v1": 0.2752,
+     "aml_txn_v1": 0.0039
+    },
+    "top": [
+     {
+      "feature": "aml_temporal_v1::tenure_days",
+      "psi": 7.4018,
+      "train_median": 3.9805555555555556,
+      "test_median": 7.980555555555555
+     },
+     {
+      "feature": "aml_temporal_v1::recency_days",
+      "psi": 2.311,
+      "train_median": 2.3680555555555554,
+      "test_median": 4.548263888888888
+     },
+     {
+      "feature": "aml_temporal_v1::span_days",
+      "psi": 1.2214,
+      "train_median": 1.2055555555555555,
+      "test_median": 2.8652777777777776
+     },
+     {
+      "feature": "aml_temporal_v1::daily_concentration",
+      "psi": 0.7963,
+      "train_median": 0.7272727272727273,
+      "test_median": 0.6666666666666666
+     },
+     {
+      "feature": "aml_network_v1::repeat_pair_mean",
+      "psi": 0.7241,
+      "train_median": 2.0,
+      "test_median": 2.5
+     },
+     {
+      "feature": "aml_temporal_v1::max_gap_days",
+      "psi": 0.5934,
+      "train_median": 0.8152777777777778,
+      "test_median": 1.25625
+     },
+     {
+      "feature": "aml_network_v1::neighbour_txn_mean",
+      "psi": 0.5492,
+      "train_median": 15.5,
+      "test_median": 28.5
+     },
+     {
+      "feature": "aml_txn_v1::txn_in",
+      "psi": 0.4521,
+      "train_median": 2.0,
+      "test_median": 2.0
+     },
+     {
+      "feature": "aml_temporal_v1::weekend_share",
+      "psi": 0.432,
+      "train_median": 0.0,
+      "test_median": 0.0
+     },
+     {
+      "feature": "aml_network_v1::neighbour_txn_max",
+      "psi": 0.3908,
+      "train_median": 22.0,
+      "test_median": 43.0
+     },
+     {
+      "feature": "aml_temporal_v1::txn_per_span_day",
+      "psi": 0.3567,
+      "train_median": 5.261875761266748,
+      "test_median": 3.3287101248266295
+     },
+     {
+      "feature": "aml_temporal_v1::std_iat_hours",
+      "psi": 0.3408,
+      "train_median": 6.10468854424386,
+      "test_median": 8.628521496754507
+     }
+    ]
+   },
+   "persistence_reference_ap": 0.01176105633466804,
+   "notes": [
+    "unit of prediction is the (entity, origin) pair: every entity with feature-window history is scored at each origin, so the same account recurs across train, validation and test with a different snapshot and label; the partitions are disjoint in time, not in entity.",
+    "label = the entity is payer or payee of at least one transaction flagged by the publisher and dated in [origin, origin + 2 days 00:00:00).",
+    "eligibility = at least one dated transaction in the feature window; window positives without one are excluded and counted, never scored.",
+    "features = transactions dated strictly before the origin; recency and tenure are measured from the origin.",
+    "train: 31 of 1459 window positives have no feature-window history and are excluded.",
+    "val: 32 of 1497 window positives have no feature-window history and are excluded.",
+    "test: 23 of 1397 window positives have no feature-window history and are excluded."
+   ]
+  },
+  "lookback_3d": {
+   "lookback_days": 3.0,
+   "origins": {
+    "train": {
+     "role": "train",
+     "origin": "2022-09-05 00:00:00",
+     "feature_window": [
+      "2022-09-02 00:00:00",
+      "2022-09-05 00:00:00"
+     ],
+     "label_window": [
+      "2022-09-05 00:00:00",
+      "2022-09-07 00:00:00"
+     ],
+     "n_eligible": 366440,
+     "n_positive": 1182,
+     "prevalence": 0.003225630389695448,
+     "n_prior_involvement": 2126,
+     "n_positive_with_prior_involvement": 201,
+     "n_positive_new_involvement": 981,
+     "n_window_positive": 1459,
+     "n_cold_start_positive": 277,
+     "n_feature_transactions": 1169261
+    },
+    "val": {
+     "role": "val",
+     "origin": "2022-09-07 00:00:00",
+     "feature_window": [
+      "2022-09-04 00:00:00",
+      "2022-09-07 00:00:00"
+     ],
+     "label_window": [
+      "2022-09-07 00:00:00",
+      "2022-09-09 00:00:00"
+     ],
+     "n_eligible": 244341,
+     "n_positive": 1092,
+     "prevalence": 0.004469163996218399,
+     "n_prior_involvement": 2982,
+     "n_positive_with_prior_involvement": 248,
+     "n_positive_new_involvement": 844,
+     "n_window_positive": 1497,
+     "n_cold_start_positive": 405,
+     "n_feature_transactions": 1172169
+    },
+    "test": {
+     "role": "test",
+     "origin": "2022-09-09 00:00:00",
+     "feature_window": [
+      "2022-09-06 00:00:00",
+      "2022-09-09 00:00:00"
+     ],
+     "label_window": [
+      "2022-09-09 00:00:00",
+      "2022-09-11 00:00:00"
+     ],
+     "n_eligible": 244309,
+     "n_positive": 985,
+     "prevalence": 0.004031779426873345,
+     "n_prior_involvement": 3826,
+     "n_positive_with_prior_involvement": 243,
+     "n_positive_new_involvement": 742,
+     "n_window_positive": 1397,
+     "n_cold_start_positive": 412,
+     "n_feature_transactions": 1447613
+    }
+   },
+   "psi": {
+    "n_defined": 66,
+    "n_above_0_25": 21,
+    "n_above_0_10": 38,
+    "median": 0.1494,
+    "median_by_family": {
+     "aml_context_v1": 0.0566,
+     "aml_cycle_v1": 0.011,
+     "aml_flow_v1": 0.0444,
+     "aml_network_v1": 0.1577,
+     "aml_temporal_v1": 0.4916,
+     "aml_txn_v1": 0.0733
+    },
+    "top": [
+     {
+      "feature": "aml_temporal_v1::weekend_share",
+      "psi": 4.9509,
+      "train_median": 0.0,
+      "test_median": 0.0
+     },
+     {
+      "feature": "aml_temporal_v1::daily_concentration",
+      "psi": 2.9138,
+      "train_median": 1.0,
+      "test_median": 0.3333333333333333
+     },
+     {
+      "feature": "aml_txn_v1::amount_top1_share",
+      "psi": 1.931,
+      "train_median": 0.7135969898690214,
+      "test_median": 0.2345374722905156
+     },
+     {
+      "feature": "aml_temporal_v1::recency_days",
+      "psi": 1.8289,
+      "train_median": 2.0701388888888888,
+      "test_median": 0.4027777777777778
+     },
+     {
+      "feature": "aml_network_v1::repeat_pair_mean",
+      "psi": 1.6467,
+      "train_median": 2.0,
+      "test_median": 6.0
+     },
+     {
+      "feature": "aml_network_v1::counterparty_diversity",
+      "psi": 1.5258,
+      "train_median": 0.5,
+      "test_median": 0.16666666666666666
+     },
+     {
+      "feature": "aml_temporal_v1::span_days",
+      "psi": 1.3434,
+      "train_median": 0.37222222222222223,
+      "test_median": 2.183333333333333
+     },
+     {
+      "feature": "aml_temporal_v1::active_days",
+      "psi": 1.16,
+      "train_median": 1.0,
+      "test_median": 3.0
+     },
+     {
+      "feature": "aml_network_v1::neighbour_txn_mean",
+      "psi": 1.088,
+      "train_median": 9.5,
+      "test_median": 18.0
+     },
+     {
+      "feature": "aml_network_v1::neighbour_txn_max",
+      "psi": 1.0489,
+      "train_median": 13.0,
+      "test_median": 24.0
+     },
+     {
+      "feature": "aml_txn_v1::txn_in",
+      "psi": 1.0169,
+      "train_median": 2.0,
+      "test_median": 6.0
+     },
+     {
+      "feature": "aml_temporal_v1::max_gap_days",
+      "psi": 0.7876,
+      "train_median": 0.7986111111111112,
+      "test_median": 0.9881944444444445
+     }
+    ]
+   },
+   "persistence_reference_ap": 0.018705779149531344,
+   "notes": [
+    "unit of prediction is the (entity, origin) pair: every entity with feature-window history is scored at each origin, so the same account recurs across train, validation and test with a different snapshot and label; the partitions are disjoint in time, not in entity.",
+    "label = the entity is payer or payee of at least one transaction flagged by the publisher and dated in [origin, origin + 2 days 00:00:00).",
+    "eligibility = at least one dated transaction in the feature window; window positives without one are excluded and counted, never scored.",
+    "features = transactions dated strictly before the origin and at or after origin - 3 days 00:00:00; recency and tenure are measured from the origin.",
+    "train: 277 of 1459 window positives have no feature-window history and are excluded.",
+    "val: 405 of 1497 window positives have no feature-window history and are excluded.",
+    "test: 412 of 1397 window positives have no feature-window history and are excluded."
+   ]
+  },
+  "lookback_4d": {
+   "lookback_days": 4.0,
+   "origins": {
+    "train": {
+     "role": "train",
+     "origin": "2022-09-05 00:00:00",
+     "feature_window": [
+      "2022-09-01 00:00:00",
+      "2022-09-05 00:00:00"
+     ],
+     "label_window": [
+      "2022-09-05 00:00:00",
+      "2022-09-07 00:00:00"
+     ],
+     "n_eligible": 511548,
+     "n_positive": 1428,
+     "prevalence": 0.002791526894836848,
+     "n_prior_involvement": 2215,
+     "n_positive_with_prior_involvement": 203,
+     "n_positive_new_involvement": 1225,
+     "n_window_positive": 1459,
+     "n_cold_start_positive": 31,
+     "n_feature_transactions": 2284182
+    },
+    "val": {
+     "role": "val",
+     "origin": "2022-09-07 00:00:00",
+     "feature_window": [
+      "2022-09-03 00:00:00",
+      "2022-09-07 00:00:00"
+     ],
+     "label_window": [
+      "2022-09-07 00:00:00",
+      "2022-09-09 00:00:00"
+     ],
+     "n_eligible": 253004,
+     "n_positive": 1120,
+     "prevalence": 0.004426807481304643,
+     "n_prior_involvement": 3190,
+     "n_positive_with_prior_involvement": 250,
+     "n_positive_new_involvement": 870,
+     "n_window_positive": 1497,
+     "n_cold_start_positive": 377,
+     "n_feature_transactions": 1379551
+    },
+    "test": {
+     "role": "test",
+     "origin": "2022-09-09 00:00:00",
+     "feature_window": [
+      "2022-09-05 00:00:00",
+      "2022-09-09 00:00:00"
+     ],
+     "label_window": [
+      "2022-09-09 00:00:00",
+      "2022-09-11 00:00:00"
+     ],
+     "n_eligible": 253113,
+     "n_positive": 1018,
+     "prevalence": 0.004021919063817346,
+     "n_prior_involvement": 4071,
+     "n_positive_with_prior_involvement": 246,
+     "n_positive_new_involvement": 772,
+     "n_window_positive": 1397,
+     "n_cold_start_positive": 379,
+     "n_feature_transactions": 1930263
+    }
+   },
+   "psi": {
+    "n_defined": 66,
+    "n_above_0_25": 37,
+    "n_above_0_10": 49,
+    "median": 0.33999999999999997,
+    "median_by_family": {
+     "aml_context_v1": 0.184,
+     "aml_cycle_v1": 0.3782,
+     "aml_flow_v1": 0.3368,
+     "aml_network_v1": 0.4349,
+     "aml_temporal_v1": 0.5766,
+     "aml_txn_v1": 0.1912
+    },
+    "top": [
+     {
+      "feature": "aml_cycle_v1::layering_amount_match_share",
+      "psi": 4.2549,
+      "train_median": 1.0,
+      "test_median": 0.0
+     },
+     {
+      "feature": "aml_temporal_v1::weekend_share",
+      "psi": 3.5697,
+      "train_median": 0.0,
+      "test_median": 0.0
+     },
+     {
+      "feature": "aml_temporal_v1::daily_concentration",
+      "psi": 3.3155,
+      "train_median": 0.7272727272727273,
+      "test_median": 0.25
+     },
+     {
+      "feature": "aml_txn_v1::amount_top1_share",
+      "psi": 2.7052,
+      "train_median": 0.5,
+      "test_median": 0.1808416744351114
+     },
+     {
+      "feature": "aml_flow_v1::instant_turnaround_share",
+      "psi": 2.3093,
+      "train_median": 0.6666666666666666,
+      "test_median": 0.0
+     },
+     {
+      "feature": "aml_temporal_v1::recency_days",
+      "psi": 2.1067,
+      "train_median": 2.3680555555555554,
+      "test_median": 0.42291666666666666
+     },
+     {
+      "feature": "aml_cycle_v1::layering_events",
+      "psi": 1.8879,
+      "train_median": 1.0,
+      "test_median": 0.0
+     },
+     {
+      "feature": "aml_flow_v1::median_in_to_out_hours",
+      "psi": 1.8679,
+      "train_median": 0.0,
+      "test_median": 9.766666666666666
+     },
+     {
+      "feature": "aml_temporal_v1::span_days",
+      "psi": 1.7828,
+      "train_median": 1.2055555555555555,
+      "test_median": 3.158333333333333
+     },
+     {
+      "feature": "aml_flow_v1::flow_imbalance",
+      "psi": 1.7517,
+      "train_median": 0.0,
+      "test_median": 0.7191359703843805
+     },
+     {
+      "feature": "aml_txn_v1::txn_out",
+      "psi": 1.7433,
+      "train_median": 2.0,
+      "test_median": 1.0
+     },
+     {
+      "feature": "aml_temporal_v1::min_iat_hours",
+      "psi": 1.7029,
+      "train_median": 0.0,
+      "test_median": 0.016666666666666666
+     }
+    ]
+   },
+   "persistence_reference_ap": 0.01765232339548503,
+   "notes": [
+    "unit of prediction is the (entity, origin) pair: every entity with feature-window history is scored at each origin, so the same account recurs across train, validation and test with a different snapshot and label; the partitions are disjoint in time, not in entity.",
+    "label = the entity is payer or payee of at least one transaction flagged by the publisher and dated in [origin, origin + 2 days 00:00:00).",
+    "eligibility = at least one dated transaction in the feature window; window positives without one are excluded and counted, never scored.",
+    "features = transactions dated strictly before the origin and at or after origin - 4 days 00:00:00; recency and tenure are measured from the origin.",
+    "train: 31 of 1459 window positives have no feature-window history and are excluded.",
+    "val: 377 of 1497 window positives have no feature-window history and are excluded.",
+    "test: 379 of 1397 window positives have no feature-window history and are excluded."
+   ]
+  }
+ }
+}

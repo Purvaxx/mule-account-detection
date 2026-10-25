@@ -1,0 +1,1513 @@
+{
+  "schema_version": "1.0",
+  "experiment": {
+    "name": "heuristic_floor",
+    "description": "Unsupervised AML typology score over aml_core_v1. The floor a supervised candidate has to clear to have demonstrated anything.",
+    "tags": [
+      "baseline",
+      "unsupervised"
+    ],
+    "seed": 42,
+    "dataset": {
+      "name": "reference_dkdata",
+      "version": "size13479193-d205a64d",
+      "provenance": "file:C:\\Users\\bhara\\Downloads\\SIH\\dkdata.json",
+      "label_definition": "positive = graph node attribute 'core' is True, set by Layer 3 from the payer_core / beneficiary_core flags carried by the source records; it marks entities named as core to the published investigation, not a supervised fraud adjudication",
+      "synthetic": false,
+      "notes": [
+        "Version is derived from file size and mtime, not a content hash.",
+        "The positive class is extremely rare; see the split plan's notes for which folds can support label-dependent metrics."
+      ]
+    },
+    "features": {
+      "sets": [
+        "aml_core_v1"
+      ],
+      "scope": "global"
+    },
+    "split": {
+      "strategy": "stratified_kfold",
+      "params": {
+        "n_folds": 4
+      },
+      "seed": 42
+    },
+    "model": {
+      "family": "structural_heuristic",
+      "params": {},
+      "imbalance": "none"
+    },
+    "threshold": {
+      "strategy": "alert_budget",
+      "params": {
+        "rate": 0.01
+      }
+    },
+    "calibration": {
+      "method": "none",
+      "min_val_positives": 20
+    },
+    "evaluation": {
+      "k_values": [
+        10,
+        20,
+        50,
+        100
+      ],
+      "alert_rates": [
+        0.001,
+        0.005,
+        0.01,
+        0.05
+      ],
+      "calibration_bins": 10
+    }
+  },
+  "dataset": {
+    "spec": {
+      "name": "reference_dkdata",
+      "version": "size13479193-d205a64d",
+      "provenance": "file:C:\\Users\\bhara\\Downloads\\SIH\\dkdata.json",
+      "label_definition": "positive = graph node attribute 'core' is True, set by Layer 3 from the payer_core / beneficiary_core flags carried by the source records; it marks entities named as core to the published investigation, not a supervised fraud adjudication",
+      "synthetic": false,
+      "notes": [
+        "Version is derived from file size and mtime, not a content hash.",
+        "The positive class is extremely rare; see the split plan's notes for which folds can support label-dependent metrics."
+      ]
+    },
+    "n_entities": 3440,
+    "n_positive": 4,
+    "n_negative": 3436,
+    "prevalence": 0.0011627906976744186,
+    "n_edges": 16940,
+    "has_graph": true,
+    "has_time": true
+  },
+  "features": {
+    "scope": "global",
+    "as_of": null,
+    "n_columns": 29,
+    "sets": [
+      {
+        "name": "aml_core_v1",
+        "version": "1.0",
+        "family": "composite",
+        "time_scopable": true,
+        "n_columns": 29,
+        "columns": [
+          "aml_core_v1::txn_in",
+          "aml_core_v1::txn_out",
+          "aml_core_v1::txn_total",
+          "aml_core_v1::amount_in_sum",
+          "aml_core_v1::amount_out_sum",
+          "aml_core_v1::amount_in_mean",
+          "aml_core_v1::amount_out_mean",
+          "aml_core_v1::amount_max",
+          "aml_core_v1::amount_std",
+          "aml_core_v1::active_days",
+          "aml_core_v1::span_days",
+          "aml_core_v1::txn_per_active_day",
+          "aml_core_v1::mean_iat_days",
+          "aml_core_v1::std_iat_days",
+          "aml_core_v1::burstiness",
+          "aml_core_v1::fan_in",
+          "aml_core_v1::fan_out",
+          "aml_core_v1::inflow_outflow_ratio",
+          "aml_core_v1::flow_imbalance",
+          "aml_core_v1::pass_through_ratio",
+          "aml_core_v1::min_in_to_out_gap_days",
+          "aml_core_v1::same_day_in_out",
+          "aml_core_v1::degree_total",
+          "aml_core_v1::counterparty_count",
+          "aml_core_v1::counterparty_diversity",
+          "aml_core_v1::reciprocal_partners",
+          "aml_core_v1::reciprocal_ratio",
+          "aml_core_v1::clustering",
+          "aml_core_v1::degree_centrality"
+        ]
+      }
+    ],
+    "notes": [
+      "15436 NaN cells remained after computation and were left in place; candidates are responsible for imputing them inside their train-fitted preprocessing."
+    ]
+  },
+  "split": {
+    "strategy": "stratified_kfold",
+    "params": {
+      "n_folds": 4,
+      "val_folds": 1
+    },
+    "seed": 42,
+    "regime": "entity-disjoint",
+    "entity_disjoint": true,
+    "time_aware": false,
+    "graph_leakage_controlled": false,
+    "n_folds": 4,
+    "notes": [],
+    "folds": [
+      {
+        "fold_idx": 0,
+        "n_train": 1720,
+        "n_train_pos": 2,
+        "n_val": 860,
+        "n_val_pos": 1,
+        "n_test": 860,
+        "n_test_pos": 1
+      },
+      {
+        "fold_idx": 1,
+        "n_train": 1720,
+        "n_train_pos": 2,
+        "n_val": 860,
+        "n_val_pos": 1,
+        "n_test": 860,
+        "n_test_pos": 1
+      },
+      {
+        "fold_idx": 2,
+        "n_train": 1720,
+        "n_train_pos": 2,
+        "n_val": 860,
+        "n_val_pos": 1,
+        "n_test": 860,
+        "n_test_pos": 1
+      },
+      {
+        "fold_idx": 3,
+        "n_train": 1720,
+        "n_train_pos": 2,
+        "n_val": 860,
+        "n_val_pos": 1,
+        "n_test": 860,
+        "n_test_pos": 1
+      }
+    ]
+  },
+  "leakage": [
+    {
+      "check": "evaluation_regime",
+      "severity": "info",
+      "message": "split 'stratified_kfold' is entity-disjoint: entity_disjoint=True, time_aware=False, graph_leakage_controlled=False"
+    },
+    {
+      "check": "temporal_ordering",
+      "severity": "warning",
+      "message": "the dataset carries timestamps but the split ignores them; the model may be fitted on behaviour that post-dates the behaviour it is scored on"
+    },
+    {
+      "check": "feature_scope",
+      "severity": "info",
+      "message": "features were computed on the whole population, so structural and aggregate columns encode information about held-out entities (transductive feature regime)",
+      "fold_idx": 0
+    },
+    {
+      "check": "constant_or_perfect_features",
+      "severity": "warning",
+      "message": "14 feature column(s) separate the training classes perfectly; on a rare-positive dataset that is more often a leak than a discovery",
+      "detail": {
+        "columns": [
+          "aml_core_v1::txn_in",
+          "aml_core_v1::txn_out",
+          "aml_core_v1::txn_total",
+          "aml_core_v1::amount_in_sum",
+          "aml_core_v1::amount_out_sum",
+          "aml_core_v1::active_days",
+          "aml_core_v1::txn_per_active_day",
+          "aml_core_v1::fan_in",
+          "aml_core_v1::fan_out",
+          "aml_core_v1::same_day_in_out",
+          "aml_core_v1::degree_total",
+          "aml_core_v1::counterparty_count",
+          "aml_core_v1::reciprocal_partners",
+          "aml_core_v1::degree_centrality"
+        ],
+        "n_train_positive": 2
+      },
+      "fold_idx": 0
+    },
+    {
+      "check": "feature_scope",
+      "severity": "info",
+      "message": "features were computed on the whole population, so structural and aggregate columns encode information about held-out entities (transductive feature regime)",
+      "fold_idx": 1
+    },
+    {
+      "check": "constant_or_perfect_features",
+      "severity": "warning",
+      "message": "12 feature column(s) separate the training classes perfectly; on a rare-positive dataset that is more often a leak than a discovery",
+      "detail": {
+        "columns": [
+          "aml_core_v1::txn_in",
+          "aml_core_v1::txn_out",
+          "aml_core_v1::txn_total",
+          "aml_core_v1::amount_in_sum",
+          "aml_core_v1::txn_per_active_day",
+          "aml_core_v1::fan_in",
+          "aml_core_v1::fan_out",
+          "aml_core_v1::same_day_in_out",
+          "aml_core_v1::degree_total",
+          "aml_core_v1::counterparty_count",
+          "aml_core_v1::reciprocal_partners",
+          "aml_core_v1::degree_centrality"
+        ],
+        "n_train_positive": 2
+      },
+      "fold_idx": 1
+    },
+    {
+      "check": "feature_scope",
+      "severity": "info",
+      "message": "features were computed on the whole population, so structural and aggregate columns encode information about held-out entities (transductive feature regime)",
+      "fold_idx": 2
+    },
+    {
+      "check": "constant_or_perfect_features",
+      "severity": "warning",
+      "message": "12 feature column(s) separate the training classes perfectly; on a rare-positive dataset that is more often a leak than a discovery",
+      "detail": {
+        "columns": [
+          "aml_core_v1::txn_in",
+          "aml_core_v1::txn_out",
+          "aml_core_v1::txn_total",
+          "aml_core_v1::amount_in_sum",
+          "aml_core_v1::txn_per_active_day",
+          "aml_core_v1::fan_in",
+          "aml_core_v1::fan_out",
+          "aml_core_v1::same_day_in_out",
+          "aml_core_v1::degree_total",
+          "aml_core_v1::counterparty_count",
+          "aml_core_v1::reciprocal_partners",
+          "aml_core_v1::degree_centrality"
+        ],
+        "n_train_positive": 2
+      },
+      "fold_idx": 2
+    },
+    {
+      "check": "feature_scope",
+      "severity": "info",
+      "message": "features were computed on the whole population, so structural and aggregate columns encode information about held-out entities (transductive feature regime)",
+      "fold_idx": 3
+    },
+    {
+      "check": "constant_or_perfect_features",
+      "severity": "warning",
+      "message": "14 feature column(s) separate the training classes perfectly; on a rare-positive dataset that is more often a leak than a discovery",
+      "detail": {
+        "columns": [
+          "aml_core_v1::txn_in",
+          "aml_core_v1::txn_out",
+          "aml_core_v1::txn_total",
+          "aml_core_v1::amount_in_sum",
+          "aml_core_v1::amount_out_sum",
+          "aml_core_v1::active_days",
+          "aml_core_v1::txn_per_active_day",
+          "aml_core_v1::fan_in",
+          "aml_core_v1::fan_out",
+          "aml_core_v1::same_day_in_out",
+          "aml_core_v1::degree_total",
+          "aml_core_v1::counterparty_count",
+          "aml_core_v1::reciprocal_partners",
+          "aml_core_v1::degree_centrality"
+        ],
+        "n_train_positive": 2
+      },
+      "fold_idx": 3
+    }
+  ],
+  "folds": [
+    {
+      "fold_idx": 0,
+      "counts": {
+        "n_train": 1720,
+        "n_train_pos": 2,
+        "n_val": 860,
+        "n_val_pos": 1,
+        "n_test": 860,
+        "n_test_pos": 1
+      },
+      "validation_metrics": {
+        "n": 860,
+        "n_positive": 1,
+        "n_negative": 859,
+        "prevalence": 0.0011627906976744186,
+        "average_precision": 1.0,
+        "ap_lift": 860.0,
+        "roc_auc": 1.0,
+        "precision_at_k": {
+          "10": 0.1,
+          "20": 0.05,
+          "50": 0.02,
+          "100": 0.01
+        },
+        "recall_at_k": {
+          "10": 1.0,
+          "20": 1.0,
+          "50": 1.0,
+          "100": 1.0
+        },
+        "precision_at_rate": {
+          "0.001": 1.0,
+          "0.005": 0.2,
+          "0.01": 0.1111111111111111,
+          "0.05": 0.023255813953488372
+        },
+        "recall_at_rate": {
+          "0.001": 1.0,
+          "0.005": 1.0,
+          "0.01": 1.0,
+          "0.05": 1.0
+        },
+        "at_threshold": {
+          "threshold": 0.7586789718825925,
+          "precision": 0.1111111111111111,
+          "recall": 1.0,
+          "f1": 0.19999999999999998,
+          "confusion": [
+            [
+              851,
+              8
+            ],
+            [
+              0,
+              1
+            ]
+          ],
+          "alerts": 9,
+          "alert_rate": 0.010465116279069767,
+          "false_positive_burden": 8.0
+        },
+        "calibration": null,
+        "undefined": {
+          "calibration": "scores are not on a probability scale"
+        }
+      },
+      "test_metrics": {
+        "n": 860,
+        "n_positive": 1,
+        "n_negative": 859,
+        "prevalence": 0.0011627906976744186,
+        "average_precision": 1.0,
+        "ap_lift": 860.0,
+        "roc_auc": 1.0,
+        "precision_at_k": {
+          "10": 0.1,
+          "20": 0.05,
+          "50": 0.02,
+          "100": 0.01
+        },
+        "recall_at_k": {
+          "10": 1.0,
+          "20": 1.0,
+          "50": 1.0,
+          "100": 1.0
+        },
+        "precision_at_rate": {
+          "0.001": 1.0,
+          "0.005": 0.2,
+          "0.01": 0.1111111111111111,
+          "0.05": 0.023255813953488372
+        },
+        "recall_at_rate": {
+          "0.001": 1.0,
+          "0.005": 1.0,
+          "0.01": 1.0,
+          "0.05": 1.0
+        },
+        "at_threshold": {
+          "threshold": 0.7586789718825925,
+          "precision": 0.09090909090909091,
+          "recall": 1.0,
+          "f1": 0.16666666666666669,
+          "confusion": [
+            [
+              849,
+              10
+            ],
+            [
+              0,
+              1
+            ]
+          ],
+          "alerts": 11,
+          "alert_rate": 0.012790697674418604,
+          "false_positive_burden": 10.0
+        },
+        "calibration": null,
+        "undefined": {
+          "calibration": "scores are not on a probability scale"
+        }
+      },
+      "threshold": {
+        "value": 0.7586789718825925,
+        "strategy": "alert_budget",
+        "params": {
+          "rate": 0.01
+        },
+        "selected_on": "validation",
+        "objective": "val_alert_rate",
+        "objective_value": 0.010465116279069767,
+        "reason": null,
+        "n_val_positives": 1
+      },
+      "calibration": {
+        "method": "none",
+        "fitted": true,
+        "produces_probabilities": false,
+        "diagnostics": {}
+      },
+      "leakage": [
+        {
+          "check": "feature_scope",
+          "severity": "info",
+          "message": "features were computed on the whole population, so structural and aggregate columns encode information about held-out entities (transductive feature regime)"
+        },
+        {
+          "check": "constant_or_perfect_features",
+          "severity": "warning",
+          "message": "14 feature column(s) separate the training classes perfectly; on a rare-positive dataset that is more often a leak than a discovery",
+          "detail": {
+            "columns": [
+              "aml_core_v1::txn_in",
+              "aml_core_v1::txn_out",
+              "aml_core_v1::txn_total",
+              "aml_core_v1::amount_in_sum",
+              "aml_core_v1::amount_out_sum",
+              "aml_core_v1::active_days",
+              "aml_core_v1::txn_per_active_day",
+              "aml_core_v1::fan_in",
+              "aml_core_v1::fan_out",
+              "aml_core_v1::same_day_in_out",
+              "aml_core_v1::degree_total",
+              "aml_core_v1::counterparty_count",
+              "aml_core_v1::reciprocal_partners",
+              "aml_core_v1::degree_centrality"
+            ],
+            "n_train_positive": 2
+          }
+        }
+      ],
+      "fit_report": {
+        "status": "no_parameters_to_fit",
+        "signals_used": [
+          "aml_core_v1::burstiness",
+          "aml_core_v1::counterparty_diversity",
+          "aml_core_v1::fan_in",
+          "aml_core_v1::fan_out",
+          "aml_core_v1::min_in_to_out_gap_days",
+          "aml_core_v1::pass_through_ratio",
+          "aml_core_v1::reciprocal_ratio",
+          "aml_core_v1::txn_per_active_day"
+        ],
+        "signals_missing": [],
+        "labels_used": false
+      },
+      "runtime_seconds": {
+        "features": 5.537656700005755,
+        "fit": 9.320001117885113e-05,
+        "score": 0.008905300055630505
+      },
+      "checkpoint": null,
+      "notes": []
+    },
+    {
+      "fold_idx": 1,
+      "counts": {
+        "n_train": 1720,
+        "n_train_pos": 2,
+        "n_val": 860,
+        "n_val_pos": 1,
+        "n_test": 860,
+        "n_test_pos": 1
+      },
+      "validation_metrics": {
+        "n": 860,
+        "n_positive": 1,
+        "n_negative": 859,
+        "prevalence": 0.0011627906976744186,
+        "average_precision": 1.0,
+        "ap_lift": 860.0,
+        "roc_auc": 1.0,
+        "precision_at_k": {
+          "10": 0.1,
+          "20": 0.05,
+          "50": 0.02,
+          "100": 0.01
+        },
+        "recall_at_k": {
+          "10": 1.0,
+          "20": 1.0,
+          "50": 1.0,
+          "100": 1.0
+        },
+        "precision_at_rate": {
+          "0.001": 1.0,
+          "0.005": 0.2,
+          "0.01": 0.1111111111111111,
+          "0.05": 0.023255813953488372
+        },
+        "recall_at_rate": {
+          "0.001": 1.0,
+          "0.005": 1.0,
+          "0.01": 1.0,
+          "0.05": 1.0
+        },
+        "at_threshold": {
+          "threshold": 0.7638028649028912,
+          "precision": 0.1111111111111111,
+          "recall": 1.0,
+          "f1": 0.19999999999999998,
+          "confusion": [
+            [
+              851,
+              8
+            ],
+            [
+              0,
+              1
+            ]
+          ],
+          "alerts": 9,
+          "alert_rate": 0.010465116279069767,
+          "false_positive_burden": 8.0
+        },
+        "calibration": null,
+        "undefined": {
+          "calibration": "scores are not on a probability scale"
+        }
+      },
+      "test_metrics": {
+        "n": 860,
+        "n_positive": 1,
+        "n_negative": 859,
+        "prevalence": 0.0011627906976744186,
+        "average_precision": 1.0,
+        "ap_lift": 860.0,
+        "roc_auc": 1.0,
+        "precision_at_k": {
+          "10": 0.1,
+          "20": 0.05,
+          "50": 0.02,
+          "100": 0.01
+        },
+        "recall_at_k": {
+          "10": 1.0,
+          "20": 1.0,
+          "50": 1.0,
+          "100": 1.0
+        },
+        "precision_at_rate": {
+          "0.001": 1.0,
+          "0.005": 0.2,
+          "0.01": 0.1111111111111111,
+          "0.05": 0.023255813953488372
+        },
+        "recall_at_rate": {
+          "0.001": 1.0,
+          "0.005": 1.0,
+          "0.01": 1.0,
+          "0.05": 1.0
+        },
+        "at_threshold": {
+          "threshold": 0.7638028649028912,
+          "precision": 0.16666666666666666,
+          "recall": 1.0,
+          "f1": 0.2857142857142857,
+          "confusion": [
+            [
+              854,
+              5
+            ],
+            [
+              0,
+              1
+            ]
+          ],
+          "alerts": 6,
+          "alert_rate": 0.0069767441860465115,
+          "false_positive_burden": 5.0
+        },
+        "calibration": null,
+        "undefined": {
+          "calibration": "scores are not on a probability scale"
+        }
+      },
+      "threshold": {
+        "value": 0.7638028649028912,
+        "strategy": "alert_budget",
+        "params": {
+          "rate": 0.01
+        },
+        "selected_on": "validation",
+        "objective": "val_alert_rate",
+        "objective_value": 0.010465116279069767,
+        "reason": null,
+        "n_val_positives": 1
+      },
+      "calibration": {
+        "method": "none",
+        "fitted": true,
+        "produces_probabilities": false,
+        "diagnostics": {}
+      },
+      "leakage": [
+        {
+          "check": "feature_scope",
+          "severity": "info",
+          "message": "features were computed on the whole population, so structural and aggregate columns encode information about held-out entities (transductive feature regime)"
+        },
+        {
+          "check": "constant_or_perfect_features",
+          "severity": "warning",
+          "message": "12 feature column(s) separate the training classes perfectly; on a rare-positive dataset that is more often a leak than a discovery",
+          "detail": {
+            "columns": [
+              "aml_core_v1::txn_in",
+              "aml_core_v1::txn_out",
+              "aml_core_v1::txn_total",
+              "aml_core_v1::amount_in_sum",
+              "aml_core_v1::txn_per_active_day",
+              "aml_core_v1::fan_in",
+              "aml_core_v1::fan_out",
+              "aml_core_v1::same_day_in_out",
+              "aml_core_v1::degree_total",
+              "aml_core_v1::counterparty_count",
+              "aml_core_v1::reciprocal_partners",
+              "aml_core_v1::degree_centrality"
+            ],
+            "n_train_positive": 2
+          }
+        }
+      ],
+      "fit_report": {
+        "status": "no_parameters_to_fit",
+        "signals_used": [
+          "aml_core_v1::burstiness",
+          "aml_core_v1::counterparty_diversity",
+          "aml_core_v1::fan_in",
+          "aml_core_v1::fan_out",
+          "aml_core_v1::min_in_to_out_gap_days",
+          "aml_core_v1::pass_through_ratio",
+          "aml_core_v1::reciprocal_ratio",
+          "aml_core_v1::txn_per_active_day"
+        ],
+        "signals_missing": [],
+        "labels_used": false
+      },
+      "runtime_seconds": {
+        "features": 1.700012944638729e-06,
+        "fit": 6.500002928078175e-05,
+        "score": 0.008569999947212636
+      },
+      "checkpoint": null,
+      "notes": []
+    },
+    {
+      "fold_idx": 2,
+      "counts": {
+        "n_train": 1720,
+        "n_train_pos": 2,
+        "n_val": 860,
+        "n_val_pos": 1,
+        "n_test": 860,
+        "n_test_pos": 1
+      },
+      "validation_metrics": {
+        "n": 860,
+        "n_positive": 1,
+        "n_negative": 859,
+        "prevalence": 0.0011627906976744186,
+        "average_precision": 1.0,
+        "ap_lift": 860.0,
+        "roc_auc": 1.0,
+        "precision_at_k": {
+          "10": 0.1,
+          "20": 0.05,
+          "50": 0.02,
+          "100": 0.01
+        },
+        "recall_at_k": {
+          "10": 1.0,
+          "20": 1.0,
+          "50": 1.0,
+          "100": 1.0
+        },
+        "precision_at_rate": {
+          "0.001": 1.0,
+          "0.005": 0.2,
+          "0.01": 0.1111111111111111,
+          "0.05": 0.023255813953488372
+        },
+        "recall_at_rate": {
+          "0.001": 1.0,
+          "0.005": 1.0,
+          "0.01": 1.0,
+          "0.05": 1.0
+        },
+        "at_threshold": {
+          "threshold": 0.8217521896267933,
+          "precision": 0.1111111111111111,
+          "recall": 1.0,
+          "f1": 0.19999999999999998,
+          "confusion": [
+            [
+              851,
+              8
+            ],
+            [
+              0,
+              1
+            ]
+          ],
+          "alerts": 9,
+          "alert_rate": 0.010465116279069767,
+          "false_positive_burden": 8.0
+        },
+        "calibration": null,
+        "undefined": {
+          "calibration": "scores are not on a probability scale"
+        }
+      },
+      "test_metrics": {
+        "n": 860,
+        "n_positive": 1,
+        "n_negative": 859,
+        "prevalence": 0.0011627906976744186,
+        "average_precision": 1.0,
+        "ap_lift": 860.0,
+        "roc_auc": 1.0,
+        "precision_at_k": {
+          "10": 0.1,
+          "20": 0.05,
+          "50": 0.02,
+          "100": 0.01
+        },
+        "recall_at_k": {
+          "10": 1.0,
+          "20": 1.0,
+          "50": 1.0,
+          "100": 1.0
+        },
+        "precision_at_rate": {
+          "0.001": 1.0,
+          "0.005": 0.2,
+          "0.01": 0.1111111111111111,
+          "0.05": 0.023255813953488372
+        },
+        "recall_at_rate": {
+          "0.001": 1.0,
+          "0.005": 1.0,
+          "0.01": 1.0,
+          "0.05": 1.0
+        },
+        "at_threshold": {
+          "threshold": 0.8217521896267933,
+          "precision": 0.25,
+          "recall": 1.0,
+          "f1": 0.4,
+          "confusion": [
+            [
+              856,
+              3
+            ],
+            [
+              0,
+              1
+            ]
+          ],
+          "alerts": 4,
+          "alert_rate": 0.004651162790697674,
+          "false_positive_burden": 3.0
+        },
+        "calibration": null,
+        "undefined": {
+          "calibration": "scores are not on a probability scale"
+        }
+      },
+      "threshold": {
+        "value": 0.8217521896267933,
+        "strategy": "alert_budget",
+        "params": {
+          "rate": 0.01
+        },
+        "selected_on": "validation",
+        "objective": "val_alert_rate",
+        "objective_value": 0.010465116279069767,
+        "reason": null,
+        "n_val_positives": 1
+      },
+      "calibration": {
+        "method": "none",
+        "fitted": true,
+        "produces_probabilities": false,
+        "diagnostics": {}
+      },
+      "leakage": [
+        {
+          "check": "feature_scope",
+          "severity": "info",
+          "message": "features were computed on the whole population, so structural and aggregate columns encode information about held-out entities (transductive feature regime)"
+        },
+        {
+          "check": "constant_or_perfect_features",
+          "severity": "warning",
+          "message": "12 feature column(s) separate the training classes perfectly; on a rare-positive dataset that is more often a leak than a discovery",
+          "detail": {
+            "columns": [
+              "aml_core_v1::txn_in",
+              "aml_core_v1::txn_out",
+              "aml_core_v1::txn_total",
+              "aml_core_v1::amount_in_sum",
+              "aml_core_v1::txn_per_active_day",
+              "aml_core_v1::fan_in",
+              "aml_core_v1::fan_out",
+              "aml_core_v1::same_day_in_out",
+              "aml_core_v1::degree_total",
+              "aml_core_v1::counterparty_count",
+              "aml_core_v1::reciprocal_partners",
+              "aml_core_v1::degree_centrality"
+            ],
+            "n_train_positive": 2
+          }
+        }
+      ],
+      "fit_report": {
+        "status": "no_parameters_to_fit",
+        "signals_used": [
+          "aml_core_v1::burstiness",
+          "aml_core_v1::counterparty_diversity",
+          "aml_core_v1::fan_in",
+          "aml_core_v1::fan_out",
+          "aml_core_v1::min_in_to_out_gap_days",
+          "aml_core_v1::pass_through_ratio",
+          "aml_core_v1::reciprocal_ratio",
+          "aml_core_v1::txn_per_active_day"
+        ],
+        "signals_missing": [],
+        "labels_used": false
+      },
+      "runtime_seconds": {
+        "features": 1.700012944638729e-06,
+        "fit": 6.350001785904169e-05,
+        "score": 0.008484899997711182
+      },
+      "checkpoint": null,
+      "notes": []
+    },
+    {
+      "fold_idx": 3,
+      "counts": {
+        "n_train": 1720,
+        "n_train_pos": 2,
+        "n_val": 860,
+        "n_val_pos": 1,
+        "n_test": 860,
+        "n_test_pos": 1
+      },
+      "validation_metrics": {
+        "n": 860,
+        "n_positive": 1,
+        "n_negative": 859,
+        "prevalence": 0.0011627906976744186,
+        "average_precision": 1.0,
+        "ap_lift": 860.0,
+        "roc_auc": 1.0,
+        "precision_at_k": {
+          "10": 0.1,
+          "20": 0.05,
+          "50": 0.02,
+          "100": 0.01
+        },
+        "recall_at_k": {
+          "10": 1.0,
+          "20": 1.0,
+          "50": 1.0,
+          "100": 1.0
+        },
+        "precision_at_rate": {
+          "0.001": 1.0,
+          "0.005": 0.2,
+          "0.01": 0.1111111111111111,
+          "0.05": 0.023255813953488372
+        },
+        "recall_at_rate": {
+          "0.001": 1.0,
+          "0.005": 1.0,
+          "0.01": 1.0,
+          "0.05": 1.0
+        },
+        "at_threshold": {
+          "threshold": 0.7770866675167679,
+          "precision": 0.1111111111111111,
+          "recall": 1.0,
+          "f1": 0.19999999999999998,
+          "confusion": [
+            [
+              851,
+              8
+            ],
+            [
+              0,
+              1
+            ]
+          ],
+          "alerts": 9,
+          "alert_rate": 0.010465116279069767,
+          "false_positive_burden": 8.0
+        },
+        "calibration": null,
+        "undefined": {
+          "calibration": "scores are not on a probability scale"
+        }
+      },
+      "test_metrics": {
+        "n": 860,
+        "n_positive": 1,
+        "n_negative": 859,
+        "prevalence": 0.0011627906976744186,
+        "average_precision": 1.0,
+        "ap_lift": 860.0,
+        "roc_auc": 1.0,
+        "precision_at_k": {
+          "10": 0.1,
+          "20": 0.05,
+          "50": 0.02,
+          "100": 0.01
+        },
+        "recall_at_k": {
+          "10": 1.0,
+          "20": 1.0,
+          "50": 1.0,
+          "100": 1.0
+        },
+        "precision_at_rate": {
+          "0.001": 1.0,
+          "0.005": 0.2,
+          "0.01": 0.1111111111111111,
+          "0.05": 0.023255813953488372
+        },
+        "recall_at_rate": {
+          "0.001": 1.0,
+          "0.005": 1.0,
+          "0.01": 1.0,
+          "0.05": 1.0
+        },
+        "at_threshold": {
+          "threshold": 0.7770866675167679,
+          "precision": 0.09090909090909091,
+          "recall": 1.0,
+          "f1": 0.16666666666666669,
+          "confusion": [
+            [
+              849,
+              10
+            ],
+            [
+              0,
+              1
+            ]
+          ],
+          "alerts": 11,
+          "alert_rate": 0.012790697674418604,
+          "false_positive_burden": 10.0
+        },
+        "calibration": null,
+        "undefined": {
+          "calibration": "scores are not on a probability scale"
+        }
+      },
+      "threshold": {
+        "value": 0.7770866675167679,
+        "strategy": "alert_budget",
+        "params": {
+          "rate": 0.01
+        },
+        "selected_on": "validation",
+        "objective": "val_alert_rate",
+        "objective_value": 0.010465116279069767,
+        "reason": null,
+        "n_val_positives": 1
+      },
+      "calibration": {
+        "method": "none",
+        "fitted": true,
+        "produces_probabilities": false,
+        "diagnostics": {}
+      },
+      "leakage": [
+        {
+          "check": "feature_scope",
+          "severity": "info",
+          "message": "features were computed on the whole population, so structural and aggregate columns encode information about held-out entities (transductive feature regime)"
+        },
+        {
+          "check": "constant_or_perfect_features",
+          "severity": "warning",
+          "message": "14 feature column(s) separate the training classes perfectly; on a rare-positive dataset that is more often a leak than a discovery",
+          "detail": {
+            "columns": [
+              "aml_core_v1::txn_in",
+              "aml_core_v1::txn_out",
+              "aml_core_v1::txn_total",
+              "aml_core_v1::amount_in_sum",
+              "aml_core_v1::amount_out_sum",
+              "aml_core_v1::active_days",
+              "aml_core_v1::txn_per_active_day",
+              "aml_core_v1::fan_in",
+              "aml_core_v1::fan_out",
+              "aml_core_v1::same_day_in_out",
+              "aml_core_v1::degree_total",
+              "aml_core_v1::counterparty_count",
+              "aml_core_v1::reciprocal_partners",
+              "aml_core_v1::degree_centrality"
+            ],
+            "n_train_positive": 2
+          }
+        }
+      ],
+      "fit_report": {
+        "status": "no_parameters_to_fit",
+        "signals_used": [
+          "aml_core_v1::burstiness",
+          "aml_core_v1::counterparty_diversity",
+          "aml_core_v1::fan_in",
+          "aml_core_v1::fan_out",
+          "aml_core_v1::min_in_to_out_gap_days",
+          "aml_core_v1::pass_through_ratio",
+          "aml_core_v1::reciprocal_ratio",
+          "aml_core_v1::txn_per_active_day"
+        ],
+        "signals_missing": [],
+        "labels_used": false
+      },
+      "runtime_seconds": {
+        "features": 1.500011421740055e-06,
+        "fit": 6.43999082967639e-05,
+        "score": 0.008631700067780912
+      },
+      "checkpoint": null,
+      "notes": []
+    }
+  ],
+  "aggregate": {
+    "n": {
+      "mean": 860.0,
+      "std": 0.0,
+      "n_defined": 4,
+      "n_folds": 4
+    },
+    "n_positive": {
+      "mean": 1.0,
+      "std": 0.0,
+      "n_defined": 4,
+      "n_folds": 4
+    },
+    "n_negative": {
+      "mean": 859.0,
+      "std": 0.0,
+      "n_defined": 4,
+      "n_folds": 4
+    },
+    "prevalence": {
+      "mean": 0.0011627906976744186,
+      "std": 0.0,
+      "n_defined": 4,
+      "n_folds": 4
+    },
+    "average_precision": {
+      "mean": 1.0,
+      "std": 0.0,
+      "n_defined": 4,
+      "n_folds": 4
+    },
+    "ap_lift": {
+      "mean": 860.0,
+      "std": 0.0,
+      "n_defined": 4,
+      "n_folds": 4
+    },
+    "roc_auc": {
+      "mean": 1.0,
+      "std": 0.0,
+      "n_defined": 4,
+      "n_folds": 4
+    },
+    "precision_at_k.10": {
+      "mean": 0.1,
+      "std": 0.0,
+      "n_defined": 4,
+      "n_folds": 4
+    },
+    "precision_at_k.20": {
+      "mean": 0.05,
+      "std": 0.0,
+      "n_defined": 4,
+      "n_folds": 4
+    },
+    "precision_at_k.50": {
+      "mean": 0.02,
+      "std": 0.0,
+      "n_defined": 4,
+      "n_folds": 4
+    },
+    "precision_at_k.100": {
+      "mean": 0.01,
+      "std": 0.0,
+      "n_defined": 4,
+      "n_folds": 4
+    },
+    "recall_at_k.10": {
+      "mean": 1.0,
+      "std": 0.0,
+      "n_defined": 4,
+      "n_folds": 4
+    },
+    "recall_at_k.20": {
+      "mean": 1.0,
+      "std": 0.0,
+      "n_defined": 4,
+      "n_folds": 4
+    },
+    "recall_at_k.50": {
+      "mean": 1.0,
+      "std": 0.0,
+      "n_defined": 4,
+      "n_folds": 4
+    },
+    "recall_at_k.100": {
+      "mean": 1.0,
+      "std": 0.0,
+      "n_defined": 4,
+      "n_folds": 4
+    },
+    "precision_at_rate.0.001": {
+      "mean": 1.0,
+      "std": 0.0,
+      "n_defined": 4,
+      "n_folds": 4
+    },
+    "precision_at_rate.0.005": {
+      "mean": 0.2,
+      "std": 0.0,
+      "n_defined": 4,
+      "n_folds": 4
+    },
+    "precision_at_rate.0.01": {
+      "mean": 0.1111111111111111,
+      "std": 0.0,
+      "n_defined": 4,
+      "n_folds": 4
+    },
+    "precision_at_rate.0.05": {
+      "mean": 0.023255813953488372,
+      "std": 0.0,
+      "n_defined": 4,
+      "n_folds": 4
+    },
+    "recall_at_rate.0.001": {
+      "mean": 1.0,
+      "std": 0.0,
+      "n_defined": 4,
+      "n_folds": 4
+    },
+    "recall_at_rate.0.005": {
+      "mean": 1.0,
+      "std": 0.0,
+      "n_defined": 4,
+      "n_folds": 4
+    },
+    "recall_at_rate.0.01": {
+      "mean": 1.0,
+      "std": 0.0,
+      "n_defined": 4,
+      "n_folds": 4
+    },
+    "recall_at_rate.0.05": {
+      "mean": 1.0,
+      "std": 0.0,
+      "n_defined": 4,
+      "n_folds": 4
+    },
+    "at_threshold.threshold": {
+      "mean": 0.7803301734822612,
+      "std": 0.02484064316806876,
+      "n_defined": 4,
+      "n_folds": 4
+    },
+    "at_threshold.precision": {
+      "mean": 0.14962121212121213,
+      "std": 0.0656899439243357,
+      "n_defined": 4,
+      "n_folds": 4
+    },
+    "at_threshold.recall": {
+      "mean": 1.0,
+      "std": 0.0,
+      "n_defined": 4,
+      "n_folds": 4
+    },
+    "at_threshold.f1": {
+      "mean": 0.2547619047619048,
+      "std": 0.09691967827165533,
+      "n_defined": 4,
+      "n_folds": 4
+    },
+    "at_threshold.alerts": {
+      "mean": 8.0,
+      "std": 3.082207001484488,
+      "n_defined": 4,
+      "n_folds": 4
+    },
+    "at_threshold.alert_rate": {
+      "mean": 0.009302325581395349,
+      "std": 0.0035839616296331257,
+      "n_defined": 4,
+      "n_folds": 4
+    },
+    "at_threshold.false_positive_burden": {
+      "mean": 7.0,
+      "std": 3.082207001484488,
+      "n_defined": 4,
+      "n_folds": 4
+    },
+    "calibration": {
+      "mean": null,
+      "std": null,
+      "n_defined": 0,
+      "n_folds": 4
+    }
+  },
+  "validation_aggregate": {
+    "n": {
+      "mean": 860.0,
+      "std": 0.0,
+      "n_defined": 4,
+      "n_folds": 4
+    },
+    "n_positive": {
+      "mean": 1.0,
+      "std": 0.0,
+      "n_defined": 4,
+      "n_folds": 4
+    },
+    "n_negative": {
+      "mean": 859.0,
+      "std": 0.0,
+      "n_defined": 4,
+      "n_folds": 4
+    },
+    "prevalence": {
+      "mean": 0.0011627906976744186,
+      "std": 0.0,
+      "n_defined": 4,
+      "n_folds": 4
+    },
+    "average_precision": {
+      "mean": 1.0,
+      "std": 0.0,
+      "n_defined": 4,
+      "n_folds": 4
+    },
+    "ap_lift": {
+      "mean": 860.0,
+      "std": 0.0,
+      "n_defined": 4,
+      "n_folds": 4
+    },
+    "roc_auc": {
+      "mean": 1.0,
+      "std": 0.0,
+      "n_defined": 4,
+      "n_folds": 4
+    },
+    "precision_at_k.10": {
+      "mean": 0.1,
+      "std": 0.0,
+      "n_defined": 4,
+      "n_folds": 4
+    },
+    "precision_at_k.20": {
+      "mean": 0.05,
+      "std": 0.0,
+      "n_defined": 4,
+      "n_folds": 4
+    },
+    "precision_at_k.50": {
+      "mean": 0.02,
+      "std": 0.0,
+      "n_defined": 4,
+      "n_folds": 4
+    },
+    "precision_at_k.100": {
+      "mean": 0.01,
+      "std": 0.0,
+      "n_defined": 4,
+      "n_folds": 4
+    },
+    "recall_at_k.10": {
+      "mean": 1.0,
+      "std": 0.0,
+      "n_defined": 4,
+      "n_folds": 4
+    },
+    "recall_at_k.20": {
+      "mean": 1.0,
+      "std": 0.0,
+      "n_defined": 4,
+      "n_folds": 4
+    },
+    "recall_at_k.50": {
+      "mean": 1.0,
+      "std": 0.0,
+      "n_defined": 4,
+      "n_folds": 4
+    },
+    "recall_at_k.100": {
+      "mean": 1.0,
+      "std": 0.0,
+      "n_defined": 4,
+      "n_folds": 4
+    },
+    "precision_at_rate.0.001": {
+      "mean": 1.0,
+      "std": 0.0,
+      "n_defined": 4,
+      "n_folds": 4
+    },
+    "precision_at_rate.0.005": {
+      "mean": 0.2,
+      "std": 0.0,
+      "n_defined": 4,
+      "n_folds": 4
+    },
+    "precision_at_rate.0.01": {
+      "mean": 0.1111111111111111,
+      "std": 0.0,
+      "n_defined": 4,
+      "n_folds": 4
+    },
+    "precision_at_rate.0.05": {
+      "mean": 0.023255813953488372,
+      "std": 0.0,
+      "n_defined": 4,
+      "n_folds": 4
+    },
+    "recall_at_rate.0.001": {
+      "mean": 1.0,
+      "std": 0.0,
+      "n_defined": 4,
+      "n_folds": 4
+    },
+    "recall_at_rate.0.005": {
+      "mean": 1.0,
+      "std": 0.0,
+      "n_defined": 4,
+      "n_folds": 4
+    },
+    "recall_at_rate.0.01": {
+      "mean": 1.0,
+      "std": 0.0,
+      "n_defined": 4,
+      "n_folds": 4
+    },
+    "recall_at_rate.0.05": {
+      "mean": 1.0,
+      "std": 0.0,
+      "n_defined": 4,
+      "n_folds": 4
+    },
+    "at_threshold.threshold": {
+      "mean": 0.7803301734822612,
+      "std": 0.02484064316806876,
+      "n_defined": 4,
+      "n_folds": 4
+    },
+    "at_threshold.precision": {
+      "mean": 0.1111111111111111,
+      "std": 0.0,
+      "n_defined": 4,
+      "n_folds": 4
+    },
+    "at_threshold.recall": {
+      "mean": 1.0,
+      "std": 0.0,
+      "n_defined": 4,
+      "n_folds": 4
+    },
+    "at_threshold.f1": {
+      "mean": 0.19999999999999998,
+      "std": 0.0,
+      "n_defined": 4,
+      "n_folds": 4
+    },
+    "at_threshold.alerts": {
+      "mean": 9.0,
+      "std": 0.0,
+      "n_defined": 4,
+      "n_folds": 4
+    },
+    "at_threshold.alert_rate": {
+      "mean": 0.010465116279069767,
+      "std": 0.0,
+      "n_defined": 4,
+      "n_folds": 4
+    },
+    "at_threshold.false_positive_burden": {
+      "mean": 8.0,
+      "std": 0.0,
+      "n_defined": 4,
+      "n_folds": 4
+    },
+    "calibration": {
+      "mean": null,
+      "std": null,
+      "n_defined": 0,
+      "n_folds": 4
+    }
+  },
+  "environment": {
+    "python": "3.11.8",
+    "platform": "Windows-10-10.0.26200-SP0",
+    "processor": "Intel64 Family 6 Model 190 Stepping 0, GenuineIntel",
+    "packages": {
+      "numpy": "2.3.5",
+      "pandas": "3.0.5",
+      "networkx": "3.6.1",
+      "sklearn": "1.9.0",
+      "torch": "2.13.0+cpu",
+      "torch_geometric": "2.8.0.post1",
+      "xgboost": null,
+      "lightgbm": null
+    },
+    "seeding": {
+      "seed": 42,
+      "python_random": true,
+      "numpy": true,
+      "torch": true,
+      "torch_deterministic_algorithms": false
+    }
+  },
+  "determinism": {
+    "seeded_sources": [
+      "python_random",
+      "numpy",
+      "torch (if installed)"
+    ],
+    "not_controlled": [
+      "floating-point reduction order across CPU threads",
+      "BLAS / MKL version differences",
+      "GPU kernel selection when CUDA is used"
+    ],
+    "torch_version": "2.13.0+cpu",
+    "torch_num_threads": 4,
+    "cuda_available": false
+  },
+  "notes": [
+    "features were computed on the whole population (transductive feature regime); see the leakage block.",
+    "the feature matrix is identical for every fold under this regime and was computed once; per-fold feature timings after fold 0 measure the reuse, not the computation."
+  ],
+  "started_at": "2026-09-06T07:15:59+00:00",
+  "finished_at": "2026-09-06T07:16:11+00:00",
+  "total_runtime_seconds": 19.49916920007672,
+  "git_commit": "fb09935837ba46e98fe19650c6c49564a884ac2f"
+}

@@ -1,0 +1,246 @@
+{
+  "name": "ibm_aml_hi_small",
+  "spec": {
+    "name": "ibm_aml_hi_small",
+    "version": "size475664283-c9a6aae1",
+    "provenance": "file:C:\\Users\\bhara\\Downloads\\Laundering Data\\HI-Small_Trans.csv",
+    "label_definition": "positive = the (bank, account) entity is the payer or the payee of at least one transaction whose published 'Is Laundering' flag is 1. IBM labels transactions; this entity label is derived, and it makes a launderer's counterparty positive as well",
+    "synthetic": true,
+    "notes": [
+      "SYNTHETIC: IBM AMLworld virtual-world simulator (Altman et al., NeurIPS 2023 Datasets and Benchmarks). Not evidence about real-world detection.",
+      "Entity is the (bank, account) pair; account strings are not globally unique (8 collisions across banks).",
+      "Amounts are native across 15 currencies (37% USD) and are not FX-converted; the amount column is 'amount', not 'amount_usd'.",
+      "The typology names live in the separate HI-Small_Patterns.txt and are deliberately not loaded: their group headers state the generating mechanism and its degree/hop parameter.",
+      "Version is derived from file size and mtime, not a content hash; the content hash is in data/manifests/ibm_aml_hi_small.json."
+    ]
+  },
+  "domain": "money_laundering",
+  "data": {
+    "n_entities": 515088,
+    "n_transactions": 5078345,
+    "n_positive": 6357,
+    "n_negative": 508731,
+    "positive_rate": 0.01234158046780356,
+    "has_graph_object": false,
+    "transaction_fields": [
+      "source_entity",
+      "target_entity",
+      "date",
+      "amount",
+      "Payment Format",
+      "Payment Currency",
+      "Receiving Currency",
+      "edge_key"
+    ],
+    "entity_fields": [],
+    "timestamp_range": {
+      "min": "2022-09-01 00:00:00",
+      "max": "2022-09-18 16:18:00",
+      "span_days": 17.0,
+      "n_dated": 5078345,
+      "n_undated": 0
+    },
+    "missingness": {
+      "source_entity": 0.0,
+      "target_entity": 0.0,
+      "date": 0.0,
+      "amount": 0.0,
+      "Payment Format": 0.0,
+      "Payment Currency": 0.0,
+      "Receiving Currency": 0.0,
+      "edge_key": 0.0
+    },
+    "duplicate_structure": {
+      "n_distinct_ordered_pairs": 1015736,
+      "mean_transactions_per_pair": 4.999670189891861,
+      "n_self_loops": 591212,
+      "n_fully_duplicated_rows": 9
+    },
+    "identity_representation": "entity ids are the source dataset's account/name identifiers as loaded; no resolution or merging was applied by the audit"
+  },
+  "labels": {
+    "definition": "positive = the (bank, account) entity is the payer or the payee of at least one transaction whose published 'Is Laundering' flag is 1. IBM labels transactions; this entity label is derived, and it makes a launderer's counterparty positive as well",
+    "granularity": "entity",
+    "derived_from_transaction_labels": true,
+    "n_positive": 6357,
+    "positive_rate": 0.01234158046780356,
+    "supports_cross_validation": true,
+    "min_positives_for_cross_validation": 40,
+    "label_alias_columns_present": [],
+    "entity_time_coverage": 1.0,
+    "forward_split_positives": {
+      "cut_at_q50": {
+        "cutoff": "2022-09-01 00:28:00",
+        "n_entities_after": 262281,
+        "n_positive_after": 2780
+      },
+      "cut_at_q60": {
+        "cutoff": "2022-09-01 03:55:00",
+        "n_entities_after": 206134,
+        "n_positive_after": 1979
+      },
+      "cut_at_q70": {
+        "cutoff": "2022-09-01 09:29:00",
+        "n_entities_after": 154588,
+        "n_positive_after": 1210
+      },
+      "cut_at_q80": {
+        "cutoff": "2022-09-01 17:59:00",
+        "n_entities_after": 103031,
+        "n_positive_after": 563
+      }
+    },
+    "supports_time_forward_evaluation": true,
+    "supports_entity_disjoint_evaluation": true,
+    "prospective_or_retrospective": "retrospective: the flag was attached after the behaviour it describes was complete, so a feature computed over an entity's whole history sees the period the label was assigned from"
+  },
+  "structural_triviality": {
+    "prevalence_floor_average_precision": 0.01234158046780356,
+    "single_quantity": {
+      "transaction_count": {
+        "average_precision": 0.025525146790761687,
+        "direction": "descending",
+        "lift_over_prevalence": 2.0682235032499383,
+        "roc_auc": 0.6917442316310651
+      },
+      "out_degree": {
+        "average_precision": 0.024353870774978928,
+        "direction": "descending",
+        "lift_over_prevalence": 1.9733186392547344,
+        "roc_auc": 0.6581182343423619
+      },
+      "in_degree": {
+        "average_precision": 0.021972149035186808,
+        "direction": "descending",
+        "lift_over_prevalence": 1.7803351112531545,
+        "roc_auc": 0.6884617063494488
+      },
+      "fan_in": {
+        "average_precision": 0.03464343168185733,
+        "direction": "descending",
+        "lift_over_prevalence": 2.8070498565588373,
+        "roc_auc": 0.7307206572207205
+      },
+      "fan_out": {
+        "average_precision": 0.02268557870015632,
+        "direction": "descending",
+        "lift_over_prevalence": 1.8381421050033222,
+        "roc_auc": 0.6576894177908155
+      },
+      "counterparty_count": {
+        "average_precision": 0.03526234092487958,
+        "direction": "descending",
+        "lift_over_prevalence": 2.857198153580993,
+        "roc_auc": 0.7568531918418615
+      },
+      "incoming_volume": {
+        "average_precision": 0.020569460959500244,
+        "direction": "descending",
+        "lift_over_prevalence": 1.66667964554146,
+        "roc_auc": 0.6837416751201144
+      },
+      "outgoing_volume": {
+        "average_precision": 0.022101191763680368,
+        "direction": "descending",
+        "lift_over_prevalence": 1.7907910434435417,
+        "roc_auc": 0.6598568629266196
+      },
+      "total_volume": {
+        "average_precision": 0.021843214670996307,
+        "direction": "descending",
+        "lift_over_prevalence": 1.7698879594862587,
+        "roc_auc": 0.6891038266632488
+      },
+      "degree_centrality": {
+        "average_precision": 0.03526234092487958,
+        "direction": "descending",
+        "lift_over_prevalence": 2.857198153580993,
+        "roc_auc": 0.7568531918418615
+      },
+      "component_size": {
+        "average_precision": 0.017042089076114347,
+        "direction": "descending",
+        "lift_over_prevalence": 1.3808676385146432,
+        "roc_auc": 0.6396098507351803
+      },
+      "first_activity": {
+        "average_precision": 0.01456996049030607,
+        "direction": "ascending",
+        "lift_over_prevalence": 1.180558724088528,
+        "roc_auc": 0.5646972118254089
+      },
+      "last_activity": {
+        "average_precision": 0.1404304131555509,
+        "direction": "descending",
+        "lift_over_prevalence": 11.378640970814285,
+        "roc_auc": 0.6780693728101951
+      },
+      "active_span_days": {
+        "average_precision": 0.1321335247918233,
+        "direction": "descending",
+        "lift_over_prevalence": 10.706369831362386,
+        "roc_auc": 0.6861331656595231
+      },
+      "velocity_per_active_day": {
+        "average_precision": 0.01659609824119097,
+        "direction": "descending",
+        "lift_over_prevalence": 1.3447303839639098,
+        "roc_auc": 0.6413221055031888
+      }
+    },
+    "combined_probe": {
+      "test_average_precision": 0.20984510775460505,
+      "test_roc_auc": 0.8771343710333857,
+      "n_train": 257544,
+      "n_train_positive": 3179,
+      "n_test": 257544,
+      "n_test_positive": 3178,
+      "quantities": [
+        "transaction_count",
+        "out_degree",
+        "in_degree",
+        "fan_in",
+        "fan_out",
+        "counterparty_count",
+        "incoming_volume",
+        "outgoing_volume",
+        "total_volume",
+        "degree_centrality",
+        "component_size",
+        "first_activity",
+        "last_activity",
+        "active_span_days",
+        "velocity_per_active_day"
+      ],
+      "quantities_dropped": [],
+      "probe": "untuned HistGradientBoostingClassifier on the simple quantities only; a stand-in for 'what falls out without modelling', not a candidate model"
+    },
+    "verdict": "non_trivial",
+    "best_single_quantity": {
+      "name": "last_activity",
+      "average_precision": 0.1404304131555509
+    },
+    "class_free_bands": {}
+  },
+  "split_feasibility": {
+    "stratified_kfold": {
+      "usable": true,
+      "note": "6357 positives over 4 folds leaves about 1589 per test partition"
+    },
+    "time_forward_holdout": {
+      "usable": true,
+      "note": "a forward cut leaves enough positives in the later partition"
+    },
+    "component_grouped_kfold": {
+      "usable": true,
+      "note": "components are the grouping unit; usable whenever k-fold is, but fold sizes follow the component-size distribution and can be very uneven"
+    }
+  },
+  "verdict": "MODEL_SELECTION_READY",
+  "reason": "enough positives and no trivial structural recovery (probe average precision 0.2098)",
+  "recommended_use": "usable for model comparison",
+  "limitations": [
+    "SYNTHETIC: rows were generated, not observed. No result on this dataset is evidence about real-world detection performance.",
+    "The entity label is derived from transaction flags, which makes a flagged entity's counterparty positive as well."
+  ]
+}

@@ -1,0 +1,2191 @@
+{
+  "schema_version": "1.0",
+  "experiment": {
+    "name": "legacy_graphsage_exp3",
+    "description": "The Experiment 3 architecture and its 167-column representation, run under the same protocol as every other candidate. A benchmark of the architecture, NOT a restatement of the frozen checkpoint's historical result.",
+    "tags": [
+      "legacy",
+      "gnn",
+      "regression-reference"
+    ],
+    "seed": 42,
+    "dataset": {
+      "name": "reference_dkdata",
+      "version": "size13479193-d205a64d",
+      "provenance": "file:C:\\Users\\bhara\\Downloads\\SIH\\dkdata.json",
+      "label_definition": "positive = graph node attribute 'core' is True, set by Layer 3 from the payer_core / beneficiary_core flags carried by the source records; it marks entities named as core to the published investigation, not a supervised fraud adjudication",
+      "synthetic": false,
+      "notes": [
+        "Version is derived from file size and mtime, not a content hash.",
+        "The positive class is extremely rare; see the split plan's notes for which folds can support label-dependent metrics."
+      ]
+    },
+    "features": {
+      "sets": [
+        "legacy_exp3_v1"
+      ],
+      "scope": "global"
+    },
+    "split": {
+      "strategy": "legacy_exp3_transductive",
+      "params": {
+        "n_folds": 4
+      },
+      "seed": 42
+    },
+    "model": {
+      "family": "legacy_graphsage",
+      "params": {
+        "hidden_dim": 64,
+        "dropout": 0.5,
+        "lr": 0.01,
+        "weight_decay": 0.0005,
+        "max_epochs": 200,
+        "patience": 50
+      },
+      "imbalance": "pos_weight"
+    },
+    "threshold": {
+      "strategy": "max_f1",
+      "params": {}
+    },
+    "calibration": {
+      "method": "none",
+      "min_val_positives": 20
+    },
+    "evaluation": {
+      "k_values": [
+        10,
+        20,
+        50,
+        100
+      ],
+      "alert_rates": [
+        0.001,
+        0.005,
+        0.01,
+        0.05
+      ],
+      "calibration_bins": 10
+    }
+  },
+  "dataset": {
+    "spec": {
+      "name": "reference_dkdata",
+      "version": "size13479193-d205a64d",
+      "provenance": "file:C:\\Users\\bhara\\Downloads\\SIH\\dkdata.json",
+      "label_definition": "positive = graph node attribute 'core' is True, set by Layer 3 from the payer_core / beneficiary_core flags carried by the source records; it marks entities named as core to the published investigation, not a supervised fraud adjudication",
+      "synthetic": false,
+      "notes": [
+        "Version is derived from file size and mtime, not a content hash.",
+        "The positive class is extremely rare; see the split plan's notes for which folds can support label-dependent metrics."
+      ]
+    },
+    "n_entities": 3440,
+    "n_positive": 4,
+    "n_negative": 3436,
+    "prevalence": 0.0011627906976744186,
+    "n_edges": 16940,
+    "has_graph": true,
+    "has_time": true
+  },
+  "features": {
+    "scope": "global",
+    "as_of": null,
+    "n_columns": 167,
+    "sets": [
+      {
+        "name": "legacy_exp3_v1",
+        "version": "1.0",
+        "family": "legacy",
+        "time_scopable": true,
+        "n_columns": 167,
+        "columns": [
+          "legacy_exp3_v1::log_in_degree",
+          "legacy_exp3_v1::log_out_degree",
+          "legacy_exp3_v1::log_total_incoming_usd",
+          "legacy_exp3_v1::log_total_outgoing_usd",
+          "legacy_exp3_v1::flow_imbalance",
+          "legacy_exp3_v1::entity_type_Company",
+          "legacy_exp3_v1::entity_type_Person",
+          "legacy_exp3_v1::entity_type_Invalid",
+          "legacy_exp3_v1::entity_type_unknown",
+          "legacy_exp3_v1::bank_country_.A",
+          "legacy_exp3_v1::bank_country_.D",
+          "legacy_exp3_v1::bank_country_.K",
+          "legacy_exp3_v1::bank_country_/M",
+          "legacy_exp3_v1::bank_country_00",
+          "legacy_exp3_v1::bank_country_01",
+          "legacy_exp3_v1::bank_country_02",
+          "legacy_exp3_v1::bank_country_03",
+          "legacy_exp3_v1::bank_country_04",
+          "legacy_exp3_v1::bank_country_05",
+          "legacy_exp3_v1::bank_country_06",
+          "legacy_exp3_v1::bank_country_07",
+          "legacy_exp3_v1::bank_country_08",
+          "legacy_exp3_v1::bank_country_09",
+          "legacy_exp3_v1::bank_country_10",
+          "legacy_exp3_v1::bank_country_11",
+          "legacy_exp3_v1::bank_country_12",
+          "legacy_exp3_v1::bank_country_13",
+          "legacy_exp3_v1::bank_country_14",
+          "legacy_exp3_v1::bank_country_15",
+          "legacy_exp3_v1::bank_country_16",
+          "legacy_exp3_v1::bank_country_17",
+          "legacy_exp3_v1::bank_country_18",
+          "legacy_exp3_v1::bank_country_19",
+          "legacy_exp3_v1::bank_country_20",
+          "legacy_exp3_v1::bank_country_21",
+          "legacy_exp3_v1::bank_country_22",
+          "legacy_exp3_v1::bank_country_23",
+          "legacy_exp3_v1::bank_country_24",
+          "legacy_exp3_v1::bank_country_25",
+          "legacy_exp3_v1::bank_country_26",
+          "legacy_exp3_v1::bank_country_27",
+          "legacy_exp3_v1::bank_country_28",
+          "legacy_exp3_v1::bank_country_29",
+          "legacy_exp3_v1::bank_country_30",
+          "legacy_exp3_v1::bank_country_31",
+          "legacy_exp3_v1::bank_country_32",
+          "legacy_exp3_v1::bank_country_33",
+          "legacy_exp3_v1::bank_country_34",
+          "legacy_exp3_v1::bank_country_35",
+          "legacy_exp3_v1::bank_country_36",
+          "legacy_exp3_v1::bank_country_37",
+          "legacy_exp3_v1::bank_country_38",
+          "legacy_exp3_v1::bank_country_39",
+          "legacy_exp3_v1::bank_country_40",
+          "legacy_exp3_v1::bank_country_41",
+          "legacy_exp3_v1::bank_country_42",
+          "legacy_exp3_v1::bank_country_43",
+          "legacy_exp3_v1::bank_country_44",
+          "legacy_exp3_v1::bank_country_45",
+          "legacy_exp3_v1::bank_country_46",
+          "legacy_exp3_v1::bank_country_47",
+          "legacy_exp3_v1::bank_country_48",
+          "legacy_exp3_v1::bank_country_49",
+          "legacy_exp3_v1::bank_country_50",
+          "legacy_exp3_v1::bank_country_51",
+          "legacy_exp3_v1::bank_country_52",
+          "legacy_exp3_v1::bank_country_53",
+          "legacy_exp3_v1::bank_country_54",
+          "legacy_exp3_v1::bank_country_55",
+          "legacy_exp3_v1::bank_country_56",
+          "legacy_exp3_v1::bank_country_57",
+          "legacy_exp3_v1::bank_country_58",
+          "legacy_exp3_v1::bank_country_60",
+          "legacy_exp3_v1::bank_country_61",
+          "legacy_exp3_v1::bank_country_62",
+          "legacy_exp3_v1::bank_country_63",
+          "legacy_exp3_v1::bank_country_64",
+          "legacy_exp3_v1::bank_country_65",
+          "legacy_exp3_v1::bank_country_66",
+          "legacy_exp3_v1::bank_country_67",
+          "legacy_exp3_v1::bank_country_68",
+          "legacy_exp3_v1::bank_country_69",
+          "legacy_exp3_v1::bank_country_70",
+          "legacy_exp3_v1::bank_country_71",
+          "legacy_exp3_v1::bank_country_72",
+          "legacy_exp3_v1::bank_country_73",
+          "legacy_exp3_v1::bank_country_74",
+          "legacy_exp3_v1::bank_country_75",
+          "legacy_exp3_v1::bank_country_76",
+          "legacy_exp3_v1::bank_country_77",
+          "legacy_exp3_v1::bank_country_78",
+          "legacy_exp3_v1::bank_country_79",
+          "legacy_exp3_v1::bank_country_80",
+          "legacy_exp3_v1::bank_country_81",
+          "legacy_exp3_v1::bank_country_82",
+          "legacy_exp3_v1::bank_country_83",
+          "legacy_exp3_v1::bank_country_84",
+          "legacy_exp3_v1::bank_country_85",
+          "legacy_exp3_v1::bank_country_86",
+          "legacy_exp3_v1::bank_country_87",
+          "legacy_exp3_v1::bank_country_88",
+          "legacy_exp3_v1::bank_country_89",
+          "legacy_exp3_v1::bank_country_90",
+          "legacy_exp3_v1::bank_country_92",
+          "legacy_exp3_v1::bank_country_93",
+          "legacy_exp3_v1::bank_country_94",
+          "legacy_exp3_v1::bank_country_95",
+          "legacy_exp3_v1::bank_country_96",
+          "legacy_exp3_v1::bank_country_97",
+          "legacy_exp3_v1::bank_country_99",
+          "legacy_exp3_v1::bank_country_AE",
+          "legacy_exp3_v1::bank_country_AT",
+          "legacy_exp3_v1::bank_country_AZ",
+          "legacy_exp3_v1::bank_country_BE",
+          "legacy_exp3_v1::bank_country_BG",
+          "legacy_exp3_v1::bank_country_CH",
+          "legacy_exp3_v1::bank_country_CY",
+          "legacy_exp3_v1::bank_country_CZ",
+          "legacy_exp3_v1::bank_country_DE",
+          "legacy_exp3_v1::bank_country_DK",
+          "legacy_exp3_v1::bank_country_EE",
+          "legacy_exp3_v1::bank_country_ES",
+          "legacy_exp3_v1::bank_country_FI",
+          "legacy_exp3_v1::bank_country_FR",
+          "legacy_exp3_v1::bank_country_G8",
+          "legacy_exp3_v1::bank_country_GB",
+          "legacy_exp3_v1::bank_country_GE",
+          "legacy_exp3_v1::bank_country_GR",
+          "legacy_exp3_v1::bank_country_HU",
+          "legacy_exp3_v1::bank_country_IL",
+          "legacy_exp3_v1::bank_country_IT",
+          "legacy_exp3_v1::bank_country_JH",
+          "legacy_exp3_v1::bank_country_KZ",
+          "legacy_exp3_v1::bank_country_LB",
+          "legacy_exp3_v1::bank_country_LI",
+          "legacy_exp3_v1::bank_country_LT",
+          "legacy_exp3_v1::bank_country_LU",
+          "legacy_exp3_v1::bank_country_LV",
+          "legacy_exp3_v1::bank_country_MD",
+          "legacy_exp3_v1::bank_country_ME",
+          "legacy_exp3_v1::bank_country_MF",
+          "legacy_exp3_v1::bank_country_MK",
+          "legacy_exp3_v1::bank_country_MT",
+          "legacy_exp3_v1::bank_country_NL",
+          "legacy_exp3_v1::bank_country_NR",
+          "legacy_exp3_v1::bank_country_OS",
+          "legacy_exp3_v1::bank_country_PL",
+          "legacy_exp3_v1::bank_country_PT",
+          "legacy_exp3_v1::bank_country_QA",
+          "legacy_exp3_v1::bank_country_R0",
+          "legacy_exp3_v1::bank_country_RO",
+          "legacy_exp3_v1::bank_country_RS",
+          "legacy_exp3_v1::bank_country_SE",
+          "legacy_exp3_v1::bank_country_SI",
+          "legacy_exp3_v1::bank_country_SK",
+          "legacy_exp3_v1::bank_country_T1",
+          "legacy_exp3_v1::bank_country_TA",
+          "legacy_exp3_v1::bank_country_TR",
+          "legacy_exp3_v1::bank_country_TX",
+          "legacy_exp3_v1::bank_country_TZ",
+          "legacy_exp3_v1::out_repeated_counterparty_ratio",
+          "legacy_exp3_v1::in_repeated_counterparty_ratio",
+          "legacy_exp3_v1::max_parallel_edge_count",
+          "legacy_exp3_v1::mean_parallel_edge_count",
+          "legacy_exp3_v1::parallel_temporal_dispersion",
+          "legacy_exp3_v1::reciprocal_out_count",
+          "legacy_exp3_v1::reciprocal_in_count"
+        ]
+      }
+    ],
+    "notes": []
+  },
+  "split": {
+    "strategy": "legacy_exp3_transductive",
+    "params": {
+      "n_folds": 4
+    },
+    "seed": 42,
+    "regime": "entity-disjoint",
+    "entity_disjoint": true,
+    "time_aware": false,
+    "graph_leakage_controlled": false,
+    "n_folds": 4,
+    "notes": [
+      "transductive protocol: whole-graph topology and whole-graph features are visible at training time; only labels are masked.",
+      "retained as the legacy regression reference for Experiment 3."
+    ],
+    "folds": [
+      {
+        "fold_idx": 0,
+        "n_train": 1720,
+        "n_train_pos": 2,
+        "n_val": 860,
+        "n_val_pos": 1,
+        "n_test": 860,
+        "n_test_pos": 1
+      },
+      {
+        "fold_idx": 1,
+        "n_train": 1720,
+        "n_train_pos": 2,
+        "n_val": 860,
+        "n_val_pos": 1,
+        "n_test": 860,
+        "n_test_pos": 1
+      },
+      {
+        "fold_idx": 2,
+        "n_train": 1720,
+        "n_train_pos": 2,
+        "n_val": 860,
+        "n_val_pos": 1,
+        "n_test": 860,
+        "n_test_pos": 1
+      },
+      {
+        "fold_idx": 3,
+        "n_train": 1720,
+        "n_train_pos": 2,
+        "n_val": 860,
+        "n_val_pos": 1,
+        "n_test": 860,
+        "n_test_pos": 1
+      }
+    ]
+  },
+  "leakage": [
+    {
+      "check": "evaluation_regime",
+      "severity": "info",
+      "message": "split 'legacy_exp3_transductive' is entity-disjoint: entity_disjoint=True, time_aware=False, graph_leakage_controlled=False"
+    },
+    {
+      "check": "temporal_ordering",
+      "severity": "warning",
+      "message": "the dataset carries timestamps but the split ignores them; the model may be fitted on behaviour that post-dates the behaviour it is scored on"
+    },
+    {
+      "check": "feature_scope",
+      "severity": "info",
+      "message": "features were computed on the whole population, so structural and aggregate columns encode information about held-out entities (transductive feature regime)",
+      "fold_idx": 0
+    },
+    {
+      "check": "constant_or_perfect_features",
+      "severity": "warning",
+      "message": "6 feature column(s) separate the training classes perfectly; on a rare-positive dataset that is more often a leak than a discovery",
+      "detail": {
+        "columns": [
+          "legacy_exp3_v1::log_in_degree",
+          "legacy_exp3_v1::log_out_degree",
+          "legacy_exp3_v1::log_total_incoming_usd",
+          "legacy_exp3_v1::log_total_outgoing_usd",
+          "legacy_exp3_v1::reciprocal_out_count",
+          "legacy_exp3_v1::reciprocal_in_count"
+        ],
+        "n_train_positive": 2
+      },
+      "fold_idx": 0
+    },
+    {
+      "check": "feature_scope",
+      "severity": "info",
+      "message": "features were computed on the whole population, so structural and aggregate columns encode information about held-out entities (transductive feature regime)",
+      "fold_idx": 1
+    },
+    {
+      "check": "constant_or_perfect_features",
+      "severity": "warning",
+      "message": "5 feature column(s) separate the training classes perfectly; on a rare-positive dataset that is more often a leak than a discovery",
+      "detail": {
+        "columns": [
+          "legacy_exp3_v1::log_in_degree",
+          "legacy_exp3_v1::log_out_degree",
+          "legacy_exp3_v1::log_total_incoming_usd",
+          "legacy_exp3_v1::reciprocal_out_count",
+          "legacy_exp3_v1::reciprocal_in_count"
+        ],
+        "n_train_positive": 2
+      },
+      "fold_idx": 1
+    },
+    {
+      "check": "feature_scope",
+      "severity": "info",
+      "message": "features were computed on the whole population, so structural and aggregate columns encode information about held-out entities (transductive feature regime)",
+      "fold_idx": 2
+    },
+    {
+      "check": "constant_or_perfect_features",
+      "severity": "warning",
+      "message": "5 feature column(s) separate the training classes perfectly; on a rare-positive dataset that is more often a leak than a discovery",
+      "detail": {
+        "columns": [
+          "legacy_exp3_v1::log_in_degree",
+          "legacy_exp3_v1::log_out_degree",
+          "legacy_exp3_v1::log_total_incoming_usd",
+          "legacy_exp3_v1::reciprocal_out_count",
+          "legacy_exp3_v1::reciprocal_in_count"
+        ],
+        "n_train_positive": 2
+      },
+      "fold_idx": 2
+    },
+    {
+      "check": "feature_scope",
+      "severity": "info",
+      "message": "features were computed on the whole population, so structural and aggregate columns encode information about held-out entities (transductive feature regime)",
+      "fold_idx": 3
+    },
+    {
+      "check": "constant_or_perfect_features",
+      "severity": "warning",
+      "message": "6 feature column(s) separate the training classes perfectly; on a rare-positive dataset that is more often a leak than a discovery",
+      "detail": {
+        "columns": [
+          "legacy_exp3_v1::log_in_degree",
+          "legacy_exp3_v1::log_out_degree",
+          "legacy_exp3_v1::log_total_incoming_usd",
+          "legacy_exp3_v1::log_total_outgoing_usd",
+          "legacy_exp3_v1::reciprocal_out_count",
+          "legacy_exp3_v1::reciprocal_in_count"
+        ],
+        "n_train_positive": 2
+      },
+      "fold_idx": 3
+    }
+  ],
+  "folds": [
+    {
+      "fold_idx": 0,
+      "counts": {
+        "n_train": 1720,
+        "n_train_pos": 2,
+        "n_val": 860,
+        "n_val_pos": 1,
+        "n_test": 860,
+        "n_test_pos": 1
+      },
+      "validation_metrics": {
+        "n": 860,
+        "n_positive": 1,
+        "n_negative": 859,
+        "prevalence": 0.0011627906976744186,
+        "average_precision": 1.0,
+        "ap_lift": 860.0,
+        "roc_auc": 1.0,
+        "precision_at_k": {
+          "10": 0.1,
+          "20": 0.05,
+          "50": 0.02,
+          "100": 0.01
+        },
+        "recall_at_k": {
+          "10": 1.0,
+          "20": 1.0,
+          "50": 1.0,
+          "100": 1.0
+        },
+        "precision_at_rate": {
+          "0.001": 1.0,
+          "0.005": 0.2,
+          "0.01": 0.1111111111111111,
+          "0.05": 0.023255813953488372
+        },
+        "recall_at_rate": {
+          "0.001": 1.0,
+          "0.005": 1.0,
+          "0.01": 1.0,
+          "0.05": 1.0
+        },
+        "at_threshold": {
+          "threshold": 0.5458633899688721,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "confusion": [
+            [
+              859,
+              0
+            ],
+            [
+              0,
+              1
+            ]
+          ],
+          "alerts": 1,
+          "alert_rate": 0.0011627906976744186,
+          "false_positive_burden": 0.0
+        },
+        "calibration": {
+          "brier": 0.07951987692543183,
+          "expected_calibration_error": 0.2720083361274975,
+          "bins": [
+            {
+              "lower": 0.0,
+              "upper": 0.1,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            },
+            {
+              "lower": 0.1,
+              "upper": 0.2,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            },
+            {
+              "lower": 0.2,
+              "upper": 0.30000000000000004,
+              "count": 756,
+              "mean_predicted": 0.2505344155012931,
+              "observed_rate": 0.0
+            },
+            {
+              "lower": 0.30000000000000004,
+              "upper": 0.4,
+              "count": 39,
+              "mean_predicted": 0.31854963379028517,
+              "observed_rate": 0.0
+            },
+            {
+              "lower": 0.4,
+              "upper": 0.5,
+              "count": 2,
+              "mean_predicted": 0.4994319975376129,
+              "observed_rate": 0.0
+            },
+            {
+              "lower": 0.5,
+              "upper": 0.6000000000000001,
+              "count": 63,
+              "mean_predicted": 0.5095373212345062,
+              "observed_rate": 0.015873015873015872
+            },
+            {
+              "lower": 0.6000000000000001,
+              "upper": 0.7000000000000001,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            },
+            {
+              "lower": 0.7000000000000001,
+              "upper": 0.8,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            },
+            {
+              "lower": 0.8,
+              "upper": 0.9,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            },
+            {
+              "lower": 0.9,
+              "upper": 1.0,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            }
+          ]
+        },
+        "undefined": {}
+      },
+      "test_metrics": {
+        "n": 860,
+        "n_positive": 1,
+        "n_negative": 859,
+        "prevalence": 0.0011627906976744186,
+        "average_precision": 0.014084507042253521,
+        "ap_lift": 12.112676056338028,
+        "roc_auc": 0.9185098952270081,
+        "precision_at_k": {
+          "10": 0.0,
+          "20": 0.0,
+          "50": 0.0,
+          "100": 0.01
+        },
+        "recall_at_k": {
+          "10": 0.0,
+          "20": 0.0,
+          "50": 0.0,
+          "100": 1.0
+        },
+        "precision_at_rate": {
+          "0.001": 0.0,
+          "0.005": 0.0,
+          "0.01": 0.0,
+          "0.05": 0.0
+        },
+        "recall_at_rate": {
+          "0.001": 0.0,
+          "0.005": 0.0,
+          "0.01": 0.0,
+          "0.05": 0.0
+        },
+        "at_threshold": {
+          "threshold": 0.5458633899688721,
+          "precision": null,
+          "recall": 0.0,
+          "f1": null,
+          "confusion": [
+            [
+              859,
+              0
+            ],
+            [
+              1,
+              0
+            ]
+          ],
+          "alerts": 0,
+          "alert_rate": 0.0,
+          "false_positive_burden": null
+        },
+        "calibration": {
+          "brier": 0.08171430894576182,
+          "expected_calibration_error": 0.27517233516934303,
+          "bins": [
+            {
+              "lower": 0.0,
+              "upper": 0.1,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            },
+            {
+              "lower": 0.1,
+              "upper": 0.2,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            },
+            {
+              "lower": 0.2,
+              "upper": 0.30000000000000004,
+              "count": 740,
+              "mean_predicted": 0.2511389756323518,
+              "observed_rate": 0.0
+            },
+            {
+              "lower": 0.30000000000000004,
+              "upper": 0.4,
+              "count": 49,
+              "mean_predicted": 0.31951861965413,
+              "observed_rate": 0.0
+            },
+            {
+              "lower": 0.4,
+              "upper": 0.5,
+              "count": 2,
+              "mean_predicted": 0.47366195917129517,
+              "observed_rate": 0.5
+            },
+            {
+              "lower": 0.5,
+              "upper": 0.6000000000000001,
+              "count": 69,
+              "mean_predicted": 0.5086417077244192,
+              "observed_rate": 0.0
+            },
+            {
+              "lower": 0.6000000000000001,
+              "upper": 0.7000000000000001,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            },
+            {
+              "lower": 0.7000000000000001,
+              "upper": 0.8,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            },
+            {
+              "lower": 0.8,
+              "upper": 0.9,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            },
+            {
+              "lower": 0.9,
+              "upper": 1.0,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            }
+          ]
+        },
+        "undefined": {
+          "threshold.precision": "no entity scored above the threshold",
+          "threshold.f1": "precision or recall undefined (or both zero) at this threshold",
+          "threshold.false_positive_burden": "no true positives at this threshold; false positives per true positive is unbounded"
+        }
+      },
+      "threshold": {
+        "value": 0.5458633899688721,
+        "strategy": "max_f1",
+        "params": {},
+        "selected_on": "validation",
+        "objective": "val_f1",
+        "objective_value": 1.0,
+        "reason": null,
+        "n_val_positives": 1
+      },
+      "calibration": {
+        "method": "none",
+        "fitted": true,
+        "produces_probabilities": true,
+        "diagnostics": {}
+      },
+      "leakage": [
+        {
+          "check": "feature_scope",
+          "severity": "info",
+          "message": "features were computed on the whole population, so structural and aggregate columns encode information about held-out entities (transductive feature regime)"
+        },
+        {
+          "check": "constant_or_perfect_features",
+          "severity": "warning",
+          "message": "6 feature column(s) separate the training classes perfectly; on a rare-positive dataset that is more often a leak than a discovery",
+          "detail": {
+            "columns": [
+              "legacy_exp3_v1::log_in_degree",
+              "legacy_exp3_v1::log_out_degree",
+              "legacy_exp3_v1::log_total_incoming_usd",
+              "legacy_exp3_v1::log_total_outgoing_usd",
+              "legacy_exp3_v1::reciprocal_out_count",
+              "legacy_exp3_v1::reciprocal_in_count"
+            ],
+            "n_train_positive": 2
+          }
+        }
+      ],
+      "fit_report": {
+        "status": "fitted",
+        "architecture": "BaselineGraphSAGE (2-layer, mean aggregator)",
+        "input_dim": 167,
+        "n_edges_visible": 16940,
+        "epochs_run": 53,
+        "best_epoch": 3,
+        "early_stopping_monitor": "val_average_precision",
+        "best_monitor_value": 1.0,
+        "imbalance": "pos_weight=859.00",
+        "n_train": 1720,
+        "n_train_positive": 2
+      },
+      "runtime_seconds": {
+        "features": 5.214661999954842,
+        "fit": 8.431187100009993,
+        "score": 0.08878400002140552
+      },
+      "checkpoint": null,
+      "notes": []
+    },
+    {
+      "fold_idx": 1,
+      "counts": {
+        "n_train": 1720,
+        "n_train_pos": 2,
+        "n_val": 860,
+        "n_val_pos": 1,
+        "n_test": 860,
+        "n_test_pos": 1
+      },
+      "validation_metrics": {
+        "n": 860,
+        "n_positive": 1,
+        "n_negative": 859,
+        "prevalence": 0.0011627906976744186,
+        "average_precision": 1.0,
+        "ap_lift": 860.0,
+        "roc_auc": 1.0,
+        "precision_at_k": {
+          "10": 0.1,
+          "20": 0.05,
+          "50": 0.02,
+          "100": 0.01
+        },
+        "recall_at_k": {
+          "10": 1.0,
+          "20": 1.0,
+          "50": 1.0,
+          "100": 1.0
+        },
+        "precision_at_rate": {
+          "0.001": 1.0,
+          "0.005": 0.2,
+          "0.01": 0.1111111111111111,
+          "0.05": 0.023255813953488372
+        },
+        "recall_at_rate": {
+          "0.001": 1.0,
+          "0.005": 1.0,
+          "0.01": 1.0,
+          "0.05": 1.0
+        },
+        "at_threshold": {
+          "threshold": 0.620009183883667,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "confusion": [
+            [
+              859,
+              0
+            ],
+            [
+              0,
+              1
+            ]
+          ],
+          "alerts": 1,
+          "alert_rate": 0.0011627906976744186,
+          "false_positive_burden": 0.0
+        },
+        "calibration": {
+          "brier": 0.17445459309827877,
+          "expected_calibration_error": 0.41679817576741063,
+          "bins": [
+            {
+              "lower": 0.0,
+              "upper": 0.1,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            },
+            {
+              "lower": 0.1,
+              "upper": 0.2,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            },
+            {
+              "lower": 0.2,
+              "upper": 0.30000000000000004,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            },
+            {
+              "lower": 0.30000000000000004,
+              "upper": 0.4,
+              "count": 193,
+              "mean_predicted": 0.3968823635516389,
+              "observed_rate": 0.0
+            },
+            {
+              "lower": 0.4,
+              "upper": 0.5,
+              "count": 643,
+              "mean_predicted": 0.41970190493908494,
+              "observed_rate": 0.0
+            },
+            {
+              "lower": 0.5,
+              "upper": 0.6000000000000001,
+              "count": 23,
+              "mean_predicted": 0.5043399696764739,
+              "observed_rate": 0.0
+            },
+            {
+              "lower": 0.6000000000000001,
+              "upper": 0.7000000000000001,
+              "count": 1,
+              "mean_predicted": 0.620009183883667,
+              "observed_rate": 1.0
+            },
+            {
+              "lower": 0.7000000000000001,
+              "upper": 0.8,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            },
+            {
+              "lower": 0.8,
+              "upper": 0.9,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            },
+            {
+              "lower": 0.9,
+              "upper": 1.0,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            }
+          ]
+        },
+        "undefined": {}
+      },
+      "test_metrics": {
+        "n": 860,
+        "n_positive": 1,
+        "n_negative": 859,
+        "prevalence": 0.0011627906976744186,
+        "average_precision": 1.0,
+        "ap_lift": 860.0,
+        "roc_auc": 1.0,
+        "precision_at_k": {
+          "10": 0.1,
+          "20": 0.05,
+          "50": 0.02,
+          "100": 0.01
+        },
+        "recall_at_k": {
+          "10": 1.0,
+          "20": 1.0,
+          "50": 1.0,
+          "100": 1.0
+        },
+        "precision_at_rate": {
+          "0.001": 1.0,
+          "0.005": 0.2,
+          "0.01": 0.1111111111111111,
+          "0.05": 0.023255813953488372
+        },
+        "recall_at_rate": {
+          "0.001": 1.0,
+          "0.005": 1.0,
+          "0.01": 1.0,
+          "0.05": 1.0
+        },
+        "at_threshold": {
+          "threshold": 0.620009183883667,
+          "precision": null,
+          "recall": 0.0,
+          "f1": null,
+          "confusion": [
+            [
+              859,
+              0
+            ],
+            [
+              1,
+              0
+            ]
+          ],
+          "alerts": 0,
+          "alert_rate": 0.0,
+          "false_positive_burden": null
+        },
+        "calibration": {
+          "brier": 0.17510717739298434,
+          "expected_calibration_error": 0.41751694911441145,
+          "bins": [
+            {
+              "lower": 0.0,
+              "upper": 0.1,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            },
+            {
+              "lower": 0.1,
+              "upper": 0.2,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            },
+            {
+              "lower": 0.2,
+              "upper": 0.30000000000000004,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            },
+            {
+              "lower": 0.30000000000000004,
+              "upper": 0.4,
+              "count": 195,
+              "mean_predicted": 0.3964741544845777,
+              "observed_rate": 0.0
+            },
+            {
+              "lower": 0.4,
+              "upper": 0.5,
+              "count": 642,
+              "mean_predicted": 0.4209667995247143,
+              "observed_rate": 0.0
+            },
+            {
+              "lower": 0.5,
+              "upper": 0.6000000000000001,
+              "count": 22,
+              "mean_predicted": 0.5046434537930922,
+              "observed_rate": 0.0
+            },
+            {
+              "lower": 0.6000000000000001,
+              "upper": 0.7000000000000001,
+              "count": 1,
+              "mean_predicted": 0.6107251644134521,
+              "observed_rate": 1.0
+            },
+            {
+              "lower": 0.7000000000000001,
+              "upper": 0.8,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            },
+            {
+              "lower": 0.8,
+              "upper": 0.9,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            },
+            {
+              "lower": 0.9,
+              "upper": 1.0,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            }
+          ]
+        },
+        "undefined": {
+          "threshold.precision": "no entity scored above the threshold",
+          "threshold.f1": "precision or recall undefined (or both zero) at this threshold",
+          "threshold.false_positive_burden": "no true positives at this threshold; false positives per true positive is unbounded"
+        }
+      },
+      "threshold": {
+        "value": 0.620009183883667,
+        "strategy": "max_f1",
+        "params": {},
+        "selected_on": "validation",
+        "objective": "val_f1",
+        "objective_value": 1.0,
+        "reason": null,
+        "n_val_positives": 1
+      },
+      "calibration": {
+        "method": "none",
+        "fitted": true,
+        "produces_probabilities": true,
+        "diagnostics": {}
+      },
+      "leakage": [
+        {
+          "check": "feature_scope",
+          "severity": "info",
+          "message": "features were computed on the whole population, so structural and aggregate columns encode information about held-out entities (transductive feature regime)"
+        },
+        {
+          "check": "constant_or_perfect_features",
+          "severity": "warning",
+          "message": "5 feature column(s) separate the training classes perfectly; on a rare-positive dataset that is more often a leak than a discovery",
+          "detail": {
+            "columns": [
+              "legacy_exp3_v1::log_in_degree",
+              "legacy_exp3_v1::log_out_degree",
+              "legacy_exp3_v1::log_total_incoming_usd",
+              "legacy_exp3_v1::reciprocal_out_count",
+              "legacy_exp3_v1::reciprocal_in_count"
+            ],
+            "n_train_positive": 2
+          }
+        }
+      ],
+      "fit_report": {
+        "status": "fitted",
+        "architecture": "BaselineGraphSAGE (2-layer, mean aggregator)",
+        "input_dim": 167,
+        "n_edges_visible": 16940,
+        "epochs_run": 53,
+        "best_epoch": 3,
+        "early_stopping_monitor": "val_average_precision",
+        "best_monitor_value": 1.0,
+        "imbalance": "pos_weight=859.00",
+        "n_train": 1720,
+        "n_train_positive": 2
+      },
+      "runtime_seconds": {
+        "features": 1.200009137392044e-06,
+        "fit": 4.529622299945913,
+        "score": 0.08491040009539574
+      },
+      "checkpoint": null,
+      "notes": []
+    },
+    {
+      "fold_idx": 2,
+      "counts": {
+        "n_train": 1720,
+        "n_train_pos": 2,
+        "n_val": 860,
+        "n_val_pos": 1,
+        "n_test": 860,
+        "n_test_pos": 1
+      },
+      "validation_metrics": {
+        "n": 860,
+        "n_positive": 1,
+        "n_negative": 859,
+        "prevalence": 0.0011627906976744186,
+        "average_precision": 1.0,
+        "ap_lift": 860.0,
+        "roc_auc": 1.0,
+        "precision_at_k": {
+          "10": 0.1,
+          "20": 0.05,
+          "50": 0.02,
+          "100": 0.01
+        },
+        "recall_at_k": {
+          "10": 1.0,
+          "20": 1.0,
+          "50": 1.0,
+          "100": 1.0
+        },
+        "precision_at_rate": {
+          "0.001": 1.0,
+          "0.005": 0.2,
+          "0.01": 0.1111111111111111,
+          "0.05": 0.023255813953488372
+        },
+        "recall_at_rate": {
+          "0.001": 1.0,
+          "0.005": 1.0,
+          "0.01": 1.0,
+          "0.05": 1.0
+        },
+        "at_threshold": {
+          "threshold": 0.534970223903656,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "confusion": [
+            [
+              859,
+              0
+            ],
+            [
+              0,
+              1
+            ]
+          ],
+          "alerts": 1,
+          "alert_rate": 0.0011627906976744186,
+          "false_positive_burden": 0.0
+        },
+        "calibration": {
+          "brier": 0.21884081276549544,
+          "expected_calibration_error": 0.46776700595090553,
+          "bins": [
+            {
+              "lower": 0.0,
+              "upper": 0.1,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            },
+            {
+              "lower": 0.1,
+              "upper": 0.2,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            },
+            {
+              "lower": 0.2,
+              "upper": 0.30000000000000004,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            },
+            {
+              "lower": 0.30000000000000004,
+              "upper": 0.4,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            },
+            {
+              "lower": 0.4,
+              "upper": 0.5,
+              "count": 859,
+              "mean_predicted": 0.4677701924815861,
+              "observed_rate": 0.0
+            },
+            {
+              "lower": 0.5,
+              "upper": 0.6000000000000001,
+              "count": 1,
+              "mean_predicted": 0.534970223903656,
+              "observed_rate": 1.0
+            },
+            {
+              "lower": 0.6000000000000001,
+              "upper": 0.7000000000000001,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            },
+            {
+              "lower": 0.7000000000000001,
+              "upper": 0.8,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            },
+            {
+              "lower": 0.8,
+              "upper": 0.9,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            },
+            {
+              "lower": 0.9,
+              "upper": 1.0,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            }
+          ]
+        },
+        "undefined": {}
+      },
+      "test_metrics": {
+        "n": 860,
+        "n_positive": 1,
+        "n_negative": 859,
+        "prevalence": 0.0011627906976744186,
+        "average_precision": 1.0,
+        "ap_lift": 860.0,
+        "roc_auc": 1.0,
+        "precision_at_k": {
+          "10": 0.1,
+          "20": 0.05,
+          "50": 0.02,
+          "100": 0.01
+        },
+        "recall_at_k": {
+          "10": 1.0,
+          "20": 1.0,
+          "50": 1.0,
+          "100": 1.0
+        },
+        "precision_at_rate": {
+          "0.001": 1.0,
+          "0.005": 0.2,
+          "0.01": 0.1111111111111111,
+          "0.05": 0.023255813953488372
+        },
+        "recall_at_rate": {
+          "0.001": 1.0,
+          "0.005": 1.0,
+          "0.01": 1.0,
+          "0.05": 1.0
+        },
+        "at_threshold": {
+          "threshold": 0.534970223903656,
+          "precision": null,
+          "recall": 0.0,
+          "f1": null,
+          "confusion": [
+            [
+              859,
+              0
+            ],
+            [
+              1,
+              0
+            ]
+          ],
+          "alerts": 0,
+          "alert_rate": 0.0,
+          "false_positive_burden": null
+        },
+        "calibration": {
+          "brier": 0.21860793035349502,
+          "expected_calibration_error": 0.46752291335616003,
+          "bins": [
+            {
+              "lower": 0.0,
+              "upper": 0.1,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            },
+            {
+              "lower": 0.1,
+              "upper": 0.2,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            },
+            {
+              "lower": 0.2,
+              "upper": 0.30000000000000004,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            },
+            {
+              "lower": 0.30000000000000004,
+              "upper": 0.4,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            },
+            {
+              "lower": 0.4,
+              "upper": 0.5,
+              "count": 859,
+              "mean_predicted": 0.467519167762974,
+              "observed_rate": 0.0
+            },
+            {
+              "lower": 0.5,
+              "upper": 0.6000000000000001,
+              "count": 1,
+              "mean_predicted": 0.5292596220970154,
+              "observed_rate": 1.0
+            },
+            {
+              "lower": 0.6000000000000001,
+              "upper": 0.7000000000000001,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            },
+            {
+              "lower": 0.7000000000000001,
+              "upper": 0.8,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            },
+            {
+              "lower": 0.8,
+              "upper": 0.9,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            },
+            {
+              "lower": 0.9,
+              "upper": 1.0,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            }
+          ]
+        },
+        "undefined": {
+          "threshold.precision": "no entity scored above the threshold",
+          "threshold.f1": "precision or recall undefined (or both zero) at this threshold",
+          "threshold.false_positive_burden": "no true positives at this threshold; false positives per true positive is unbounded"
+        }
+      },
+      "threshold": {
+        "value": 0.534970223903656,
+        "strategy": "max_f1",
+        "params": {},
+        "selected_on": "validation",
+        "objective": "val_f1",
+        "objective_value": 1.0,
+        "reason": null,
+        "n_val_positives": 1
+      },
+      "calibration": {
+        "method": "none",
+        "fitted": true,
+        "produces_probabilities": true,
+        "diagnostics": {}
+      },
+      "leakage": [
+        {
+          "check": "feature_scope",
+          "severity": "info",
+          "message": "features were computed on the whole population, so structural and aggregate columns encode information about held-out entities (transductive feature regime)"
+        },
+        {
+          "check": "constant_or_perfect_features",
+          "severity": "warning",
+          "message": "5 feature column(s) separate the training classes perfectly; on a rare-positive dataset that is more often a leak than a discovery",
+          "detail": {
+            "columns": [
+              "legacy_exp3_v1::log_in_degree",
+              "legacy_exp3_v1::log_out_degree",
+              "legacy_exp3_v1::log_total_incoming_usd",
+              "legacy_exp3_v1::reciprocal_out_count",
+              "legacy_exp3_v1::reciprocal_in_count"
+            ],
+            "n_train_positive": 2
+          }
+        }
+      ],
+      "fit_report": {
+        "status": "fitted",
+        "architecture": "BaselineGraphSAGE (2-layer, mean aggregator)",
+        "input_dim": 167,
+        "n_edges_visible": 16940,
+        "epochs_run": 51,
+        "best_epoch": 1,
+        "early_stopping_monitor": "val_average_precision",
+        "best_monitor_value": 1.0,
+        "imbalance": "pos_weight=859.00",
+        "n_train": 1720,
+        "n_train_positive": 2
+      },
+      "runtime_seconds": {
+        "features": 1.6998965293169022e-06,
+        "fit": 4.96293959999457,
+        "score": 0.09578099998179823
+      },
+      "checkpoint": null,
+      "notes": []
+    },
+    {
+      "fold_idx": 3,
+      "counts": {
+        "n_train": 1720,
+        "n_train_pos": 2,
+        "n_val": 860,
+        "n_val_pos": 1,
+        "n_test": 860,
+        "n_test_pos": 1
+      },
+      "validation_metrics": {
+        "n": 860,
+        "n_positive": 1,
+        "n_negative": 859,
+        "prevalence": 0.0011627906976744186,
+        "average_precision": 1.0,
+        "ap_lift": 860.0,
+        "roc_auc": 1.0,
+        "precision_at_k": {
+          "10": 0.1,
+          "20": 0.05,
+          "50": 0.02,
+          "100": 0.01
+        },
+        "recall_at_k": {
+          "10": 1.0,
+          "20": 1.0,
+          "50": 1.0,
+          "100": 1.0
+        },
+        "precision_at_rate": {
+          "0.001": 1.0,
+          "0.005": 0.2,
+          "0.01": 0.1111111111111111,
+          "0.05": 0.023255813953488372
+        },
+        "recall_at_rate": {
+          "0.001": 1.0,
+          "0.005": 1.0,
+          "0.01": 1.0,
+          "0.05": 1.0
+        },
+        "at_threshold": {
+          "threshold": 0.35576075315475464,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "confusion": [
+            [
+              859,
+              0
+            ],
+            [
+              0,
+              1
+            ]
+          ],
+          "alerts": 1,
+          "alert_rate": 0.0011627906976744186,
+          "false_positive_burden": 0.0
+        },
+        "calibration": {
+          "brier": 0.005798741105924407,
+          "expected_calibration_error": 0.01936095231081166,
+          "bins": [
+            {
+              "lower": 0.0,
+              "upper": 0.1,
+              "count": 791,
+              "mean_predicted": 0.00018881089658714746,
+              "observed_rate": 0.0
+            },
+            {
+              "lower": 0.1,
+              "upper": 0.2,
+              "count": 15,
+              "mean_predicted": 0.16155109057823816,
+              "observed_rate": 0.0
+            },
+            {
+              "lower": 0.2,
+              "upper": 0.30000000000000004,
+              "count": 34,
+              "mean_predicted": 0.25569237549515333,
+              "observed_rate": 0.0
+            },
+            {
+              "lower": 0.30000000000000004,
+              "upper": 0.4,
+              "count": 20,
+              "mean_predicted": 0.3192131221294403,
+              "observed_rate": 0.05
+            },
+            {
+              "lower": 0.4,
+              "upper": 0.5,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            },
+            {
+              "lower": 0.5,
+              "upper": 0.6000000000000001,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            },
+            {
+              "lower": 0.6000000000000001,
+              "upper": 0.7000000000000001,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            },
+            {
+              "lower": 0.7000000000000001,
+              "upper": 0.8,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            },
+            {
+              "lower": 0.8,
+              "upper": 0.9,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            },
+            {
+              "lower": 0.9,
+              "upper": 1.0,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            }
+          ]
+        },
+        "undefined": {}
+      },
+      "test_metrics": {
+        "n": 860,
+        "n_positive": 1,
+        "n_negative": 859,
+        "prevalence": 0.0011627906976744186,
+        "average_precision": 1.0,
+        "ap_lift": 860.0,
+        "roc_auc": 1.0,
+        "precision_at_k": {
+          "10": 0.1,
+          "20": 0.05,
+          "50": 0.02,
+          "100": 0.01
+        },
+        "recall_at_k": {
+          "10": 1.0,
+          "20": 1.0,
+          "50": 1.0,
+          "100": 1.0
+        },
+        "precision_at_rate": {
+          "0.001": 1.0,
+          "0.005": 0.2,
+          "0.01": 0.1111111111111111,
+          "0.05": 0.023255813953488372
+        },
+        "recall_at_rate": {
+          "0.001": 1.0,
+          "0.005": 1.0,
+          "0.01": 1.0,
+          "0.05": 1.0
+        },
+        "at_threshold": {
+          "threshold": 0.35576075315475464,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "confusion": [
+            [
+              859,
+              0
+            ],
+            [
+              0,
+              1
+            ]
+          ],
+          "alerts": 1,
+          "alert_rate": 0.0011627906976744186,
+          "false_positive_burden": 0.0
+        },
+        "calibration": {
+          "brier": 0.004123825922046009,
+          "expected_calibration_error": 0.01640463041243908,
+          "bins": [
+            {
+              "lower": 0.0,
+              "upper": 0.1,
+              "count": 800,
+              "mean_predicted": 0.00039232466805779685,
+              "observed_rate": 0.0
+            },
+            {
+              "lower": 0.1,
+              "upper": 0.2,
+              "count": 21,
+              "mean_predicted": 0.14935412186951863,
+              "observed_rate": 0.0
+            },
+            {
+              "lower": 0.2,
+              "upper": 0.30000000000000004,
+              "count": 25,
+              "mean_predicted": 0.2587851756811142,
+              "observed_rate": 0.0
+            },
+            {
+              "lower": 0.30000000000000004,
+              "upper": 0.4,
+              "count": 13,
+              "mean_predicted": 0.32203816909056443,
+              "observed_rate": 0.0
+            },
+            {
+              "lower": 0.4,
+              "upper": 0.5,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            },
+            {
+              "lower": 0.5,
+              "upper": 0.6000000000000001,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            },
+            {
+              "lower": 0.6000000000000001,
+              "upper": 0.7000000000000001,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            },
+            {
+              "lower": 0.7000000000000001,
+              "upper": 0.8,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            },
+            {
+              "lower": 0.8,
+              "upper": 0.9,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            },
+            {
+              "lower": 0.9,
+              "upper": 1.0,
+              "count": 1,
+              "mean_predicted": 0.9984397292137146,
+              "observed_rate": 1.0
+            }
+          ]
+        },
+        "undefined": {}
+      },
+      "threshold": {
+        "value": 0.35576075315475464,
+        "strategy": "max_f1",
+        "params": {},
+        "selected_on": "validation",
+        "objective": "val_f1",
+        "objective_value": 1.0,
+        "reason": null,
+        "n_val_positives": 1
+      },
+      "calibration": {
+        "method": "none",
+        "fitted": true,
+        "produces_probabilities": true,
+        "diagnostics": {}
+      },
+      "leakage": [
+        {
+          "check": "feature_scope",
+          "severity": "info",
+          "message": "features were computed on the whole population, so structural and aggregate columns encode information about held-out entities (transductive feature regime)"
+        },
+        {
+          "check": "constant_or_perfect_features",
+          "severity": "warning",
+          "message": "6 feature column(s) separate the training classes perfectly; on a rare-positive dataset that is more often a leak than a discovery",
+          "detail": {
+            "columns": [
+              "legacy_exp3_v1::log_in_degree",
+              "legacy_exp3_v1::log_out_degree",
+              "legacy_exp3_v1::log_total_incoming_usd",
+              "legacy_exp3_v1::log_total_outgoing_usd",
+              "legacy_exp3_v1::reciprocal_out_count",
+              "legacy_exp3_v1::reciprocal_in_count"
+            ],
+            "n_train_positive": 2
+          }
+        }
+      ],
+      "fit_report": {
+        "status": "fitted",
+        "architecture": "BaselineGraphSAGE (2-layer, mean aggregator)",
+        "input_dim": 167,
+        "n_edges_visible": 16940,
+        "epochs_run": 67,
+        "best_epoch": 17,
+        "early_stopping_monitor": "val_average_precision",
+        "best_monitor_value": 1.0,
+        "imbalance": "pos_weight=859.00",
+        "n_train": 1720,
+        "n_train_positive": 2
+      },
+      "runtime_seconds": {
+        "features": 1.600012183189392e-06,
+        "fit": 9.69255069992505,
+        "score": 0.11499030003324151
+      },
+      "checkpoint": null,
+      "notes": []
+    }
+  ],
+  "aggregate": {
+    "n": {
+      "mean": 860.0,
+      "std": 0.0,
+      "n_defined": 4,
+      "n_folds": 4
+    },
+    "n_positive": {
+      "mean": 1.0,
+      "std": 0.0,
+      "n_defined": 4,
+      "n_folds": 4
+    },
+    "n_negative": {
+      "mean": 859.0,
+      "std": 0.0,
+      "n_defined": 4,
+      "n_folds": 4
+    },
+    "prevalence": {
+      "mean": 0.0011627906976744186,
+      "std": 0.0,
+      "n_defined": 4,
+      "n_folds": 4
+    },
+    "average_precision": {
+      "mean": 0.7535211267605634,
+      "std": 0.42691393144303313,
+      "n_defined": 4,
+      "n_folds": 4
+    },
+    "ap_lift": {
+      "mean": 648.0281690140845,
+      "std": 367.1459810410085,
+      "n_defined": 4,
+      "n_folds": 4
+    },
+    "roc_auc": {
+      "mean": 0.9796274738067521,
+      "std": 0.03528625044523326,
+      "n_defined": 4,
+      "n_folds": 4
+    },
+    "precision_at_k.10": {
+      "mean": 0.07500000000000001,
+      "std": 0.04330127018922193,
+      "n_defined": 4,
+      "n_folds": 4
+    },
+    "precision_at_k.20": {
+      "mean": 0.037500000000000006,
+      "std": 0.021650635094610966,
+      "n_defined": 4,
+      "n_folds": 4
+    },
+    "precision_at_k.50": {
+      "mean": 0.015,
+      "std": 0.008660254037844387,
+      "n_defined": 4,
+      "n_folds": 4
+    },
+    "precision_at_k.100": {
+      "mean": 0.01,
+      "std": 0.0,
+      "n_defined": 4,
+      "n_folds": 4
+    },
+    "recall_at_k.10": {
+      "mean": 0.75,
+      "std": 0.4330127018922193,
+      "n_defined": 4,
+      "n_folds": 4
+    },
+    "recall_at_k.20": {
+      "mean": 0.75,
+      "std": 0.4330127018922193,
+      "n_defined": 4,
+      "n_folds": 4
+    },
+    "recall_at_k.50": {
+      "mean": 0.75,
+      "std": 0.4330127018922193,
+      "n_defined": 4,
+      "n_folds": 4
+    },
+    "recall_at_k.100": {
+      "mean": 1.0,
+      "std": 0.0,
+      "n_defined": 4,
+      "n_folds": 4
+    },
+    "precision_at_rate.0.001": {
+      "mean": 0.75,
+      "std": 0.4330127018922193,
+      "n_defined": 4,
+      "n_folds": 4
+    },
+    "precision_at_rate.0.005": {
+      "mean": 0.15000000000000002,
+      "std": 0.08660254037844387,
+      "n_defined": 4,
+      "n_folds": 4
+    },
+    "precision_at_rate.0.01": {
+      "mean": 0.08333333333333333,
+      "std": 0.048112522432468816,
+      "n_defined": 4,
+      "n_folds": 4
+    },
+    "precision_at_rate.0.05": {
+      "mean": 0.01744186046511628,
+      "std": 0.010070062834702775,
+      "n_defined": 4,
+      "n_folds": 4
+    },
+    "recall_at_rate.0.001": {
+      "mean": 0.75,
+      "std": 0.4330127018922193,
+      "n_defined": 4,
+      "n_folds": 4
+    },
+    "recall_at_rate.0.005": {
+      "mean": 0.75,
+      "std": 0.4330127018922193,
+      "n_defined": 4,
+      "n_folds": 4
+    },
+    "recall_at_rate.0.01": {
+      "mean": 0.75,
+      "std": 0.4330127018922193,
+      "n_defined": 4,
+      "n_folds": 4
+    },
+    "recall_at_rate.0.05": {
+      "mean": 0.75,
+      "std": 0.4330127018922193,
+      "n_defined": 4,
+      "n_folds": 4
+    },
+    "at_threshold.threshold": {
+      "mean": 0.5141508877277374,
+      "std": 0.0971243290225008,
+      "n_defined": 4,
+      "n_folds": 4
+    },
+    "at_threshold.precision": {
+      "mean": 1.0,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 4
+    },
+    "at_threshold.recall": {
+      "mean": 0.25,
+      "std": 0.4330127018922193,
+      "n_defined": 4,
+      "n_folds": 4
+    },
+    "at_threshold.f1": {
+      "mean": 1.0,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 4
+    },
+    "at_threshold.alerts": {
+      "mean": 0.25,
+      "std": 0.4330127018922193,
+      "n_defined": 4,
+      "n_folds": 4
+    },
+    "at_threshold.alert_rate": {
+      "mean": 0.00029069767441860465,
+      "std": 0.0005035031417351387,
+      "n_defined": 4,
+      "n_folds": 4
+    },
+    "at_threshold.false_positive_burden": {
+      "mean": 0.0,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 4
+    },
+    "calibration.brier": {
+      "mean": 0.11988831065357179,
+      "std": 0.08314649254362148,
+      "n_defined": 4,
+      "n_folds": 4
+    },
+    "calibration.expected_calibration_error": {
+      "mean": 0.29415420701308836,
+      "std": 0.17520003798398567,
+      "n_defined": 4,
+      "n_folds": 4
+    }
+  },
+  "validation_aggregate": {
+    "n": {
+      "mean": 860.0,
+      "std": 0.0,
+      "n_defined": 4,
+      "n_folds": 4
+    },
+    "n_positive": {
+      "mean": 1.0,
+      "std": 0.0,
+      "n_defined": 4,
+      "n_folds": 4
+    },
+    "n_negative": {
+      "mean": 859.0,
+      "std": 0.0,
+      "n_defined": 4,
+      "n_folds": 4
+    },
+    "prevalence": {
+      "mean": 0.0011627906976744186,
+      "std": 0.0,
+      "n_defined": 4,
+      "n_folds": 4
+    },
+    "average_precision": {
+      "mean": 1.0,
+      "std": 0.0,
+      "n_defined": 4,
+      "n_folds": 4
+    },
+    "ap_lift": {
+      "mean": 860.0,
+      "std": 0.0,
+      "n_defined": 4,
+      "n_folds": 4
+    },
+    "roc_auc": {
+      "mean": 1.0,
+      "std": 0.0,
+      "n_defined": 4,
+      "n_folds": 4
+    },
+    "precision_at_k.10": {
+      "mean": 0.1,
+      "std": 0.0,
+      "n_defined": 4,
+      "n_folds": 4
+    },
+    "precision_at_k.20": {
+      "mean": 0.05,
+      "std": 0.0,
+      "n_defined": 4,
+      "n_folds": 4
+    },
+    "precision_at_k.50": {
+      "mean": 0.02,
+      "std": 0.0,
+      "n_defined": 4,
+      "n_folds": 4
+    },
+    "precision_at_k.100": {
+      "mean": 0.01,
+      "std": 0.0,
+      "n_defined": 4,
+      "n_folds": 4
+    },
+    "recall_at_k.10": {
+      "mean": 1.0,
+      "std": 0.0,
+      "n_defined": 4,
+      "n_folds": 4
+    },
+    "recall_at_k.20": {
+      "mean": 1.0,
+      "std": 0.0,
+      "n_defined": 4,
+      "n_folds": 4
+    },
+    "recall_at_k.50": {
+      "mean": 1.0,
+      "std": 0.0,
+      "n_defined": 4,
+      "n_folds": 4
+    },
+    "recall_at_k.100": {
+      "mean": 1.0,
+      "std": 0.0,
+      "n_defined": 4,
+      "n_folds": 4
+    },
+    "precision_at_rate.0.001": {
+      "mean": 1.0,
+      "std": 0.0,
+      "n_defined": 4,
+      "n_folds": 4
+    },
+    "precision_at_rate.0.005": {
+      "mean": 0.2,
+      "std": 0.0,
+      "n_defined": 4,
+      "n_folds": 4
+    },
+    "precision_at_rate.0.01": {
+      "mean": 0.1111111111111111,
+      "std": 0.0,
+      "n_defined": 4,
+      "n_folds": 4
+    },
+    "precision_at_rate.0.05": {
+      "mean": 0.023255813953488372,
+      "std": 0.0,
+      "n_defined": 4,
+      "n_folds": 4
+    },
+    "recall_at_rate.0.001": {
+      "mean": 1.0,
+      "std": 0.0,
+      "n_defined": 4,
+      "n_folds": 4
+    },
+    "recall_at_rate.0.005": {
+      "mean": 1.0,
+      "std": 0.0,
+      "n_defined": 4,
+      "n_folds": 4
+    },
+    "recall_at_rate.0.01": {
+      "mean": 1.0,
+      "std": 0.0,
+      "n_defined": 4,
+      "n_folds": 4
+    },
+    "recall_at_rate.0.05": {
+      "mean": 1.0,
+      "std": 0.0,
+      "n_defined": 4,
+      "n_folds": 4
+    },
+    "at_threshold.threshold": {
+      "mean": 0.5141508877277374,
+      "std": 0.0971243290225008,
+      "n_defined": 4,
+      "n_folds": 4
+    },
+    "at_threshold.precision": {
+      "mean": 1.0,
+      "std": 0.0,
+      "n_defined": 4,
+      "n_folds": 4
+    },
+    "at_threshold.recall": {
+      "mean": 1.0,
+      "std": 0.0,
+      "n_defined": 4,
+      "n_folds": 4
+    },
+    "at_threshold.f1": {
+      "mean": 1.0,
+      "std": 0.0,
+      "n_defined": 4,
+      "n_folds": 4
+    },
+    "at_threshold.alerts": {
+      "mean": 1.0,
+      "std": 0.0,
+      "n_defined": 4,
+      "n_folds": 4
+    },
+    "at_threshold.alert_rate": {
+      "mean": 0.0011627906976744186,
+      "std": 0.0,
+      "n_defined": 4,
+      "n_folds": 4
+    },
+    "at_threshold.false_positive_burden": {
+      "mean": 0.0,
+      "std": 0.0,
+      "n_defined": 4,
+      "n_folds": 4
+    },
+    "calibration.brier": {
+      "mean": 0.11965350597378262,
+      "std": 0.08278722220597495,
+      "n_defined": 4,
+      "n_folds": 4
+    },
+    "calibration.expected_calibration_error": {
+      "mean": 0.2939836175391563,
+      "std": 0.17405789485894574,
+      "n_defined": 4,
+      "n_folds": 4
+    }
+  },
+  "environment": {
+    "python": "3.11.8",
+    "platform": "Windows-10-10.0.26200-SP0",
+    "processor": "Intel64 Family 6 Model 190 Stepping 0, GenuineIntel",
+    "packages": {
+      "numpy": "2.3.5",
+      "pandas": "3.0.5",
+      "networkx": "3.6.1",
+      "sklearn": "1.9.0",
+      "torch": "2.13.0+cpu",
+      "torch_geometric": "2.8.0.post1",
+      "xgboost": null,
+      "lightgbm": null
+    },
+    "seeding": {
+      "seed": 42,
+      "python_random": true,
+      "numpy": true,
+      "torch": true,
+      "torch_deterministic_algorithms": false
+    }
+  },
+  "determinism": {
+    "seeded_sources": [
+      "python_random",
+      "numpy",
+      "torch (if installed)"
+    ],
+    "not_controlled": [
+      "floating-point reduction order across CPU threads",
+      "BLAS / MKL version differences",
+      "GPU kernel selection when CUDA is used"
+    ],
+    "torch_version": "2.13.0+cpu",
+    "torch_num_threads": 4,
+    "cuda_available": false
+  },
+  "notes": [
+    "transductive protocol: whole-graph topology and whole-graph features are visible at training time; only labels are masked.",
+    "retained as the legacy regression reference for Experiment 3.",
+    "features were computed on the whole population (transductive feature regime); see the leakage block.",
+    "the feature matrix is identical for every fold under this regime and was computed once; per-fold feature timings after fold 0 measure the reuse, not the computation."
+  ],
+  "started_at": "2026-09-06T07:17:06+00:00",
+  "finished_at": "2026-09-06T07:17:39+00:00",
+  "total_runtime_seconds": 33.68213289999403,
+  "git_commit": "fb09935837ba46e98fe19650c6c49564a884ac2f"
+}

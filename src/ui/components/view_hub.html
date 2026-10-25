@@ -1,0 +1,184 @@
+<!--
+    Dataset Hub
+    ===========
+    Every dataset the console can analyse.  The Reference Dataset is given its
+    own treatment because it is the distribution the frozen checkpoint was
+    trained on; an uploaded workspace is scored out-of-sample and carries a
+    confidence assessment.
+
+    READY (eligible to analyse) and COMPLETE (predictions exist) are shown as
+    separate facts, so reaching READY can never read as "results exist".
+-->
+<section x-show="currentView === 'hub'" x-cloak class="space-y-6">
+
+    <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-4">
+        <div>
+            <p class="eyebrow">Workspaces</p>
+            <h1 class="text-3xl font-bold tracking-tight text-system-heading mt-2">Dataset Hub</h1>
+            <p class="text-sm text-system-muted mt-2 max-w-2xl leading-relaxed">
+                Every dataset the console can analyse. The Reference Dataset is the distribution the frozen
+                checkpoint was trained on; uploaded workspaces are scored out-of-sample and carry a
+                confidence assessment.
+            </p>
+        </div>
+        <div class="flex items-center gap-3 flex-none">
+            <button @click="currentView = 'dashboard'" class="btn">Back to Dashboard</button>
+            <button @click="openNewDataset" class="btn btn-primary">+ New Dataset</button>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
+
+        <!-- Reference Dataset: the trusted system dataset. Given its own
+             treatment so it never reads as one upload among many. -->
+        <article class="panel lead-edge rise rise-1 flex flex-col overflow-hidden">
+            <div class="p-5 border-b border-system-border bg-system-deep/10">
+                <div class="flex items-start justify-between gap-3">
+                    <div class="min-w-0">
+                        <p class="eyebrow text-system-primary-soft">System Dataset</p>
+                        <h3 class="text-lg font-bold text-system-heading mt-1.5">Reference Dataset</h3>
+                    </div>
+                    <span class="badge border-system-success/40 text-system-success flex-none">
+                        <span class="badge-dot"></span>Trusted
+                    </span>
+                </div>
+                <p class="text-[0.6875rem] text-system-muted mt-2 leading-relaxed">
+                    The training distribution of the frozen Experiment 3 checkpoint. Predictions here are in-sample,
+                    so no out-of-distribution caveat applies.
+                </p>
+            </div>
+            <dl class="grid grid-cols-2 divide-x divide-system-border border-b border-system-border">
+                <div class="p-4">
+                    <dt class="eyebrow">Entities</dt>
+                    <dd class="text-lg font-mono num text-system-heading mt-1.5" x-text="fmtInt(referenceStats.entities)"></dd>
+                </div>
+                <div class="p-4">
+                    <dt class="eyebrow">Transactions</dt>
+                    <dd class="text-lg font-mono num text-system-heading mt-1.5" x-text="fmtInt(referenceStats.transactions)"></dd>
+                </div>
+            </dl>
+            <div class="p-4 space-y-2 text-[0.6875rem] flex-grow">
+                <div class="flex items-center justify-between">
+                    <span class="eyebrow">Compatibility</span>
+                    <span class="badge border-system-success/40 text-system-success">Native</span>
+                </div>
+                <div class="flex items-center justify-between">
+                    <span class="eyebrow">Analysis</span>
+                    <span class="badge border-system-success/40 text-system-success">Complete</span>
+                </div>
+            </div>
+            <div class="p-4 pt-0">
+                <button @click="selectWorkspace('default')" class="btn btn-secondary w-full">Open Dashboard</button>
+            </div>
+        </article>
+
+        <!-- Uploaded workspaces -->
+        <template x-for="(ws, wsIdx) in workspaces" :key="ws.id">
+            <article class="panel rise flex flex-col overflow-hidden transition-colors hover:border-system-border-strong"
+                     :class="'rise-' + Math.min(4, wsIdx + 2)">
+                <div class="p-5 border-b border-system-border">
+                    <div class="flex items-start justify-between gap-3">
+                        <div class="min-w-0">
+                            <p class="eyebrow">Uploaded Workspace</p>
+                            <h3 class="text-lg font-bold text-system-heading mt-1.5 truncate" x-text="ws.name"></h3>
+                            <p class="text-[0.6875rem] text-system-faint font-mono mt-1 truncate" x-text="ws.filename"></p>
+                        </div>
+                        <span class="badge flex-none" :class="toneBadgeClass(ws.manifest_status)">
+                            <span class="badge-dot"></span><span x-text="statusLabel(ws.manifest_status)"></span>
+                        </span>
+                    </div>
+                </div>
+
+                <dl class="grid grid-cols-2 divide-x divide-system-border border-b border-system-border">
+                    <div class="p-4">
+                        <!-- Profiling reads a bounded sample, so this is the
+                             rows profiled, not the rows in the file, unless the
+                             profiler counted them exactly. Say which. -->
+                        <dt class="eyebrow" x-text="ws.records_are_exact ? 'Records' : 'Rows profiled'"></dt>
+                        <dd class="text-lg font-mono num text-system-heading mt-1.5" x-text="fmtInt(ws.records)"></dd>
+                        <p class="text-[0.625rem] text-system-muted mt-1" x-show="!ws.records_are_exact">
+                            Sample used for profiling &middot; the full file is analysed
+                        </p>
+                    </div>
+                    <div class="p-4">
+                        <dt class="eyebrow">Columns</dt>
+                        <dd class="text-lg font-mono num text-system-heading mt-1.5" x-text="fmtInt(ws.columns)"></dd>
+                    </div>
+                </dl>
+
+                <div class="p-4 space-y-2.5 text-[0.6875rem] flex-grow">
+                    <div class="flex items-center justify-between gap-2">
+                        <span class="eyebrow">Compatibility</span>
+                        <span class="badge" :class="toneBadgeClass(ws.compatibility)" x-text="statusLabel(ws.compatibility) || 'UNKNOWN'"></span>
+                    </div>
+                    <div class="flex items-center justify-between gap-2" x-show="ws.readiness">
+                        <span class="eyebrow">Readiness<button @click.stop="openHelp('readiness')" class="hint" aria-label="What readiness means">?</button></span>
+                        <span class="badge" :class="toneBadgeClass(ws.readiness)" x-text="ws.readiness"></span>
+                    </div>
+                    <div class="flex items-center justify-between gap-2">
+                        <span class="eyebrow">Analysis</span>
+                        <span class="badge" :class="analysisClass(ws)" x-text="analysisLabel(ws)"></span>
+                    </div>
+                    <div class="flex items-center justify-between gap-2" x-show="ws.trust_level">
+                        <span class="eyebrow">Confidence</span>
+                        <span class="badge" :class="toneBadgeClass(ws.trust_level)">
+                            <span x-text="ws.trust_level"></span>
+                            <span class="text-system-faint font-normal tracking-normal"
+                                  x-show="ws.trust_flag_rate !== null && ws.trust_flag_rate !== undefined"
+                                  x-text="'· ' + ((ws.trust_flag_rate || 0) * 100).toFixed(0) + '% flagged'"></span>
+                        </span>
+                    </div>
+
+                    <!-- Declared dataset semantics, so an operator can see how a
+                         workspace was configured without opening it. -->
+                    <div class="flex flex-wrap gap-1 pt-2">
+                        <span class="badge font-mono tracking-normal" x-text="'ID ' + (ws.identity_source === 'ACCOUNT_ID' ? 'ACCOUNT' : 'NAME')"></span>
+                        <span class="badge font-mono tracking-normal" x-text="'FX ' + (ws.currency_policy === 'NATIVE_USD' ? 'USD' : (ws.currency_policy === 'EXTERNAL_FX_REQUIRED' ? 'NEEDS FX' : 'UNSET'))"></span>
+                        <span class="badge font-mono tracking-normal" x-text="'GEO ' + (ws.geography_policy === 'PAYER_AND_BENEFICIARY_SEPARATE' ? 'SPLIT' : (ws.geography_policy === 'SINGLE_DOMESTIC_COUNTRY' ? 'DOMESTIC' : 'UNSET'))"></span>
+                    </div>
+                </div>
+
+                <div class="p-4 pt-0 space-y-2">
+                    <button x-show="ws.manifest_status === 'NEEDS_MAPPING'"
+                            @click="openMappingReview(ws.id)" class="btn btn-secondary w-full">
+                        Review Mapping
+                    </button>
+                    <button x-show="ws.can_predict"
+                            @click="runAnalysis(ws.id)"
+                            :disabled="analysisRunning === ws.id"
+                            class="btn w-full"
+                            :class="ws.has_predictions ? '' : 'btn-primary'">
+                        <span x-show="analysisRunning === ws.id" class="w-1.5 h-1.5 rounded-full bg-system-accent pulse-dot"></span>
+                        <span x-text="analysisRunning === ws.id ? 'Analyzing' : (ws.has_predictions ? 'Re-run Analysis' : 'Run Analysis')"></span>
+                    </button>
+                    <button x-show="ws.prediction_status === 'COMPLETE' && ws.has_predictions"
+                            @click="selectWorkspace(ws.id)" class="btn btn-secondary w-full">
+                        Open Dashboard
+                    </button>
+                    <button x-show="ws.manifest_status === 'INCOMPATIBLE' || ws.manifest_status === 'FAILED'"
+                            @click="openMappingReview(ws.id)" class="btn w-full">
+                        Inspect Configuration
+                    </button>
+                    <p x-show="!ws.can_predict && ws.manifest_status !== 'NEEDS_MAPPING' && ws.manifest_status !== 'INCOMPATIBLE' && ws.manifest_status !== 'FAILED' && ws.prediction_status !== 'COMPLETE'"
+                       class="text-center text-[0.625rem] text-system-faint uppercase tracking-[0.16em] py-2">
+                        Not eligible for analysis
+                    </p>
+                    <p x-show="analysisError && analysisErrorId === ws.id"
+                       class="text-[0.6875rem] text-system-critical bg-system-critical/10 border border-system-critical/40 rounded-sm p-2.5 break-words"
+                       x-text="analysisError"></p>
+                </div>
+            </article>
+        </template>
+    </div>
+
+    <!-- Empty state -->
+    <div x-show="workspaces.length === 0" x-cloak
+         class="panel-quiet border-dashed p-10 text-center">
+        <p class="text-sm text-system-body font-semibold">No uploaded datasets yet</p>
+        <p class="text-[0.6875rem] text-system-muted mt-2 max-w-md mx-auto leading-relaxed">
+            Upload a transaction file to profile it, map its schema onto the model's canonical fields, and run
+            inference against the frozen checkpoint.
+        </p>
+        <button @click="openNewDataset" class="btn btn-primary mt-5">+ New Dataset</button>
+    </div>
+</section>

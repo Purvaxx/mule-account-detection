@@ -1,0 +1,393 @@
+/*
+ * Console stylesheet
+ * ==================
+ * Every value here resolves through a custom property rendered from
+ * src/ui/theme.py, which src/ui/app.py injects into the page at compose time.
+ * No colour, radius, shadow or duration is written literally: a redesign is a
+ * change to theme.py, and tests/test_ui.py fails if this file hardcodes one.
+ */
+
+[x-cloak] { display: none !important; }
+
+html { scroll-behavior: smooth; }
+
+body {
+    background-color: var(--aml-background);
+    color: var(--aml-body);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+}
+
+/* ------------------------------------------------------------------
+   Ambient depth.  The plum is a light source behind the canvas, not a
+   fill: two very low-opacity radial washes anchored off-screen, so the
+   page reads as lit from above rather than tinted pink.
+   ------------------------------------------------------------------ */
+.app-ambient {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    background:
+        radial-gradient(60rem 34rem at 12% -8%, rgb(var(--aml-surface-deep-rgb) / 0.16), transparent 65%),
+        radial-gradient(48rem 30rem at 92% 4%, rgb(var(--aml-primary-rgb) / 0.07), transparent 62%),
+        radial-gradient(70rem 40rem at 50% 108%, rgb(var(--aml-surface-deep-rgb) / 0.09), transparent 70%);
+}
+.app-shell { position: relative; z-index: 1; }
+
+/* ------------------------------------------------------------------
+   Surfaces
+   ------------------------------------------------------------------ */
+.panel {
+    background-color: var(--aml-surface);
+    border: 1px solid var(--aml-border);
+    border-radius: var(--aml-radius-md);
+    box-shadow: var(--aml-shadow-panel);
+}
+.panel-quiet {
+    background-color: rgb(var(--aml-surface-rgb) / 0.55);
+    border: 1px solid var(--aml-border);
+    border-radius: var(--aml-radius-md);
+}
+.well {
+    background-color: var(--aml-surface-sunken);
+    border: 1px solid var(--aml-border);
+    border-radius: var(--aml-radius-sm);
+}
+.glass {
+    background: linear-gradient(180deg,
+                rgb(var(--aml-surface-rgb) / 0.92),
+                rgb(var(--aml-background-rgb) / 0.86)),
+                var(--aml-surface-glass);
+    backdrop-filter: blur(18px) saturate(130%);
+    -webkit-backdrop-filter: blur(18px) saturate(130%);
+}
+/* A hairline of the deep plum along a panel's top edge. Used sparingly
+   to mark the one panel that leads a section. */
+.lead-edge { position: relative; }
+.lead-edge::before {
+    content: "";
+    position: absolute;
+    inset: 0 0 auto 0;
+    height: 1px;
+    border-radius: inherit;
+    background: linear-gradient(90deg,
+                transparent,
+                rgb(var(--aml-primary-rgb) / 0.55) 18%,
+                rgb(var(--aml-surface-deep-rgb) / 0.75) 55%,
+                transparent);
+}
+
+/* ------------------------------------------------------------------
+   Application bar
+   ------------------------------------------------------------------ */
+.app-bar {
+    position: sticky;
+    top: 0;
+    z-index: 40;
+    border-bottom: 1px solid var(--aml-border);
+}
+
+/* ------------------------------------------------------------------
+   Typography helpers
+   ------------------------------------------------------------------ */
+.eyebrow {
+    font-size: 0.625rem;
+    line-height: 1;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--aml-muted);
+}
+.num { font-variant-numeric: tabular-nums; font-feature-settings: "tnum" 1; }
+
+/* ------------------------------------------------------------------
+   Controls — one definition per role, so buttons stop drifting
+   ------------------------------------------------------------------ */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.5rem 0.9rem;
+    border-radius: var(--aml-radius-sm);
+    border: 1px solid var(--aml-border);
+    background-color: var(--aml-surface-elevated);
+    color: var(--aml-body);
+    font-size: 0.6875rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: background-color var(--aml-motion-base) var(--aml-motion-ease),
+                border-color var(--aml-motion-base) var(--aml-motion-ease),
+                color var(--aml-motion-base) var(--aml-motion-ease),
+                transform var(--aml-motion-fast) var(--aml-motion-ease);
+}
+.btn:hover:not(:disabled) {
+    background-color: var(--aml-surface-hover);
+    border-color: var(--aml-border-strong);
+    color: var(--aml-heading);
+}
+.btn:active:not(:disabled) { transform: translateY(1px); }
+.btn:disabled { opacity: 0.45; cursor: not-allowed; }
+
+.btn-primary {
+    background: linear-gradient(180deg,
+                rgb(var(--aml-primary-rgb) / 1),
+                rgb(var(--aml-primary-rgb) / 0.82));
+    border-color: rgb(var(--aml-primary-rgb) / 0.9);
+    color: var(--aml-heading);
+    box-shadow: 0 10px 26px -16px rgb(var(--aml-primary-rgb) / 0.9);
+}
+.btn-primary:hover:not(:disabled) {
+    background: var(--aml-primary-soft);
+    border-color: var(--aml-primary-soft);
+    color: var(--aml-background);
+}
+.btn-secondary {
+    background-color: var(--aml-secondary-dim);
+    border-color: var(--aml-secondary-edge);
+    color: var(--aml-secondary-soft);
+}
+.btn-secondary:hover:not(:disabled) {
+    background-color: rgb(var(--aml-secondary-rgb) / 0.2);
+    border-color: var(--aml-secondary);
+    color: var(--aml-heading);
+}
+.btn-ghost {
+    background-color: transparent;
+    border-color: var(--aml-border);
+    color: var(--aml-muted);
+}
+.btn-ghost:hover:not(:disabled) {
+    background-color: var(--aml-surface-elevated);
+    color: var(--aml-body);
+}
+.btn-sm { padding: 0.3rem 0.55rem; font-size: 0.625rem; letter-spacing: 0.1em; }
+
+/* A question-mark affordance. Small, quiet, and the same everywhere. */
+.hint {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1rem;
+    height: 1rem;
+    flex: none;
+    margin-left: 0.4rem;
+    border: 1px solid var(--aml-border);
+    border-radius: var(--aml-radius-pill);
+    color: var(--aml-faint);
+    font-size: 0.5625rem;
+    font-weight: 700;
+    line-height: 1;
+    cursor: pointer;
+    transition: color var(--aml-motion-fast) var(--aml-motion-ease),
+                border-color var(--aml-motion-fast) var(--aml-motion-ease);
+}
+.hint:hover { color: var(--aml-secondary); border-color: var(--aml-secondary-edge); }
+
+.field {
+    width: 100%;
+    background-color: var(--aml-surface-sunken);
+    border: 1px solid var(--aml-border);
+    border-radius: var(--aml-radius-sm);
+    padding: 0.55rem 0.75rem;
+    color: var(--aml-body);
+    font-size: 0.8125rem;
+    transition: border-color var(--aml-motion-base) var(--aml-motion-ease);
+}
+.field:hover { border-color: var(--aml-border-strong); }
+.field::placeholder { color: var(--aml-faint); }
+
+/* Focus is always visible and always the same. */
+:where(a, button, input, select, textarea, [tabindex]):focus-visible {
+    outline: none;
+    box-shadow: var(--aml-shadow-focus);
+    border-color: var(--aml-secondary-edge);
+}
+
+/* ------------------------------------------------------------------
+   Badges
+   ------------------------------------------------------------------ */
+.badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.16rem 0.5rem;
+    border: 1px solid var(--aml-border);
+    border-radius: var(--aml-radius-xs);
+    font-size: 0.5938rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    line-height: 1.25;
+    white-space: nowrap;
+    color: var(--aml-muted);
+}
+.badge-dot { width: 5px; height: 5px; border-radius: 50%; background: currentColor; flex: none; }
+
+/* ------------------------------------------------------------------
+   Tables
+   ------------------------------------------------------------------ */
+.data-table { width: 100%; border-collapse: separate; border-spacing: 0; }
+.data-table thead th {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    background-color: var(--aml-surface-sunken);
+    border-bottom: 1px solid var(--aml-border);
+    padding: 0.6rem 0.9rem;
+    font-size: 0.5938rem;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--aml-faint);
+    white-space: nowrap;
+}
+.data-table tbody td {
+    padding: 0.62rem 0.9rem;
+    border-bottom: 1px solid rgb(var(--aml-border-rgb) / 0.55);
+    font-size: 0.75rem;
+    white-space: nowrap;
+}
+.data-table tbody tr { transition: background-color var(--aml-motion-fast) linear; }
+.data-table tbody tr[data-interactive]:hover { background-color: rgb(var(--aml-surface-hover-rgb) / 0.55); }
+.data-table tbody tr[data-selected="true"] {
+    background-color: rgb(var(--aml-secondary-rgb) / 0.08);
+    box-shadow: inset 2px 0 0 0 var(--aml-secondary);
+}
+.data-table tbody tr[data-flagged="true"] { background-color: rgb(var(--aml-critical-rgb) / 0.04); }
+.data-table tbody tr[data-flagged="true"][data-selected="true"] {
+    background-color: rgb(var(--aml-critical-rgb) / 0.1);
+    box-shadow: inset 2px 0 0 0 var(--aml-critical);
+}
+
+/* ------------------------------------------------------------------
+   Scrollbars
+   ------------------------------------------------------------------ */
+.scroller { scrollbar-width: thin; scrollbar-color: var(--aml-border-strong) transparent; }
+.scroller::-webkit-scrollbar { width: 8px; height: 8px; }
+.scroller::-webkit-scrollbar-track { background: transparent; }
+.scroller::-webkit-scrollbar-thumb {
+    background: var(--aml-border-strong);
+    border-radius: var(--aml-radius-pill);
+    border: 2px solid transparent;
+    background-clip: content-box;
+}
+.scroller::-webkit-scrollbar-thumb:hover { background-color: var(--aml-muted); background-clip: content-box; }
+
+/* ------------------------------------------------------------------
+   The network stage — the one place the console goes three-dimensional.
+
+   A perspective container holds three parallax layers behind the
+   Vis-Network canvas: a plum depth wash, a fainter counter-moving
+   wash, and a projected grid plane tilted away from the viewer.  They
+   are pointer-transparent, so hit-testing, dragging, zooming and node
+   selection are exactly what Vis-Network does on a flat canvas.
+   ------------------------------------------------------------------ */
+.graph-stage {
+    position: relative;
+    height: clamp(26rem, 60vh, 44rem);
+    border-radius: var(--aml-radius-md);
+    overflow: hidden;
+    background-color: var(--aml-graph-canvas);
+    border: 1px solid var(--aml-border);
+    box-shadow: var(--aml-shadow-inset);
+    perspective: 1100px;
+    --gx: 0; --gy: 0;
+}
+.graph-layer { position: absolute; inset: -12%; pointer-events: none; }
+.graph-wash-a {
+    background:
+        radial-gradient(38rem 26rem at calc(50% + var(--gx) * 26px) calc(46% + var(--gy) * 20px),
+                        rgb(var(--aml-graph-depth-wash-rgb) / 0.30), transparent 68%);
+    transition: background-position var(--aml-motion-base) linear;
+}
+.graph-wash-b {
+    background:
+        radial-gradient(26rem 20rem at calc(22% - var(--gx) * 44px) calc(78% - var(--gy) * 34px),
+                        rgb(var(--aml-primary-rgb) / 0.12), transparent 70%),
+        radial-gradient(24rem 18rem at calc(84% - var(--gx) * 36px) calc(18% - var(--gy) * 26px),
+                        rgb(var(--aml-secondary-rgb) / 0.09), transparent 72%);
+}
+.graph-grid {
+    position: absolute;
+    left: -30%; right: -30%; bottom: -34%; top: 34%;
+    pointer-events: none;
+    transform: rotateX(66deg) translateZ(-40px)
+               translate3d(calc(var(--gx) * -18px), calc(var(--gy) * -10px), 0);
+    transform-origin: 50% 0%;
+    background-image:
+        linear-gradient(to right, rgb(var(--aml-border-strong-rgb) / 0.5) 1px, transparent 1px),
+        linear-gradient(to bottom, rgb(var(--aml-border-strong-rgb) / 0.5) 1px, transparent 1px);
+    background-size: 4.5rem 4.5rem;
+    -webkit-mask-image: linear-gradient(to bottom, rgb(0 0 0 / 0.55), transparent 72%);
+    mask-image: linear-gradient(to bottom, rgb(0 0 0 / 0.55), transparent 72%);
+    opacity: 0.5;
+    transition: transform var(--aml-motion-slow) var(--aml-motion-ease-out);
+}
+.graph-vignette {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    box-shadow: inset 0 0 9rem 2rem rgb(var(--aml-background-rgb) / 0.95);
+}
+#network-graph { position: absolute; inset: 0; background: transparent; }
+.graph-overlay { position: absolute; pointer-events: none; }
+.graph-overlay > * { pointer-events: auto; }
+
+/* The focus pulse: a single ring that expands once when the
+   investigated entity changes. Marks where attention moved to. */
+@keyframes focus-ring {
+    0%   { transform: translate(-50%, -50%) scale(0.35); opacity: 0.55; }
+    100% { transform: translate(-50%, -50%) scale(1.9);  opacity: 0; }
+}
+.focus-pulse {
+    position: absolute;
+    left: 50%; top: 50%;
+    width: 16rem; height: 16rem;
+    border-radius: 50%;
+    border: 1px solid rgb(var(--aml-secondary-rgb) / 0.6);
+    pointer-events: none;
+    animation: focus-ring var(--aml-motion-cinematic) var(--aml-motion-ease-out) forwards;
+}
+.focus-pulse[data-flagged="true"] { border-color: rgb(var(--aml-critical-rgb) / 0.6); }
+
+/* ------------------------------------------------------------------
+   Motion — short, eased out, never bouncing
+   ------------------------------------------------------------------ */
+@keyframes rise { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+@keyframes fade { from { opacity: 0; } to { opacity: 1; } }
+@keyframes lift { from { opacity: 0; transform: translateY(14px) scale(0.985); } to { opacity: 1; transform: none; } }
+@keyframes sweep { from { background-position: -140% 0; } to { background-position: 240% 0; } }
+@keyframes breathe { 0%, 100% { opacity: 0.35; } 50% { opacity: 1; } }
+
+.rise { animation: rise var(--aml-motion-slow) var(--aml-motion-ease-out) both; }
+.rise-1 { animation-delay: 40ms; }
+.rise-2 { animation-delay: 90ms; }
+.rise-3 { animation-delay: 140ms; }
+.rise-4 { animation-delay: 190ms; }
+.fade-in { animation: fade var(--aml-motion-base) var(--aml-motion-ease) both; }
+.lift-in { animation: lift var(--aml-motion-slow) var(--aml-motion-ease-out) both; }
+.pulse-dot { animation: breathe 1.8s var(--aml-motion-ease) infinite; }
+
+/* Skeletons shimmer rather than blink: a blink reads as an error. */
+.skeleton {
+    background-color: var(--aml-surface);
+    background-image: linear-gradient(90deg, transparent, rgb(var(--aml-border-strong-rgb) / 0.28), transparent);
+    background-size: 55% 100%;
+    background-repeat: no-repeat;
+    border-radius: var(--aml-radius-sm);
+    animation: sweep 1.5s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    *, *::before, *::after {
+        animation-duration: 1ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 1ms !important;
+    }
+}

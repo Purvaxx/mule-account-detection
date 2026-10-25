@@ -1,0 +1,7 @@
+# Vendored third-party build outputs are stored byte-for-byte.
+#
+# Without this, git's autocrlf normalization rewrites their line endings on
+# checkout, which changes their SHA-256 and makes the checksums recorded in
+# src/ui/vendor/README.md fail to verify. They are never edited here, so there
+# is nothing to gain from normalizing them.
+src/ui/vendor/*.js -text

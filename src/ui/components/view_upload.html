@@ -1,0 +1,158 @@
+<!--
+    Ingestion
+    =========
+    Select, inspect, map, validate, analyze.  The stepper is a display of where
+    an upload has got to; it drives nothing.  Failure is a first-class outcome
+    with the server's own message, not a success summary with dashes in it.
+-->
+<section x-show="currentView === 'new_dataset'" x-cloak class="space-y-6">
+
+    <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-4">
+        <div>
+            <p class="eyebrow">Ingestion</p>
+            <h1 class="text-3xl font-bold tracking-tight text-system-heading mt-2">New Dataset</h1>
+            <p class="text-sm text-system-muted mt-2">Upload, profile and prepare a transaction file for inference.</p>
+        </div>
+        <button @click="openDatasetHub" class="btn flex-none">Cancel</button>
+    </div>
+
+    <!-- Workflow stepper -->
+    <ol class="panel p-4 md:p-5 flex flex-wrap items-center gap-y-3">
+        <template x-for="(step, i) in uploadSteps" :key="step.key">
+            <li class="flex items-center min-w-0" :class="i < uploadSteps.length - 1 ? 'flex-1' : ''">
+                <div class="flex items-center gap-2.5 min-w-0">
+                    <span class="flex-none w-6 h-6 rounded-full border flex items-center justify-center text-[0.625rem] font-bold num transition-colors"
+                          :class="{
+                              'border-system-success text-system-success bg-system-success/10': uploadStepIndex > i,
+                              'border-system-primary text-system-primary bg-system-primary/15': uploadStepIndex === i,
+                              'border-system-border text-system-faint': uploadStepIndex < i
+                          }">
+                        <span x-show="uploadStepIndex > i">&check;</span>
+                        <span x-show="uploadStepIndex <= i" x-text="i + 1"></span>
+                    </span>
+                    <span class="text-[0.625rem] font-bold uppercase tracking-[0.16em] truncate"
+                          :class="uploadStepIndex >= i ? 'text-system-body' : 'text-system-faint'"
+                          x-text="step.label"></span>
+                </div>
+                <span x-show="i < uploadSteps.length - 1" class="flex-1 h-px mx-3 min-w-[1rem]"
+                      :class="uploadStepIndex > i ? 'bg-system-success/40' : 'bg-system-border'"></span>
+            </li>
+        </template>
+    </ol>
+
+    <div class="panel p-6 md:p-8 max-w-3xl mx-auto w-full">
+
+        <!-- 1. Select -->
+        <div x-show="uploadStatus === 'SELECTING'" class="space-y-6">
+            <div>
+                <label for="ds-name" class="eyebrow block mb-2">Dataset Name</label>
+                <input id="ds-name" type="text" x-model="newDatasetName"
+                       placeholder="e.g. Correspondent Wires — August"
+                       class="field font-mono">
+            </div>
+            <div>
+                <span class="eyebrow block mb-2">Transaction File</span>
+                <div class="relative rounded-md border-2 border-dashed p-10 md:p-14 text-center transition-colors"
+                     :class="dragActive ? 'border-system-primary bg-system-primary/10' : 'border-system-border bg-system-sunken hover:border-system-border-strong'"
+                     @dragover.prevent="dragActive = true"
+                     @dragenter.prevent="dragActive = true"
+                     @dragleave.prevent="dragActive = false"
+                     @drop.prevent="dragActive = false; handleDroppedFile($event)">
+                    <input type="file" @change="handleFileUpload"
+                           aria-label="Choose a transaction file"
+                           class="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                           accept=".csv,.xlsx,.xls">
+                    <div class="pointer-events-none">
+                        <svg class="mx-auto h-10 w-10 mb-4" :class="dragActive ? 'text-system-primary' : 'text-system-faint'"
+                             fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.4" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                  d="M12 16V4m0 0L8 8m4-4l4 4M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2"/>
+                        </svg>
+                        <p class="text-sm font-semibold text-system-body">Drop a file here, or click to browse</p>
+                        <p class="text-[0.6875rem] text-system-muted mt-2 font-mono">CSV &middot; XLSX &middot; XLS</p>
+                    </div>
+                </div>
+                <p class="text-[0.6875rem] text-system-faint mt-3 leading-relaxed">
+                    The file is profiled on upload. Nothing is analysed until you map its schema, confirm the
+                    dataset configuration and start a run.
+                </p>
+            </div>
+            <p x-show="uploadError" x-cloak
+               class="text-xs text-system-critical bg-system-critical/10 border border-system-critical/40 rounded-sm p-3 break-words"
+               x-text="uploadError"></p>
+        </div>
+
+        <!-- 2. Inspect (in flight) -->
+        <div x-show="['UPLOADING', 'PROFILING'].includes(uploadStatus)" x-cloak class="py-14 text-center">
+            <div class="mx-auto w-10 h-10 rounded-full border-2 border-system-border border-t-system-primary animate-spin mb-6"></div>
+            <h3 class="text-sm font-bold text-system-heading uppercase tracking-[0.2em]"
+                x-text="uploadStatus === 'UPLOADING' ? 'Uploading' : 'Profiling'"></h3>
+            <p class="text-system-muted font-mono text-xs mt-3" x-text="uploadProgressMsg"></p>
+            <div class="mx-auto mt-8 max-w-sm space-y-2">
+                <div class="h-2 skeleton"></div>
+                <div class="h-2 skeleton w-4/5 mx-auto"></div>
+            </div>
+        </div>
+
+        <!-- 3. Result -->
+        <div x-show="!['SELECTING', 'UPLOADING', 'PROFILING'].includes(uploadStatus)" x-cloak class="space-y-6 lift-in">
+
+            <div class="flex flex-wrap items-start justify-between gap-4 border-b border-system-border pb-5">
+                <div class="min-w-0">
+                    <p class="eyebrow" x-text="uploadStatus === 'FAILED' ? 'Not ingested' : 'Ingested'"></p>
+                    <h2 class="text-2xl font-bold text-system-heading mt-1.5 truncate"
+                        x-text="uploadedDatasetSummary?.name || newDatasetName || 'Dataset'"></h2>
+                </div>
+                <span class="badge flex-none" :class="toneBadgeClass(uploadStatus)">
+                    <span class="badge-dot"></span><span x-text="statusLabel(uploadStatus)"></span>
+                </span>
+            </div>
+
+            <!-- Failure is a first-class outcome, not a summary with dashes in it. -->
+            <div x-show="uploadStatus === 'FAILED'" x-cloak
+                 class="border border-system-critical/40 bg-system-critical/10 rounded-md p-5">
+                <p class="eyebrow text-system-critical">Ingestion failed</p>
+                <p class="text-sm text-system-body mt-2 break-words leading-relaxed"
+                   x-text="uploadError || uploadProgressMsg || 'The file could not be ingested.'"></p>
+                <button @click="resetUpload()" class="btn mt-4">Try another file</button>
+            </div>
+
+            <template x-if="uploadStatus !== 'FAILED'">
+                <div class="grid grid-cols-2 lg:grid-cols-4 gap-3">
+                    <div class="well p-4">
+                        <p class="eyebrow">Source</p>
+                        <p class="text-xs font-mono text-system-heading mt-2 truncate" x-text="uploadedDatasetSummary?.filename || '—'"></p>
+                    </div>
+                    <div class="well p-4">
+                        <p class="eyebrow">Records</p>
+                        <p class="text-lg font-mono num text-system-heading mt-1.5" x-text="fmtInt(uploadedDatasetSummary?.records)"></p>
+                    </div>
+                    <div class="well p-4">
+                        <p class="eyebrow">Columns</p>
+                        <p class="text-lg font-mono num text-system-heading mt-1.5" x-text="fmtInt(uploadedDatasetSummary?.columns)"></p>
+                    </div>
+                    <div class="well p-4">
+                        <p class="eyebrow">Compatibility</p>
+                        <p class="text-xs font-bold uppercase tracking-[0.12em] mt-2.5"
+                           :class="toneTextClass(uploadedDatasetSummary?.compatibility)"
+                           x-text="statusLabel(uploadedDatasetSummary?.compatibility) || 'UNKNOWN'"></p>
+                    </div>
+                </div>
+            </template>
+
+            <p x-show="uploadStatus === 'NEEDS_MAPPING'" class="text-[0.6875rem] text-system-muted leading-relaxed">
+                The profiler proposed a mapping from your columns onto the model's canonical fields, but some columns
+                need an analyst decision before the dataset can be validated.
+            </p>
+
+            <div class="flex flex-wrap justify-end gap-3 pt-2">
+                <button @click="openDatasetHub" class="btn">Return to Hub</button>
+                <button x-show="uploadStatus !== 'FAILED'"
+                        @click="openMappingReview(uploadedDatasetSummary?.id || mappingWorkspaceId)"
+                        class="btn btn-primary">
+                    Continue to Mapping
+                </button>
+            </div>
+        </div>
+    </div>
+</section>

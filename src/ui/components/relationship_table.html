@@ -1,0 +1,109 @@
+<!--
+    Counterparty relationships
+    ==========================
+    Direct transaction relationships of the investigated entity, as observed in
+    the graph.  "Visible in network" reports whether the current projection
+    filters kept a counterparty on the canvas — the relationship exists either
+    way, and the table is the authoritative list.
+-->
+<div class="px-5 md:px-6 py-5 border-t border-system-border"
+     x-show="network && network.relationships && network.relationships.length > 0" x-cloak>
+
+    <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4 mb-4">
+        <div class="min-w-0">
+            <p class="eyebrow flex items-center">
+                Counterparty Relationships
+                <button @click.stop="openHelp('counterparty_table')" class="hint" aria-label="About counterparty relationships">?</button>
+            </p>
+            <p class="text-[0.6875rem] text-system-muted mt-1.5">
+                <span class="num" x-text="fmtInt(filteredRelationships.length)"></span>
+                direct <span x-text="filteredRelationships.length === 1 ? 'relationship' : 'relationships'"></span>
+                <span class="text-system-faint" x-show="network && network.hidden_count > 0"
+                      x-text="'· ' + (network?.hidden_count || 0) + ' outside the current network projection'"></span>
+            </p>
+        </div>
+
+        <div class="flex items-center gap-3 flex-none">
+            <div class="relative w-full lg:w-60">
+                <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-system-faint">
+                    <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                    </svg>
+                </span>
+                <label for="counterparty-search" class="sr-only">Search counterparties</label>
+                <input id="counterparty-search" type="text" x-model="counterpartySearchQuery" @input="counterpartyTablePage = 1"
+                       placeholder="Search counterparties"
+                       class="field pl-9 pr-9 py-1.5 text-xs">
+                <button x-show="counterpartySearchQuery.length > 0"
+                        @click="counterpartySearchQuery = ''; counterpartyTablePage = 1"
+                        aria-label="Clear counterparty search"
+                        class="absolute inset-y-0 right-0 pr-3 flex items-center text-system-faint hover:text-system-body transition-colors">
+                    <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="flex items-center gap-2">
+                <button @click="if (counterpartyTablePage > 1) counterpartyTablePage--"
+                        :disabled="counterpartyTablePage <= 1" class="btn btn-sm" aria-label="Previous page">&larr;</button>
+                <span class="text-[0.625rem] font-mono num text-system-muted whitespace-nowrap">
+                    <span class="text-system-body" x-text="counterpartyTablePage"></span>
+                    <span class="text-system-faint">/</span>
+                    <span class="text-system-body" x-text="Math.max(1, totalCounterpartyPages)"></span>
+                </span>
+                <button @click="if (counterpartyTablePage < totalCounterpartyPages) counterpartyTablePage++"
+                        :disabled="counterpartyTablePage >= totalCounterpartyPages" class="btn btn-sm" aria-label="Next page">&rarr;</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="well overflow-x-auto scroller">
+        <table class="data-table">
+            <caption class="sr-only">Direct transaction relationships of the investigated entity</caption>
+            <thead>
+                <tr>
+                    <th scope="col" class="text-left">Counterparty</th>
+                    <th scope="col" class="text-left">Direction</th>
+                    <th scope="col" class="text-right">Transactions</th>
+                    <th scope="col" class="text-right">In Network</th>
+                </tr>
+            </thead>
+            <tbody>
+                <template x-for="rel in paginatedRelationships" :key="rel.counterparty">
+                    <tr data-interactive
+                        @click="investigate(rel.counterparty)"
+                        @keydown.enter="investigate(rel.counterparty)"
+                        tabindex="0"
+                        class="cursor-pointer"
+                        :class="!rel.visible_in_network ? 'opacity-55' : ''">
+                        <td class="font-semibold text-system-body max-w-[22rem] truncate" x-text="rel.counterparty" :title="rel.counterparty"></td>
+                        <td>
+                            <span class="badge" :class="{
+                                    'text-system-accent border-system-accent/40': rel.direction === 'RECIPROCAL',
+                                    'text-system-success border-system-success/35': rel.direction === 'IN',
+                                    'text-system-warning border-system-warning/35': rel.direction === 'OUT'
+                                  }">
+                                <span x-show="rel.direction === 'RECIPROCAL'">&harr;</span>
+                                <span x-show="rel.direction === 'IN'">&larr;</span>
+                                <span x-show="rel.direction === 'OUT'">&rarr;</span>
+                                <span x-text="rel.direction"></span>
+                            </span>
+                        </td>
+                        <td class="text-right font-mono num text-system-body" x-text="rel.transaction_count"></td>
+                        <td class="text-right font-mono text-[0.625rem]">
+                            <span x-show="rel.visible_in_network" class="text-system-success">Shown</span>
+                            <span x-show="!rel.visible_in_network" class="text-system-faint">Filtered out</span>
+                        </td>
+                    </tr>
+                </template>
+
+                <tr x-show="paginatedRelationships.length === 0">
+                    <td colspan="4" class="py-10 text-center">
+                        <p class="text-xs text-system-body font-semibold">No counterparty matches that search</p>
+                        <button @click="counterpartySearchQuery = ''; counterpartyTablePage = 1" class="btn btn-sm mt-4">Clear search</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

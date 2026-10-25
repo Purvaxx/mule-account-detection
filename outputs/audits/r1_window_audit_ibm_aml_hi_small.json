@@ -1,0 +1,478 @@
+{
+ "dataset": {
+  "name": "ibm_aml_hi_small",
+  "version": "size475664283-c9a6aae1",
+  "provenance": "file:C:\\Users\\bhara\\Downloads\\Laundering Data\\HI-Small_Trans.csv",
+  "label_definition": "positive = the (bank, account) entity is the payer or the payee of at least one transaction whose published 'Is Laundering' flag is 1. IBM labels transactions; this entity label is derived, and it makes a launderer's counterparty positive as well",
+  "synthetic": true,
+  "notes": [
+   "SYNTHETIC: IBM AMLworld virtual-world simulator (Altman et al., NeurIPS 2023 Datasets and Benchmarks). Not evidence about real-world detection.",
+   "Entity is the (bank, account) pair; account strings are not globally unique (8 collisions across banks).",
+   "Amounts are native across 15 currencies (37% USD) and are not FX-converted; the amount column is 'amount', not 'amount_usd'.",
+   "The typology names live in the separate HI-Small_Patterns.txt and are deliberately not loaded: their group headers state the generating mechanism and its degree/hop parameter.",
+   "Version is derived from file size and mtime, not a content hash; the content hash is in data/manifests/ibm_aml_hi_small.json."
+  ]
+ },
+ "n_entities": 515088,
+ "n_transactions": 5078345,
+ "n_flagged_transactions": 5177,
+ "date_min": "2022-09-01 00:00:00",
+ "date_max": "2022-09-18 16:18:00",
+ "daily": [
+  {
+   "day": "2022-09-01",
+   "weekday": "Thu",
+   "transactions": 1114921,
+   "flagged": 322,
+   "flagged_rate_pct": 0.0289,
+   "active_entities": 437073,
+   "flagged_ach_share": 0.6708
+  },
+  {
+   "day": "2022-09-02",
+   "weekday": "Fri",
+   "transactions": 754449,
+   "flagged": 408,
+   "flagged_rate_pct": 0.0541,
+   "active_entities": 353448,
+   "flagged_ach_share": 0.7475
+  },
+  {
+   "day": "2022-09-03",
+   "weekday": "Sat",
+   "transactions": 207382,
+   "flagged": 391,
+   "flagged_rate_pct": 0.1885,
+   "active_entities": 147077,
+   "flagged_ach_share": 0.8798
+  },
+  {
+   "day": "2022-09-04",
+   "weekday": "Sun",
+   "transactions": 207430,
+   "flagged": 407,
+   "flagged_rate_pct": 0.1962,
+   "active_entities": 147157,
+   "flagged_ach_share": 0.9361
+  },
+  {
+   "day": "2022-09-05",
+   "weekday": "Mon",
+   "transactions": 482650,
+   "flagged": 471,
+   "flagged_rate_pct": 0.0976,
+   "active_entities": 225040,
+   "flagged_ach_share": 0.8344
+  },
+  {
+   "day": "2022-09-06",
+   "weekday": "Tue",
+   "transactions": 482089,
+   "flagged": 531,
+   "flagged_rate_pct": 0.1101,
+   "active_entities": 224616,
+   "flagged_ach_share": 0.8757
+  },
+  {
+   "day": "2022-09-07",
+   "weekday": "Wed",
+   "transactions": 482751,
+   "flagged": 497,
+   "flagged_rate_pct": 0.103,
+   "active_entities": 225074,
+   "flagged_ach_share": 0.8551
+  },
+  {
+   "day": "2022-09-08",
+   "weekday": "Thu",
+   "transactions": 482773,
+   "flagged": 539,
+   "flagged_rate_pct": 0.1116,
+   "active_entities": 225170,
+   "flagged_ach_share": 0.8627
+  },
+  {
+   "day": "2022-09-09",
+   "weekday": "Fri",
+   "transactions": 654467,
+   "flagged": 514,
+   "flagged_rate_pct": 0.0785,
+   "active_entities": 346684,
+   "flagged_ach_share": 0.8132
+  },
+  {
+   "day": "2022-09-10",
+   "weekday": "Sat",
+   "transactions": 208325,
+   "flagged": 442,
+   "flagged_rate_pct": 0.2122,
+   "active_entities": 148023,
+   "flagged_ach_share": 0.9412
+  },
+  {
+   "day": "2022-09-11",
+   "weekday": "Sun",
+   "transactions": 396,
+   "flagged": 232,
+   "flagged_rate_pct": 58.5859,
+   "active_entities": 339,
+   "flagged_ach_share": 1.0
+  },
+  {
+   "day": "2022-09-12",
+   "weekday": "Mon",
+   "transactions": 281,
+   "flagged": 170,
+   "flagged_rate_pct": 60.4982,
+   "active_entities": 239,
+   "flagged_ach_share": 1.0
+  },
+  {
+   "day": "2022-09-13",
+   "weekday": "Tue",
+   "transactions": 184,
+   "flagged": 106,
+   "flagged_rate_pct": 57.6087,
+   "active_entities": 146,
+   "flagged_ach_share": 1.0
+  },
+  {
+   "day": "2022-09-14",
+   "weekday": "Wed",
+   "transactions": 121,
+   "flagged": 70,
+   "flagged_rate_pct": 57.8512,
+   "active_entities": 95,
+   "flagged_ach_share": 1.0
+  },
+  {
+   "day": "2022-09-15",
+   "weekday": "Thu",
+   "transactions": 46,
+   "flagged": 28,
+   "flagged_rate_pct": 60.8696,
+   "active_entities": 38,
+   "flagged_ach_share": 1.0
+  },
+  {
+   "day": "2022-09-16",
+   "weekday": "Fri",
+   "transactions": 46,
+   "flagged": 26,
+   "flagged_rate_pct": 56.5217,
+   "active_entities": 35,
+   "flagged_ach_share": 1.0
+  },
+  {
+   "day": "2022-09-17",
+   "weekday": "Sat",
+   "transactions": 23,
+   "flagged": 15,
+   "flagged_rate_pct": 65.2174,
+   "active_entities": 21,
+   "flagged_ach_share": 1.0
+  },
+  {
+   "day": "2022-09-18",
+   "weekday": "Sun",
+   "transactions": 11,
+   "flagged": 8,
+   "flagged_rate_pct": 72.7273,
+   "active_entities": 10,
+   "flagged_ach_share": 1.0
+  }
+ ],
+ "designs": {
+  "L2_sep03_sep11": {
+   "windows": [
+    {
+     "window": "W1",
+     "start": "2022-09-03",
+     "end": "2022-09-05",
+     "days": 2,
+     "transactions": 414812,
+     "flagged_transactions": 798,
+     "eligible_entities": 162388,
+     "positive_entities": 1217,
+     "prevalence_pct": 0.7494,
+     "positives_not_eligible": 0,
+     "flagged_format_mix": {
+      "ACH": 0.9085,
+      "Cheque": 0.0426,
+      "Credit Card": 0.0251,
+      "Cash": 0.0125,
+      "Bitcoin": 0.0113
+     },
+     "top_currencies": {
+      "US Dollar": 0.3708,
+      "Euro": 0.2323,
+      "Swiss Franc": 0.0462
+     }
+    },
+    {
+     "window": "W2",
+     "start": "2022-09-05",
+     "end": "2022-09-07",
+     "days": 2,
+     "transactions": 964739,
+     "flagged_transactions": 1002,
+     "eligible_entities": 234947,
+     "positive_entities": 1459,
+     "prevalence_pct": 0.621,
+     "positives_not_eligible": 0,
+     "flagged_format_mix": {
+      "ACH": 0.8563,
+      "Cheque": 0.0629,
+      "Credit Card": 0.0469,
+      "Cash": 0.019,
+      "Bitcoin": 0.015
+     },
+     "top_currencies": {
+      "US Dollar": 0.373,
+      "Euro": 0.2297,
+      "Swiss Franc": 0.0462
+     }
+    },
+    {
+     "window": "W3",
+     "start": "2022-09-07",
+     "end": "2022-09-09",
+     "days": 2,
+     "transactions": 965524,
+     "flagged_transactions": 1036,
+     "eligible_entities": 235433,
+     "positive_entities": 1497,
+     "prevalence_pct": 0.6358,
+     "positives_not_eligible": 0,
+     "flagged_format_mix": {
+      "ACH": 0.8591,
+      "Cheque": 0.0569,
+      "Credit Card": 0.0483,
+      "Cash": 0.0241,
+      "Bitcoin": 0.0116
+     },
+     "top_currencies": {
+      "US Dollar": 0.3728,
+      "Euro": 0.2291,
+      "Swiss Franc": 0.0463
+     }
+    },
+    {
+     "window": "W4",
+     "start": "2022-09-09",
+     "end": "2022-09-11",
+     "days": 2,
+     "transactions": 862792,
+     "flagged_transactions": 956,
+     "eligible_entities": 354447,
+     "positive_entities": 1397,
+     "prevalence_pct": 0.3941,
+     "positives_not_eligible": 0,
+     "flagged_format_mix": {
+      "ACH": 0.8724,
+      "Cheque": 0.0628,
+      "Credit Card": 0.0345,
+      "Cash": 0.0199,
+      "Bitcoin": 0.0105
+     },
+     "top_currencies": {
+      "US Dollar": 0.3739,
+      "Euro": 0.2298,
+      "Swiss Franc": 0.046
+     }
+    }
+   ],
+   "folds": [
+    {
+     "train": "W1",
+     "test": "W2",
+     "test_eligible": 234947,
+     "test_positive": 1459,
+     "seen_entities": 144331,
+     "seen_share_of_test": 0.6143,
+     "new_entities": 90616,
+     "test_pos_seen": 723,
+     "test_pos_new_entity": 736,
+     "positive_in_both_windows": 172,
+     "first_time_positive": 1287
+    },
+    {
+     "train": "W2",
+     "test": "W3",
+     "test_eligible": 235433,
+     "test_positive": 1497,
+     "seen_entities": 217267,
+     "seen_share_of_test": 0.9228,
+     "new_entities": 18166,
+     "test_pos_seen": 1057,
+     "test_pos_new_entity": 440,
+     "positive_in_both_windows": 209,
+     "first_time_positive": 1261
+    },
+    {
+     "train": "W3",
+     "test": "W4",
+     "test_eligible": 354447,
+     "test_positive": 1397,
+     "seen_entities": 222224,
+     "seen_share_of_test": 0.627,
+     "new_entities": 132223,
+     "test_pos_seen": 941,
+     "test_pos_new_entity": 456,
+     "positive_in_both_windows": 201,
+     "first_time_positive": 1158
+    }
+   ],
+   "n_folds": 3
+  },
+  "L3_sep02_sep11": {
+   "windows": [
+    {
+     "window": "W1",
+     "start": "2022-09-02",
+     "end": "2022-09-05",
+     "days": 3,
+     "transactions": 1169261,
+     "flagged_transactions": 1206,
+     "eligible_entities": 366440,
+     "positive_entities": 1782,
+     "prevalence_pct": 0.4863,
+     "positives_not_eligible": 0,
+     "flagged_format_mix": {
+      "ACH": 0.8541,
+      "Cheque": 0.0688,
+      "Credit Card": 0.0415,
+      "Cash": 0.0216,
+      "Bitcoin": 0.0141
+     },
+     "top_currencies": {
+      "US Dollar": 0.3731,
+      "Euro": 0.2302,
+      "Swiss Franc": 0.0463
+     }
+    },
+    {
+     "window": "W2",
+     "start": "2022-09-05",
+     "end": "2022-09-08",
+     "days": 3,
+     "transactions": 1447490,
+     "flagged_transactions": 1499,
+     "eligible_entities": 244344,
+     "positive_entities": 2079,
+     "prevalence_pct": 0.8508,
+     "positives_not_eligible": 0,
+     "flagged_format_mix": {
+      "ACH": 0.8559,
+      "Cheque": 0.0614,
+      "Credit Card": 0.0487,
+      "Cash": 0.022,
+      "Bitcoin": 0.012
+     },
+     "top_currencies": {
+      "US Dollar": 0.3727,
+      "Euro": 0.2295,
+      "Swiss Franc": 0.0464
+     }
+    },
+    {
+     "window": "W3",
+     "start": "2022-09-08",
+     "end": "2022-09-11",
+     "days": 3,
+     "transactions": 1345565,
+     "flagged_transactions": 1495,
+     "eligible_entities": 361433,
+     "positive_entities": 2134,
+     "prevalence_pct": 0.5904,
+     "positives_not_eligible": 0,
+     "flagged_format_mix": {
+      "ACH": 0.8689,
+      "Cheque": 0.0602,
+      "Credit Card": 0.0381,
+      "Cash": 0.0201,
+      "Bitcoin": 0.0127
+     },
+     "top_currencies": {
+      "US Dollar": 0.3737,
+      "Euro": 0.2295,
+      "Swiss Franc": 0.0459
+     }
+    }
+   ],
+   "folds": [
+    {
+     "train": "W1",
+     "test": "W2",
+     "test_eligible": 244344,
+     "test_positive": 2079,
+     "seen_entities": 228217,
+     "seen_share_of_test": 0.934,
+     "new_entities": 16127,
+     "test_pos_seen": 1684,
+     "test_pos_new_entity": 395,
+     "positive_in_both_windows": 221,
+     "first_time_positive": 1858
+    },
+    {
+     "train": "W2",
+     "test": "W3",
+     "test_eligible": 361433,
+     "test_positive": 2134,
+     "seen_entities": 227582,
+     "seen_share_of_test": 0.6297,
+     "new_entities": 133851,
+     "test_pos_seen": 1512,
+     "test_pos_new_entity": 622,
+     "positive_in_both_windows": 298,
+     "first_time_positive": 1806
+    }
+   ],
+   "n_folds": 2
+  }
+ },
+ "excluded_tail": {
+  "window": "TAIL_excluded",
+  "start": "2022-09-11",
+  "end": "2022-09-19",
+  "days": 8,
+  "transactions": 1108,
+  "flagged_transactions": 655,
+  "eligible_entities": 716,
+  "positive_entities": 715,
+  "prevalence_pct": 99.8603,
+  "positives_not_eligible": 0,
+  "flagged_format_mix": {
+   "ACH": 1.0
+  },
+  "top_currencies": {
+   "US Dollar": 0.3755,
+   "Euro": 0.2464,
+   "Saudi Riyal": 0.0722
+  }
+ },
+ "excluded_burn_in": {
+  "window": "SEP01_burn_in",
+  "start": "2022-09-01",
+  "end": "2022-09-02",
+  "days": 1,
+  "transactions": 1114921,
+  "flagged_transactions": 322,
+  "eligible_entities": 437073,
+  "positive_entities": 504,
+  "prevalence_pct": 0.1153,
+  "positives_not_eligible": 0,
+  "flagged_format_mix": {
+   "ACH": 0.6708,
+   "Cheque": 0.1832,
+   "Credit Card": 0.0807,
+   "Cash": 0.059,
+   "Bitcoin": 0.0062
+  },
+  "top_currencies": {
+   "US Dollar": 0.3732,
+   "Euro": 0.2312,
+   "Swiss Franc": 0.0464
+  }
+ }
+}

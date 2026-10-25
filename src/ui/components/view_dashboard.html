@@ -1,0 +1,329 @@
+<!--
+    Investigation dashboard
+    =======================
+    summary -> risk intelligence -> network -> ranked entities -> dossier.
+
+    The network is the analytical centrepiece and the only surface that goes
+    three-dimensional; everything dense stays flat, crisp and 2D.
+-->
+<section x-show="currentView === 'dashboard'" class="space-y-6">
+
+    <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-4">
+        <div class="min-w-0">
+            <p class="eyebrow">Investigation</p>
+            <h1 class="text-3xl font-bold tracking-tight text-system-heading mt-2 truncate" x-text="activeWorkspaceName"></h1>
+            <p class="text-sm text-system-muted mt-2">
+                <span x-show="selectedWorkspaceId === 'default'">Built-in reference dataset &middot; in-sample predictions</span>
+                <span x-show="selectedWorkspaceId !== 'default'">Uploaded workspace &middot; out-of-sample predictions</span>
+            </p>
+        </div>
+        <div class="flex items-center gap-3 flex-none">
+            <button @click="openDatasetHub" class="btn">Switch Dataset</button>
+        </div>
+    </div>
+
+    <!-- Loading -->
+    <div x-show="loading" x-cloak class="space-y-6">
+        <div class="flex items-center gap-3 text-[0.6875rem] text-system-muted uppercase tracking-[0.24em] font-mono">
+            <span class="w-1.5 h-1.5 rounded-full bg-system-primary pulse-dot"></span>
+            <span>Resolving analysis context</span>
+        </div>
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+            <template x-for="i in 4" :key="i"><div class="h-24 skeleton"></div></template>
+        </div>
+        <div class="h-64 skeleton"></div>
+        <div class="panel p-5 space-y-3">
+            <div class="h-3 w-48 skeleton"></div>
+            <template x-for="i in 6" :key="i"><div class="h-7 skeleton"></div></template>
+        </div>
+    </div>
+
+    <!-- Error -->
+    <div x-show="error" x-cloak
+         class="panel border-system-critical/45 p-5 flex items-start gap-4">
+        <span class="mt-1.5 w-1.5 h-1.5 rounded-full bg-system-critical flex-none"></span>
+        <div class="min-w-0">
+            <p class="eyebrow text-system-critical">Analysis error</p>
+            <p class="text-sm text-system-body break-words mt-2" x-text="error"></p>
+        </div>
+    </div>
+
+    <!-- Workspace not ready -->
+    <div x-show="workspaceNotReadyStatus && !loading && !error" x-cloak class="py-6">
+        <div class="panel lead-edge max-w-2xl mx-auto p-8 md:p-10 text-center lift-in">
+            <span class="mx-auto mb-6 w-14 h-14 rounded-md border flex items-center justify-center"
+                  :class="toneOutlineClass(workspaceNotReadyStatus)">
+                <svg class="w-7 h-7" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.5m0 3.5h.01M10.3 4.3 3.4 16.2A2 2 0 0 0 5.1 19.2h13.8a2 2 0 0 0 1.7-3L13.7 4.3a2 2 0 0 0-3.4 0Z"/>
+                </svg>
+            </span>
+
+            <p class="eyebrow">Workspace State</p>
+            <h2 class="text-2xl font-bold text-system-heading mt-2">Dataset Not Ready</h2>
+            <p class="mt-2 font-mono text-xs uppercase tracking-[0.16em]"
+               :class="toneTextClass(workspaceNotReadyStatus)"
+               x-text="statusLabel(workspaceNotReadyStatus)"></p>
+
+            <p class="text-sm text-system-muted mt-6 max-w-md mx-auto leading-relaxed"
+               x-show="workspaceNotReadyStatus === 'NEEDS_MAPPING'">
+                This dataset needs an analyst decision on its column mapping before the model can be run against it.
+            </p>
+            <p class="text-sm text-system-muted mt-6 max-w-md mx-auto leading-relaxed"
+               x-show="workspaceNotReadyStatus === 'INCOMPATIBLE'">
+                This dataset does not supply the fields the frozen checkpoint's 167-feature contract requires, so
+                inference cannot run against it.
+            </p>
+            <p class="text-sm text-system-muted mt-6 max-w-md mx-auto leading-relaxed"
+               x-show="workspaceNotReadyStatus === 'ANALYZING' || workspaceNotReadyStatus === 'UPLOADED'">
+                This dataset is still being prepared.
+            </p>
+
+            <!-- READY never implies that a prediction exists. -->
+            <template x-if="workspaceNotReadyStatus === 'NO_ANALYSIS'">
+                <div class="mt-6 max-w-lg mx-auto">
+                    <div class="well p-5 text-left">
+                        <div class="flex items-center gap-3 mb-3">
+                            <span class="badge text-system-success border-system-success/40"><span class="badge-dot"></span>Ready</span>
+                            <span class="text-system-faint">&rarr;</span>
+                            <span class="badge">Not run</span>
+                        </div>
+                        <p class="text-[0.6875rem] text-system-body leading-relaxed">
+                            This dataset satisfies the model's input contract, so a run <em class="text-system-heading not-italic font-semibold">may</em>
+                            start. No inference has been performed yet, so there are no risk scores to display.
+                        </p>
+                    </div>
+                </div>
+            </template>
+
+            <div class="flex flex-wrap justify-center gap-3 mt-8">
+                <button @click="openDatasetHub" class="btn">Return to Hub</button>
+                <button x-show="workspaceNotReadyStatus === 'NEEDS_MAPPING' || workspaceNotReadyStatus === 'PARTIAL' || workspaceNotReadyStatus === 'INCOMPATIBLE'"
+                        @click="openMappingReview(selectedWorkspaceId)" class="btn btn-secondary">
+                    Review Mapping
+                </button>
+                <button x-show="workspaceNotReadyStatus === 'NO_ANALYSIS'"
+                        @click="runAnalysis(selectedWorkspaceId)"
+                        :disabled="analysisRunning === selectedWorkspaceId"
+                        class="btn btn-primary">
+                    <span x-show="analysisRunning === selectedWorkspaceId" class="w-1.5 h-1.5 rounded-full bg-system-heading pulse-dot"></span>
+                    <span x-text="analysisRunning === selectedWorkspaceId ? 'Analyzing' : 'Run Analysis'"></span>
+                </button>
+            </div>
+
+            <p x-show="analysisError && analysisErrorId === selectedWorkspaceId"
+               class="mt-5 text-[0.6875rem] text-system-critical bg-system-critical/10 border border-system-critical/40 rounded-sm p-3 break-words text-left"
+               x-text="analysisError"></p>
+        </div>
+    </div>
+
+    <!-- ============================ ANALYSIS ============================ -->
+    <div x-show="!workspaceNotReadyStatus && !loading && !error" x-cloak class="space-y-6">
+
+        <!-- 1. SUMMARY -->
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+            <div class="panel lead-edge p-5 rise rise-1">
+                <p class="eyebrow">Entities</p>
+                <p class="text-2xl font-mono num text-system-heading mt-2" x-text="fmtInt(overview.total_entities)"></p>
+                <p class="text-[0.625rem] text-system-faint mt-1">Nodes in the transaction graph</p>
+            </div>
+            <div class="panel p-5 rise rise-2">
+                <p class="eyebrow">Transactions</p>
+                <p class="text-2xl font-mono num text-system-heading mt-2" x-text="fmtInt(overview.total_transactions)"></p>
+                <p class="text-[0.625rem] text-system-faint mt-1">Directed edges</p>
+            </div>
+            <div class="panel p-5 rise rise-3">
+                <p class="eyebrow flex items-center">Flagged by model<button @click.stop="openHelp('prediction')" class="hint" aria-label="What flagged means">?</button></p>
+                <p class="text-2xl font-mono num text-system-critical mt-2" x-text="fmtInt(overview.suspicious_count)"></p>
+                <p class="text-[0.625rem] text-system-faint mt-1 num" x-text="flaggedShareLabel"></p>
+            </div>
+            <div class="panel p-5 rise rise-4">
+                <p class="eyebrow">Confidence</p>
+                <p class="text-lg sm:text-2xl font-bold tracking-tight mt-2 whitespace-nowrap"
+                   :class="toneTextClass(trust?.level)"
+                   x-text="selectedWorkspaceId === 'default' ? 'IN-SAMPLE' : (trust?.level || 'NOT ASSESSED')"></p>
+                <p class="text-[0.625rem] text-system-faint mt-1"
+                   x-text="selectedWorkspaceId === 'default' ? 'Training distribution of the checkpoint' : 'Assessed per run'"></p>
+            </div>
+        </div>
+
+        <!-- 2. RISK INTELLIGENCE -->
+        <div class="grid grid-cols-1 xl:grid-cols-3 gap-5 items-start">
+
+            <!-- Score distribution. Every bar is a count of entities in a
+                 score band, split by the model's own predicted class. No
+                 threshold is drawn, because the checkpoint does not
+                 publish one and one will not be invented. -->
+            <div class="panel p-5 xl:col-span-2 rise rise-2">
+                <div class="flex flex-wrap items-start justify-between gap-3">
+                    <div>
+                        <h2 class="text-sm font-bold text-system-heading uppercase tracking-[0.16em] flex items-center">
+                            Risk Score Distribution
+                            <button @click.stop="openHelp('risk_score')" class="hint" aria-label="What the risk score is">?</button>
+                        </h2>
+                        <p class="text-[0.6875rem] text-system-muted mt-1.5">
+                            Model output across every entity, banded. Height is entity count.
+                        </p>
+                    </div>
+                    <div class="flex items-center gap-3 text-[0.625rem]">
+                        <span class="flex items-center gap-1.5 text-system-muted"><span class="w-2.5 h-2.5 rounded-[1px] bg-system-accent/70"></span>Normal</span>
+                        <span class="flex items-center gap-1.5 text-system-muted"><span class="w-2.5 h-2.5 rounded-[1px] bg-system-critical"></span>Flagged</span>
+                    </div>
+                </div>
+                <div class="mt-4 relative">
+                    <canvas x-ref="riskSpectrum" class="w-full block" style="height: 8.5rem;"
+                            role="img"
+                            :aria-label="'Distribution of model risk scores across ' + fmtInt(overview.total_entities) + ' entities'"></canvas>
+                    <div class="flex justify-between mt-2 text-[0.625rem] font-mono num text-system-faint">
+                        <span>0.0</span><span>0.25</span><span>0.5</span><span>0.75</span><span>1.0</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Trust / OOD -->
+            <div class="xl:col-span-1 rise rise-3 h-full">
+                <!-- INCLUDE: src/ui/components/trust_banner.html -->
+
+                <div x-show="!trust && selectedWorkspaceId === 'default'" class="panel p-5 h-full">
+                    <p class="eyebrow">Model Risk</p>
+                    <h3 class="text-sm font-bold text-system-heading mt-2">Reference Dataset</h3>
+                    <p class="text-[0.6875rem] text-system-muted mt-3 leading-relaxed">
+                        This is the data the frozen Experiment 3 checkpoint was trained on, so an
+                        out-of-distribution caveat would be meaningless here and no confidence artifact is produced.
+                        Scores remain model probabilities, not determinations of fraud.
+                    </p>
+                    <p class="text-[0.625rem] text-system-faint mt-4 leading-relaxed border-t border-system-border pt-3">
+                        Ground truth: the reference labels are the ones the checkpoint was trained and evaluated
+                        against. They are not re-derived here.
+                    </p>
+                </div>
+
+                <div x-show="!trust && selectedWorkspaceId !== 'default'" x-cloak class="panel p-5 h-full">
+                    <p class="eyebrow text-system-warning">Model Risk</p>
+                    <h3 class="text-sm font-bold text-system-heading mt-2">No confidence assessment</h3>
+                    <p class="text-[0.6875rem] text-system-muted mt-3 leading-relaxed">
+                        This run predates confidence assessment, or its artifact is unavailable. The scores below are
+                        raw output of the frozen checkpoint on data it was not trained on, and nothing here states how
+                        far out of distribution that is.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 3. NETWORK — the analytical centrepiece -->
+        <div class="panel overflow-hidden rise rise-3">
+            <div class="px-5 py-4 border-b border-system-border flex flex-col xl:flex-row xl:items-center justify-between gap-4">
+                <div class="min-w-0">
+                    <h2 class="text-sm font-bold text-system-heading uppercase tracking-[0.16em] flex items-center">
+                        Network Explorer
+                        <button @click.stop="openHelp('network_explorer')" class="hint" aria-label="About the network explorer">?</button>
+                    </h2>
+                    <p class="text-[0.6875rem] text-system-muted mt-1.5 truncate">
+                        Ego network around
+                        <span class="font-mono text-system-accent" x-text="selectedId || '—'"></span>
+                        <span class="text-system-faint">&middot; filtered projection of observed transaction relationships</span>
+                    </p>
+                </div>
+
+                <div class="flex flex-wrap items-center gap-x-4 gap-y-2">
+                    <div class="flex items-center gap-2">
+                        <button @click.stop="openHelp('network_filters')" class="hint" aria-label="About the network filters">?</button>
+                        <label for="f-neighbors" class="eyebrow">Neighbors</label>
+                        <select id="f-neighbors" x-model="vizFilters.maxNeighbors" @change="refreshNetwork"
+                                class="field w-auto py-1 px-2 text-[0.6875rem] font-mono">
+                            <option value="5">5</option>
+                            <option value="15">15</option>
+                            <option value="25">25</option>
+                            <option value="0">All</option>
+                        </select>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <label for="f-mintx" class="eyebrow">Min Txs</label>
+                        <select id="f-mintx" x-model="vizFilters.minTx" @change="refreshNetwork"
+                                class="field w-auto py-1 px-2 text-[0.6875rem] font-mono">
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="5">5</option>
+                            <option value="10">10</option>
+                        </select>
+                    </div>
+                    <label class="flex items-center gap-2 cursor-pointer eyebrow hover:text-system-body transition-colors">
+                        <input type="checkbox" x-model="vizFilters.reciprocalOnly" @change="refreshNetwork"
+                               class="w-3.5 h-3.5 rounded-sm bg-system-sunken border border-system-border accent-system-accent">
+                        <span>Reciprocal only</span>
+                    </label>
+                    <button @click="recenterNetwork()" class="btn btn-sm">Recenter</button>
+                </div>
+            </div>
+
+            <!-- Legend -->
+            <div class="px-5 py-2.5 border-b border-system-border bg-system-sunken/60 flex flex-wrap items-center gap-x-5 gap-y-2 text-[0.625rem] text-system-muted">
+                <button @click.stop="openHelp('graph_legend')" class="hint" aria-label="About the graph legend">?</button>
+                <span class="flex items-center gap-2"><span class="w-2.5 h-2.5 rounded-full bg-system-accent"></span>Investigated entity</span>
+                <span class="flex items-center gap-2"><span class="w-2.5 h-2.5 rounded-full bg-system-node border border-system-border-strong"></span>Counterparty</span>
+                <span class="flex items-center gap-2"><span class="w-2.5 h-2.5 rounded-full border border-system-critical bg-system-critical/25"></span>Counterparty flagged by the model</span>
+                <span class="flex items-center gap-2 border-l border-system-border pl-5"><span class="text-system-faint">&rarr;</span>Direction</span>
+                <span class="flex items-center gap-2"><span class="w-5 h-0.5 bg-system-muted"></span>Transaction multiplicity</span>
+                <span class="ml-auto text-system-faint hidden lg:block">Click a node to investigate it</span>
+            </div>
+
+            <div class="p-4 md:p-5">
+                <div class="graph-stage" x-ref="graphStage"
+                     @pointermove="onGraphPointerMove($event)"
+                     @pointerleave="resetGraphParallax()">
+                    <div class="graph-layer graph-wash-a" aria-hidden="true"></div>
+                    <div class="graph-layer graph-wash-b" aria-hidden="true"></div>
+                    <div class="graph-grid" aria-hidden="true"></div>
+                    <div id="network-graph" role="application" aria-label="Entity relationship network"></div>
+                    <div class="graph-vignette" aria-hidden="true"></div>
+
+                    <!-- Overlays -->
+                    <!-- One row, so the projection notice and the settling chip
+                         cannot land on top of each other on a narrow stage. -->
+                    <div class="graph-overlay top-3 left-3 right-3 flex items-start justify-between gap-2 flex-wrap">
+                        <template x-if="network && network.hidden_count > 0">
+                            <div class="glass border border-system-border rounded-sm px-3 py-1.5 text-[0.625rem] uppercase tracking-[0.14em] text-system-muted flex items-center gap-2 min-w-0">
+                                <span class="w-1.5 h-1.5 rounded-full bg-system-accent flex-none"></span>
+                                <span class="text-system-accent font-bold num flex-none" x-text="'+' + network.hidden_count"></span>
+                                <span class="truncate">hidden by filters</span>
+                                <button @click.stop="openHelp('network_explorer')" class="hint" aria-label="Why counterparties are hidden">?</button>
+                            </div>
+                        </template>
+                        <div class="glass border border-system-border rounded-sm px-3 py-1.5 flex items-center gap-2 ml-auto"
+                             x-show="graphStabilizing" x-cloak x-transition.opacity>
+                            <span class="w-1.5 h-1.5 rounded-full bg-system-accent pulse-dot"></span>
+                            <span class="eyebrow">Resolving Layout</span>
+                        </div>
+                    </div>
+
+                    <div class="graph-overlay bottom-3 left-3 right-3 flex items-end justify-between gap-3 pointer-events-none">
+                        <div class="glass border border-system-border rounded-sm px-3 py-2 min-w-0" x-show="selectedEntity" x-cloak>
+                            <p class="eyebrow">In Focus</p>
+                            <p class="text-xs font-semibold text-system-heading mt-1 truncate" x-text="selectedEntity?.entity_id"></p>
+                            <p class="text-[0.625rem] font-mono num mt-0.5"
+                               :class="selectedEntity?.predicted_class === 1 ? 'text-system-critical' : 'text-system-muted'"
+                               x-text="(selectedEntity?.predicted_class === 1 ? 'FLAGGED · ' : 'NORMAL · ') + (selectedEntity?.risk_score ?? 0).toFixed(4)"></p>
+                        </div>
+                        <button @click="scrollToDossier()" class="btn btn-sm btn-secondary pointer-events-auto" x-show="selectedEntity" x-cloak>
+                            Open Dossier
+                        </button>
+                    </div>
+
+                    <!-- Empty graph -->
+                    <div class="graph-overlay inset-0 flex items-center justify-center"
+                         x-show="network && network.nodes && network.nodes.length <= 1 && !graphStabilizing" x-cloak>
+                        <div class="text-center max-w-xs">
+                            <p class="text-xs font-semibold text-system-body">No counterparties to project</p>
+                            <p class="text-[0.625rem] text-system-muted mt-2 leading-relaxed" x-text="graphEmptyReason"></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 4. RANKED ENTITIES -->
+        <!-- INCLUDE: src/ui/components/entity_table.html -->
+
+        <!-- 5. INVESTIGATION DOSSIER -->
+        <!-- INCLUDE: src/ui/components/investigation_dossier.html -->
+    </div>
+</section>

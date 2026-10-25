@@ -1,0 +1,2090 @@
+{
+  "schema_version": "1.0",
+  "experiment": {
+    "name": "boosting_aml_core",
+    "description": "Gradient-boosted trees on aml_core_v1. Backend is resolved at fit time and recorded; xgboost/lightgbm are optional.",
+    "tags": [
+      "baseline",
+      "trees"
+    ],
+    "seed": 42,
+    "dataset": {
+      "name": "reference_dkdata",
+      "version": "size13479193-d205a64d",
+      "provenance": "file:C:\\Users\\bhara\\Downloads\\SIH\\dkdata.json",
+      "label_definition": "positive = graph node attribute 'core' is True, set by Layer 3 from the payer_core / beneficiary_core flags carried by the source records; it marks entities named as core to the published investigation, not a supervised fraud adjudication",
+      "synthetic": false,
+      "notes": [
+        "Version is derived from file size and mtime, not a content hash.",
+        "The positive class is extremely rare; see the split plan's notes for which folds can support label-dependent metrics."
+      ]
+    },
+    "features": {
+      "sets": [
+        "aml_core_v1"
+      ],
+      "scope": "global"
+    },
+    "split": {
+      "strategy": "stratified_kfold",
+      "params": {
+        "n_folds": 4
+      },
+      "seed": 42
+    },
+    "model": {
+      "family": "gradient_boosting",
+      "params": {
+        "backend": "auto",
+        "n_estimators": 300,
+        "learning_rate": 0.05,
+        "max_depth": 4
+      },
+      "imbalance": "class_weight"
+    },
+    "threshold": {
+      "strategy": "alert_budget",
+      "params": {
+        "rate": 0.01
+      }
+    },
+    "calibration": {
+      "method": "none",
+      "min_val_positives": 20
+    },
+    "evaluation": {
+      "k_values": [
+        10,
+        20,
+        50,
+        100
+      ],
+      "alert_rates": [
+        0.001,
+        0.005,
+        0.01,
+        0.05
+      ],
+      "calibration_bins": 10
+    }
+  },
+  "dataset": {
+    "spec": {
+      "name": "reference_dkdata",
+      "version": "size13479193-d205a64d",
+      "provenance": "file:C:\\Users\\bhara\\Downloads\\SIH\\dkdata.json",
+      "label_definition": "positive = graph node attribute 'core' is True, set by Layer 3 from the payer_core / beneficiary_core flags carried by the source records; it marks entities named as core to the published investigation, not a supervised fraud adjudication",
+      "synthetic": false,
+      "notes": [
+        "Version is derived from file size and mtime, not a content hash.",
+        "The positive class is extremely rare; see the split plan's notes for which folds can support label-dependent metrics."
+      ]
+    },
+    "n_entities": 3440,
+    "n_positive": 4,
+    "n_negative": 3436,
+    "prevalence": 0.0011627906976744186,
+    "n_edges": 16940,
+    "has_graph": true,
+    "has_time": true
+  },
+  "features": {
+    "scope": "global",
+    "as_of": null,
+    "n_columns": 29,
+    "sets": [
+      {
+        "name": "aml_core_v1",
+        "version": "1.0",
+        "family": "composite",
+        "time_scopable": true,
+        "n_columns": 29,
+        "columns": [
+          "aml_core_v1::txn_in",
+          "aml_core_v1::txn_out",
+          "aml_core_v1::txn_total",
+          "aml_core_v1::amount_in_sum",
+          "aml_core_v1::amount_out_sum",
+          "aml_core_v1::amount_in_mean",
+          "aml_core_v1::amount_out_mean",
+          "aml_core_v1::amount_max",
+          "aml_core_v1::amount_std",
+          "aml_core_v1::active_days",
+          "aml_core_v1::span_days",
+          "aml_core_v1::txn_per_active_day",
+          "aml_core_v1::mean_iat_days",
+          "aml_core_v1::std_iat_days",
+          "aml_core_v1::burstiness",
+          "aml_core_v1::fan_in",
+          "aml_core_v1::fan_out",
+          "aml_core_v1::inflow_outflow_ratio",
+          "aml_core_v1::flow_imbalance",
+          "aml_core_v1::pass_through_ratio",
+          "aml_core_v1::min_in_to_out_gap_days",
+          "aml_core_v1::same_day_in_out",
+          "aml_core_v1::degree_total",
+          "aml_core_v1::counterparty_count",
+          "aml_core_v1::counterparty_diversity",
+          "aml_core_v1::reciprocal_partners",
+          "aml_core_v1::reciprocal_ratio",
+          "aml_core_v1::clustering",
+          "aml_core_v1::degree_centrality"
+        ]
+      }
+    ],
+    "notes": [
+      "15436 NaN cells remained after computation and were left in place; candidates are responsible for imputing them inside their train-fitted preprocessing."
+    ]
+  },
+  "split": {
+    "strategy": "stratified_kfold",
+    "params": {
+      "n_folds": 4,
+      "val_folds": 1
+    },
+    "seed": 42,
+    "regime": "entity-disjoint",
+    "entity_disjoint": true,
+    "time_aware": false,
+    "graph_leakage_controlled": false,
+    "n_folds": 4,
+    "notes": [],
+    "folds": [
+      {
+        "fold_idx": 0,
+        "n_train": 1720,
+        "n_train_pos": 2,
+        "n_val": 860,
+        "n_val_pos": 1,
+        "n_test": 860,
+        "n_test_pos": 1
+      },
+      {
+        "fold_idx": 1,
+        "n_train": 1720,
+        "n_train_pos": 2,
+        "n_val": 860,
+        "n_val_pos": 1,
+        "n_test": 860,
+        "n_test_pos": 1
+      },
+      {
+        "fold_idx": 2,
+        "n_train": 1720,
+        "n_train_pos": 2,
+        "n_val": 860,
+        "n_val_pos": 1,
+        "n_test": 860,
+        "n_test_pos": 1
+      },
+      {
+        "fold_idx": 3,
+        "n_train": 1720,
+        "n_train_pos": 2,
+        "n_val": 860,
+        "n_val_pos": 1,
+        "n_test": 860,
+        "n_test_pos": 1
+      }
+    ]
+  },
+  "leakage": [
+    {
+      "check": "evaluation_regime",
+      "severity": "info",
+      "message": "split 'stratified_kfold' is entity-disjoint: entity_disjoint=True, time_aware=False, graph_leakage_controlled=False"
+    },
+    {
+      "check": "temporal_ordering",
+      "severity": "warning",
+      "message": "the dataset carries timestamps but the split ignores them; the model may be fitted on behaviour that post-dates the behaviour it is scored on"
+    },
+    {
+      "check": "feature_scope",
+      "severity": "info",
+      "message": "features were computed on the whole population, so structural and aggregate columns encode information about held-out entities (transductive feature regime)",
+      "fold_idx": 0
+    },
+    {
+      "check": "constant_or_perfect_features",
+      "severity": "warning",
+      "message": "14 feature column(s) separate the training classes perfectly; on a rare-positive dataset that is more often a leak than a discovery",
+      "detail": {
+        "columns": [
+          "aml_core_v1::txn_in",
+          "aml_core_v1::txn_out",
+          "aml_core_v1::txn_total",
+          "aml_core_v1::amount_in_sum",
+          "aml_core_v1::amount_out_sum",
+          "aml_core_v1::active_days",
+          "aml_core_v1::txn_per_active_day",
+          "aml_core_v1::fan_in",
+          "aml_core_v1::fan_out",
+          "aml_core_v1::same_day_in_out",
+          "aml_core_v1::degree_total",
+          "aml_core_v1::counterparty_count",
+          "aml_core_v1::reciprocal_partners",
+          "aml_core_v1::degree_centrality"
+        ],
+        "n_train_positive": 2
+      },
+      "fold_idx": 0
+    },
+    {
+      "check": "feature_scope",
+      "severity": "info",
+      "message": "features were computed on the whole population, so structural and aggregate columns encode information about held-out entities (transductive feature regime)",
+      "fold_idx": 1
+    },
+    {
+      "check": "constant_or_perfect_features",
+      "severity": "warning",
+      "message": "12 feature column(s) separate the training classes perfectly; on a rare-positive dataset that is more often a leak than a discovery",
+      "detail": {
+        "columns": [
+          "aml_core_v1::txn_in",
+          "aml_core_v1::txn_out",
+          "aml_core_v1::txn_total",
+          "aml_core_v1::amount_in_sum",
+          "aml_core_v1::txn_per_active_day",
+          "aml_core_v1::fan_in",
+          "aml_core_v1::fan_out",
+          "aml_core_v1::same_day_in_out",
+          "aml_core_v1::degree_total",
+          "aml_core_v1::counterparty_count",
+          "aml_core_v1::reciprocal_partners",
+          "aml_core_v1::degree_centrality"
+        ],
+        "n_train_positive": 2
+      },
+      "fold_idx": 1
+    },
+    {
+      "check": "feature_scope",
+      "severity": "info",
+      "message": "features were computed on the whole population, so structural and aggregate columns encode information about held-out entities (transductive feature regime)",
+      "fold_idx": 2
+    },
+    {
+      "check": "constant_or_perfect_features",
+      "severity": "warning",
+      "message": "12 feature column(s) separate the training classes perfectly; on a rare-positive dataset that is more often a leak than a discovery",
+      "detail": {
+        "columns": [
+          "aml_core_v1::txn_in",
+          "aml_core_v1::txn_out",
+          "aml_core_v1::txn_total",
+          "aml_core_v1::amount_in_sum",
+          "aml_core_v1::txn_per_active_day",
+          "aml_core_v1::fan_in",
+          "aml_core_v1::fan_out",
+          "aml_core_v1::same_day_in_out",
+          "aml_core_v1::degree_total",
+          "aml_core_v1::counterparty_count",
+          "aml_core_v1::reciprocal_partners",
+          "aml_core_v1::degree_centrality"
+        ],
+        "n_train_positive": 2
+      },
+      "fold_idx": 2
+    },
+    {
+      "check": "feature_scope",
+      "severity": "info",
+      "message": "features were computed on the whole population, so structural and aggregate columns encode information about held-out entities (transductive feature regime)",
+      "fold_idx": 3
+    },
+    {
+      "check": "constant_or_perfect_features",
+      "severity": "warning",
+      "message": "14 feature column(s) separate the training classes perfectly; on a rare-positive dataset that is more often a leak than a discovery",
+      "detail": {
+        "columns": [
+          "aml_core_v1::txn_in",
+          "aml_core_v1::txn_out",
+          "aml_core_v1::txn_total",
+          "aml_core_v1::amount_in_sum",
+          "aml_core_v1::amount_out_sum",
+          "aml_core_v1::active_days",
+          "aml_core_v1::txn_per_active_day",
+          "aml_core_v1::fan_in",
+          "aml_core_v1::fan_out",
+          "aml_core_v1::same_day_in_out",
+          "aml_core_v1::degree_total",
+          "aml_core_v1::counterparty_count",
+          "aml_core_v1::reciprocal_partners",
+          "aml_core_v1::degree_centrality"
+        ],
+        "n_train_positive": 2
+      },
+      "fold_idx": 3
+    }
+  ],
+  "folds": [
+    {
+      "fold_idx": 0,
+      "counts": {
+        "n_train": 1720,
+        "n_train_pos": 2,
+        "n_val": 860,
+        "n_val_pos": 1,
+        "n_test": 860,
+        "n_test_pos": 1
+      },
+      "validation_metrics": {
+        "n": 860,
+        "n_positive": 1,
+        "n_negative": 859,
+        "prevalence": 0.0011627906976744186,
+        "average_precision": 1.0,
+        "ap_lift": 860.0,
+        "roc_auc": 1.0,
+        "precision_at_k": {
+          "10": 0.1,
+          "20": 0.05,
+          "50": 0.02,
+          "100": 0.01
+        },
+        "recall_at_k": {
+          "10": 1.0,
+          "20": 1.0,
+          "50": 1.0,
+          "100": 1.0
+        },
+        "precision_at_rate": {
+          "0.001": 1.0,
+          "0.005": 0.2,
+          "0.01": 0.1111111111111111,
+          "0.05": 0.023255813953488372
+        },
+        "recall_at_rate": {
+          "0.001": 1.0,
+          "0.005": 1.0,
+          "0.01": 1.0,
+          "0.05": 1.0
+        },
+        "at_threshold": {
+          "threshold": 7.99834068129964e-05,
+          "precision": 0.1111111111111111,
+          "recall": 1.0,
+          "f1": 0.19999999999999998,
+          "confusion": [
+            [
+              851,
+              8
+            ],
+            [
+              0,
+              1
+            ]
+          ],
+          "alerts": 9,
+          "alert_rate": 0.010465116279069767,
+          "false_positive_burden": 8.0
+        },
+        "calibration": {
+          "brier": 4.572301082022765e-09,
+          "expected_calibration_error": 5.523311950746032e-06,
+          "bins": [
+            {
+              "lower": 0.0,
+              "upper": 0.1,
+              "count": 859,
+              "mean_predicted": 4.8815535447670485e-06,
+              "observed_rate": 0.0
+            },
+            {
+              "lower": 0.1,
+              "upper": 0.2,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            },
+            {
+              "lower": 0.2,
+              "upper": 0.30000000000000004,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            },
+            {
+              "lower": 0.30000000000000004,
+              "upper": 0.4,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            },
+            {
+              "lower": 0.4,
+              "upper": 0.5,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            },
+            {
+              "lower": 0.5,
+              "upper": 0.6000000000000001,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            },
+            {
+              "lower": 0.6000000000000001,
+              "upper": 0.7000000000000001,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            },
+            {
+              "lower": 0.7000000000000001,
+              "upper": 0.8,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            },
+            {
+              "lower": 0.8,
+              "upper": 0.9,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            },
+            {
+              "lower": 0.9,
+              "upper": 1.0,
+              "count": 1,
+              "mean_predicted": 0.9994432062173133,
+              "observed_rate": 1.0
+            }
+          ]
+        },
+        "undefined": {}
+      },
+      "test_metrics": {
+        "n": 860,
+        "n_positive": 1,
+        "n_negative": 859,
+        "prevalence": 0.0011627906976744186,
+        "average_precision": 1.0,
+        "ap_lift": 860.0,
+        "roc_auc": 1.0,
+        "precision_at_k": {
+          "10": 0.1,
+          "20": 0.05,
+          "50": 0.02,
+          "100": 0.01
+        },
+        "recall_at_k": {
+          "10": 1.0,
+          "20": 1.0,
+          "50": 1.0,
+          "100": 1.0
+        },
+        "precision_at_rate": {
+          "0.001": 1.0,
+          "0.005": 0.2,
+          "0.01": 0.1111111111111111,
+          "0.05": 0.023255813953488372
+        },
+        "recall_at_rate": {
+          "0.001": 1.0,
+          "0.005": 1.0,
+          "0.01": 1.0,
+          "0.05": 1.0
+        },
+        "at_threshold": {
+          "threshold": 7.99834068129964e-05,
+          "precision": 0.0625,
+          "recall": 1.0,
+          "f1": 0.11764705882352941,
+          "confusion": [
+            [
+              844,
+              15
+            ],
+            [
+              0,
+              1
+            ]
+          ],
+          "alerts": 16,
+          "alert_rate": 0.018604651162790697,
+          "false_positive_burden": 15.0
+        },
+        "calibration": {
+          "brier": 2.8654150025848967e-06,
+          "expected_calibration_error": 6.891605741351606e-05,
+          "bins": [
+            {
+              "lower": 0.0,
+              "upper": 0.1,
+              "count": 859,
+              "mean_predicted": 1.1460362826867369e-05,
+              "observed_rate": 0.0
+            },
+            {
+              "lower": 0.1,
+              "upper": 0.2,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            },
+            {
+              "lower": 0.2,
+              "upper": 0.30000000000000004,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            },
+            {
+              "lower": 0.30000000000000004,
+              "upper": 0.4,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            },
+            {
+              "lower": 0.4,
+              "upper": 0.5,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            },
+            {
+              "lower": 0.5,
+              "upper": 0.6000000000000001,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            },
+            {
+              "lower": 0.6000000000000001,
+              "upper": 0.7000000000000001,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            },
+            {
+              "lower": 0.7000000000000001,
+              "upper": 0.8,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            },
+            {
+              "lower": 0.8,
+              "upper": 0.9,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            },
+            {
+              "lower": 0.9,
+              "upper": 1.0,
+              "count": 1,
+              "mean_predicted": 0.9505766422926553,
+              "observed_rate": 1.0
+            }
+          ]
+        },
+        "undefined": {}
+      },
+      "threshold": {
+        "value": 7.99834068129964e-05,
+        "strategy": "alert_budget",
+        "params": {
+          "rate": 0.01
+        },
+        "selected_on": "validation",
+        "objective": "val_alert_rate",
+        "objective_value": 0.010465116279069767,
+        "reason": null,
+        "n_val_positives": 1
+      },
+      "calibration": {
+        "method": "none",
+        "fitted": true,
+        "produces_probabilities": true,
+        "diagnostics": {}
+      },
+      "leakage": [
+        {
+          "check": "feature_scope",
+          "severity": "info",
+          "message": "features were computed on the whole population, so structural and aggregate columns encode information about held-out entities (transductive feature regime)"
+        },
+        {
+          "check": "constant_or_perfect_features",
+          "severity": "warning",
+          "message": "14 feature column(s) separate the training classes perfectly; on a rare-positive dataset that is more often a leak than a discovery",
+          "detail": {
+            "columns": [
+              "aml_core_v1::txn_in",
+              "aml_core_v1::txn_out",
+              "aml_core_v1::txn_total",
+              "aml_core_v1::amount_in_sum",
+              "aml_core_v1::amount_out_sum",
+              "aml_core_v1::active_days",
+              "aml_core_v1::txn_per_active_day",
+              "aml_core_v1::fan_in",
+              "aml_core_v1::fan_out",
+              "aml_core_v1::same_day_in_out",
+              "aml_core_v1::degree_total",
+              "aml_core_v1::counterparty_count",
+              "aml_core_v1::reciprocal_partners",
+              "aml_core_v1::degree_centrality"
+            ],
+            "n_train_positive": 2
+          }
+        }
+      ],
+      "fit_report": {
+        "early_stopping_note": "early stopping disabled: only 2 training positives, an internal validation split would likely contain none",
+        "status": "fitted",
+        "backend": "sklearn_hist",
+        "backend_version": "1.9.0",
+        "n_train": 1720,
+        "n_train_positive": 2,
+        "n_features": 29
+      },
+      "runtime_seconds": {
+        "features": 5.304332499974407,
+        "fit": 3.9170185000402853,
+        "score": 0.056433600024320185
+      },
+      "checkpoint": null,
+      "notes": []
+    },
+    {
+      "fold_idx": 1,
+      "counts": {
+        "n_train": 1720,
+        "n_train_pos": 2,
+        "n_val": 860,
+        "n_val_pos": 1,
+        "n_test": 860,
+        "n_test_pos": 1
+      },
+      "validation_metrics": {
+        "n": 860,
+        "n_positive": 1,
+        "n_negative": 859,
+        "prevalence": 0.0011627906976744186,
+        "average_precision": 1.0,
+        "ap_lift": 860.0,
+        "roc_auc": 1.0,
+        "precision_at_k": {
+          "10": 0.1,
+          "20": 0.05,
+          "50": 0.02,
+          "100": 0.01
+        },
+        "recall_at_k": {
+          "10": 1.0,
+          "20": 1.0,
+          "50": 1.0,
+          "100": 1.0
+        },
+        "precision_at_rate": {
+          "0.001": 1.0,
+          "0.005": 0.2,
+          "0.01": 0.1111111111111111,
+          "0.05": 0.023255813953488372
+        },
+        "recall_at_rate": {
+          "0.001": 1.0,
+          "0.005": 1.0,
+          "0.01": 1.0,
+          "0.05": 1.0
+        },
+        "at_threshold": {
+          "threshold": 0.00013687778702600373,
+          "precision": 0.1111111111111111,
+          "recall": 1.0,
+          "f1": 0.19999999999999998,
+          "confusion": [
+            [
+              851,
+              8
+            ],
+            [
+              0,
+              1
+            ]
+          ],
+          "alerts": 9,
+          "alert_rate": 0.010465116279069767,
+          "false_positive_burden": 8.0
+        },
+        "calibration": {
+          "brier": 2.0354167515767221e-07,
+          "expected_calibration_error": 2.1986690195597746e-05,
+          "bins": [
+            {
+              "lower": 0.0,
+              "upper": 0.1,
+              "count": 859,
+              "mean_predicted": 2.084103636495501e-05,
+              "observed_rate": 0.0
+            },
+            {
+              "lower": 0.1,
+              "upper": 0.2,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            },
+            {
+              "lower": 0.2,
+              "upper": 0.30000000000000004,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            },
+            {
+              "lower": 0.30000000000000004,
+              "upper": 0.4,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            },
+            {
+              "lower": 0.4,
+              "upper": 0.5,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            },
+            {
+              "lower": 0.5,
+              "upper": 0.6000000000000001,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            },
+            {
+              "lower": 0.6000000000000001,
+              "upper": 0.7000000000000001,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            },
+            {
+              "lower": 0.7000000000000001,
+              "upper": 0.8,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            },
+            {
+              "lower": 0.8,
+              "upper": 0.9,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            },
+            {
+              "lower": 0.9,
+              "upper": 1.0,
+              "count": 1,
+              "mean_predicted": 0.9989938966692823,
+              "observed_rate": 1.0
+            }
+          ]
+        },
+        "undefined": {}
+      },
+      "test_metrics": {
+        "n": 860,
+        "n_positive": 1,
+        "n_negative": 859,
+        "prevalence": 0.0011627906976744186,
+        "average_precision": 1.0,
+        "ap_lift": 860.0,
+        "roc_auc": 1.0,
+        "precision_at_k": {
+          "10": 0.1,
+          "20": 0.05,
+          "50": 0.02,
+          "100": 0.01
+        },
+        "recall_at_k": {
+          "10": 1.0,
+          "20": 1.0,
+          "50": 1.0,
+          "100": 1.0
+        },
+        "precision_at_rate": {
+          "0.001": 1.0,
+          "0.005": 0.2,
+          "0.01": 0.1111111111111111,
+          "0.05": 0.023255813953488372
+        },
+        "recall_at_rate": {
+          "0.001": 1.0,
+          "0.005": 1.0,
+          "0.01": 1.0,
+          "0.05": 1.0
+        },
+        "at_threshold": {
+          "threshold": 0.00013687778702600373,
+          "precision": 0.09090909090909091,
+          "recall": 1.0,
+          "f1": 0.16666666666666669,
+          "confusion": [
+            [
+              849,
+              10
+            ],
+            [
+              0,
+              1
+            ]
+          ],
+          "alerts": 11,
+          "alert_rate": 0.012790697674418604,
+          "false_positive_burden": 10.0
+        },
+        "calibration": {
+          "brier": 1.4454299449233649e-08,
+          "expected_calibration_error": 1.049348267288448e-05,
+          "bins": [
+            {
+              "lower": 0.0,
+              "upper": 0.1,
+              "count": 859,
+              "mean_predicted": 9.334449089595975e-06,
+              "observed_rate": 0.0
+            },
+            {
+              "lower": 0.1,
+              "upper": 0.2,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            },
+            {
+              "lower": 0.2,
+              "upper": 0.30000000000000004,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            },
+            {
+              "lower": 0.30000000000000004,
+              "upper": 0.4,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            },
+            {
+              "lower": 0.4,
+              "upper": 0.5,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            },
+            {
+              "lower": 0.5,
+              "upper": 0.6000000000000001,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            },
+            {
+              "lower": 0.6000000000000001,
+              "upper": 0.7000000000000001,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            },
+            {
+              "lower": 0.7000000000000001,
+              "upper": 0.8,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            },
+            {
+              "lower": 0.8,
+              "upper": 0.9,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            },
+            {
+              "lower": 0.9,
+              "upper": 1.0,
+              "count": 1,
+              "mean_predicted": 0.9989938966692823,
+              "observed_rate": 1.0
+            }
+          ]
+        },
+        "undefined": {}
+      },
+      "threshold": {
+        "value": 0.00013687778702600373,
+        "strategy": "alert_budget",
+        "params": {
+          "rate": 0.01
+        },
+        "selected_on": "validation",
+        "objective": "val_alert_rate",
+        "objective_value": 0.010465116279069767,
+        "reason": null,
+        "n_val_positives": 1
+      },
+      "calibration": {
+        "method": "none",
+        "fitted": true,
+        "produces_probabilities": true,
+        "diagnostics": {}
+      },
+      "leakage": [
+        {
+          "check": "feature_scope",
+          "severity": "info",
+          "message": "features were computed on the whole population, so structural and aggregate columns encode information about held-out entities (transductive feature regime)"
+        },
+        {
+          "check": "constant_or_perfect_features",
+          "severity": "warning",
+          "message": "12 feature column(s) separate the training classes perfectly; on a rare-positive dataset that is more often a leak than a discovery",
+          "detail": {
+            "columns": [
+              "aml_core_v1::txn_in",
+              "aml_core_v1::txn_out",
+              "aml_core_v1::txn_total",
+              "aml_core_v1::amount_in_sum",
+              "aml_core_v1::txn_per_active_day",
+              "aml_core_v1::fan_in",
+              "aml_core_v1::fan_out",
+              "aml_core_v1::same_day_in_out",
+              "aml_core_v1::degree_total",
+              "aml_core_v1::counterparty_count",
+              "aml_core_v1::reciprocal_partners",
+              "aml_core_v1::degree_centrality"
+            ],
+            "n_train_positive": 2
+          }
+        }
+      ],
+      "fit_report": {
+        "early_stopping_note": "early stopping disabled: only 2 training positives, an internal validation split would likely contain none",
+        "status": "fitted",
+        "backend": "sklearn_hist",
+        "backend_version": "1.9.0",
+        "n_train": 1720,
+        "n_train_positive": 2,
+        "n_features": 29
+      },
+      "runtime_seconds": {
+        "features": 1.100008375942707e-06,
+        "fit": 2.037748000002466,
+        "score": 0.07013710006140172
+      },
+      "checkpoint": null,
+      "notes": []
+    },
+    {
+      "fold_idx": 2,
+      "counts": {
+        "n_train": 1720,
+        "n_train_pos": 2,
+        "n_val": 860,
+        "n_val_pos": 1,
+        "n_test": 860,
+        "n_test_pos": 1
+      },
+      "validation_metrics": {
+        "n": 860,
+        "n_positive": 1,
+        "n_negative": 859,
+        "prevalence": 0.0011627906976744186,
+        "average_precision": 1.0,
+        "ap_lift": 860.0,
+        "roc_auc": 1.0,
+        "precision_at_k": {
+          "10": 0.1,
+          "20": 0.05,
+          "50": 0.02,
+          "100": 0.01
+        },
+        "recall_at_k": {
+          "10": 1.0,
+          "20": 1.0,
+          "50": 1.0,
+          "100": 1.0
+        },
+        "precision_at_rate": {
+          "0.001": 1.0,
+          "0.005": 0.2,
+          "0.01": 0.1111111111111111,
+          "0.05": 0.023255813953488372
+        },
+        "recall_at_rate": {
+          "0.001": 1.0,
+          "0.005": 1.0,
+          "0.01": 1.0,
+          "0.05": 1.0
+        },
+        "at_threshold": {
+          "threshold": 0.00013115665598657656,
+          "precision": 0.1111111111111111,
+          "recall": 1.0,
+          "f1": 0.19999999999999998,
+          "confusion": [
+            [
+              851,
+              8
+            ],
+            [
+              0,
+              1
+            ]
+          ],
+          "alerts": 9,
+          "alert_rate": 0.010465116279069767,
+          "false_positive_burden": 8.0
+        },
+        "calibration": {
+          "brier": 0.00011874294583997655,
+          "expected_calibration_error": 0.00038058265792957483,
+          "bins": [
+            {
+              "lower": 0.0,
+              "upper": 0.1,
+              "count": 858,
+              "mean_predicted": 9.051196329766111e-06,
+              "observed_rate": 0.0
+            },
+            {
+              "lower": 0.1,
+              "upper": 0.2,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            },
+            {
+              "lower": 0.2,
+              "upper": 0.30000000000000004,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            },
+            {
+              "lower": 0.30000000000000004,
+              "upper": 0.4,
+              "count": 1,
+              "mean_predicted": 0.31953153769579834,
+              "observed_rate": 0.0
+            },
+            {
+              "lower": 0.4,
+              "upper": 0.5,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            },
+            {
+              "lower": 0.5,
+              "upper": 0.6000000000000001,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            },
+            {
+              "lower": 0.6000000000000001,
+              "upper": 0.7000000000000001,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            },
+            {
+              "lower": 0.7000000000000001,
+              "upper": 0.8,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            },
+            {
+              "lower": 0.8,
+              "upper": 0.9,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            },
+            {
+              "lower": 0.9,
+              "upper": 1.0,
+              "count": 1,
+              "mean_predicted": 0.9999963783273033,
+              "observed_rate": 1.0
+            }
+          ]
+        },
+        "undefined": {}
+      },
+      "test_metrics": {
+        "n": 860,
+        "n_positive": 1,
+        "n_negative": 859,
+        "prevalence": 0.0011627906976744186,
+        "average_precision": 1.0,
+        "ap_lift": 860.0,
+        "roc_auc": 1.0,
+        "precision_at_k": {
+          "10": 0.1,
+          "20": 0.05,
+          "50": 0.02,
+          "100": 0.01
+        },
+        "recall_at_k": {
+          "10": 1.0,
+          "20": 1.0,
+          "50": 1.0,
+          "100": 1.0
+        },
+        "precision_at_rate": {
+          "0.001": 1.0,
+          "0.005": 0.2,
+          "0.01": 0.1111111111111111,
+          "0.05": 0.023255813953488372
+        },
+        "recall_at_rate": {
+          "0.001": 1.0,
+          "0.005": 1.0,
+          "0.01": 1.0,
+          "0.05": 1.0
+        },
+        "at_threshold": {
+          "threshold": 0.00013115665598657656,
+          "precision": 0.14285714285714285,
+          "recall": 1.0,
+          "f1": 0.25,
+          "confusion": [
+            [
+              853,
+              6
+            ],
+            [
+              0,
+              1
+            ]
+          ],
+          "alerts": 7,
+          "alert_rate": 0.00813953488372093,
+          "false_positive_burden": 6.0
+        },
+        "calibration": {
+          "brier": 5.993496268817598e-10,
+          "expected_calibration_error": 2.882633024100131e-06,
+          "bins": [
+            {
+              "lower": 0.0,
+              "upper": 0.1,
+              "count": 859,
+              "mean_predicted": 2.8813682364579484e-06,
+              "observed_rate": 0.0
+            },
+            {
+              "lower": 0.1,
+              "upper": 0.2,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            },
+            {
+              "lower": 0.2,
+              "upper": 0.30000000000000004,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            },
+            {
+              "lower": 0.30000000000000004,
+              "upper": 0.4,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            },
+            {
+              "lower": 0.4,
+              "upper": 0.5,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            },
+            {
+              "lower": 0.5,
+              "upper": 0.6000000000000001,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            },
+            {
+              "lower": 0.6000000000000001,
+              "upper": 0.7000000000000001,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            },
+            {
+              "lower": 0.7000000000000001,
+              "upper": 0.8,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            },
+            {
+              "lower": 0.8,
+              "upper": 0.9,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            },
+            {
+              "lower": 0.9,
+              "upper": 1.0,
+              "count": 1,
+              "mean_predicted": 0.9999960309143913,
+              "observed_rate": 1.0
+            }
+          ]
+        },
+        "undefined": {}
+      },
+      "threshold": {
+        "value": 0.00013115665598657656,
+        "strategy": "alert_budget",
+        "params": {
+          "rate": 0.01
+        },
+        "selected_on": "validation",
+        "objective": "val_alert_rate",
+        "objective_value": 0.010465116279069767,
+        "reason": null,
+        "n_val_positives": 1
+      },
+      "calibration": {
+        "method": "none",
+        "fitted": true,
+        "produces_probabilities": true,
+        "diagnostics": {}
+      },
+      "leakage": [
+        {
+          "check": "feature_scope",
+          "severity": "info",
+          "message": "features were computed on the whole population, so structural and aggregate columns encode information about held-out entities (transductive feature regime)"
+        },
+        {
+          "check": "constant_or_perfect_features",
+          "severity": "warning",
+          "message": "12 feature column(s) separate the training classes perfectly; on a rare-positive dataset that is more often a leak than a discovery",
+          "detail": {
+            "columns": [
+              "aml_core_v1::txn_in",
+              "aml_core_v1::txn_out",
+              "aml_core_v1::txn_total",
+              "aml_core_v1::amount_in_sum",
+              "aml_core_v1::txn_per_active_day",
+              "aml_core_v1::fan_in",
+              "aml_core_v1::fan_out",
+              "aml_core_v1::same_day_in_out",
+              "aml_core_v1::degree_total",
+              "aml_core_v1::counterparty_count",
+              "aml_core_v1::reciprocal_partners",
+              "aml_core_v1::degree_centrality"
+            ],
+            "n_train_positive": 2
+          }
+        }
+      ],
+      "fit_report": {
+        "early_stopping_note": "early stopping disabled: only 2 training positives, an internal validation split would likely contain none",
+        "status": "fitted",
+        "backend": "sklearn_hist",
+        "backend_version": "1.9.0",
+        "n_train": 1720,
+        "n_train_positive": 2,
+        "n_features": 29
+      },
+      "runtime_seconds": {
+        "features": 1.1998927220702171e-06,
+        "fit": 2.525000499910675,
+        "score": 0.0712935000192374
+      },
+      "checkpoint": null,
+      "notes": []
+    },
+    {
+      "fold_idx": 3,
+      "counts": {
+        "n_train": 1720,
+        "n_train_pos": 2,
+        "n_val": 860,
+        "n_val_pos": 1,
+        "n_test": 860,
+        "n_test_pos": 1
+      },
+      "validation_metrics": {
+        "n": 860,
+        "n_positive": 1,
+        "n_negative": 859,
+        "prevalence": 0.0011627906976744186,
+        "average_precision": 1.0,
+        "ap_lift": 860.0,
+        "roc_auc": 1.0,
+        "precision_at_k": {
+          "10": 0.1,
+          "20": 0.05,
+          "50": 0.02,
+          "100": 0.01
+        },
+        "recall_at_k": {
+          "10": 1.0,
+          "20": 1.0,
+          "50": 1.0,
+          "100": 1.0
+        },
+        "precision_at_rate": {
+          "0.001": 1.0,
+          "0.005": 0.2,
+          "0.01": 0.1111111111111111,
+          "0.05": 0.023255813953488372
+        },
+        "recall_at_rate": {
+          "0.001": 1.0,
+          "0.005": 1.0,
+          "0.01": 1.0,
+          "0.05": 1.0
+        },
+        "at_threshold": {
+          "threshold": 0.0003919487520980026,
+          "precision": 0.1,
+          "recall": 1.0,
+          "f1": 0.18181818181818182,
+          "confusion": [
+            [
+              850,
+              9
+            ],
+            [
+              0,
+              1
+            ]
+          ],
+          "alerts": 10,
+          "alert_rate": 0.011627906976744186,
+          "false_positive_burden": 9.0
+        },
+        "calibration": {
+          "brier": 5.0604806844172e-06,
+          "expected_calibration_error": 0.000121169623053247,
+          "bins": [
+            {
+              "lower": 0.0,
+              "upper": 0.1,
+              "count": 859,
+              "mean_predicted": 0.00012130504318829073,
+              "observed_rate": 0.0
+            },
+            {
+              "lower": 0.1,
+              "upper": 0.2,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            },
+            {
+              "lower": 0.2,
+              "upper": 0.30000000000000004,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            },
+            {
+              "lower": 0.30000000000000004,
+              "upper": 0.4,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            },
+            {
+              "lower": 0.4,
+              "upper": 0.5,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            },
+            {
+              "lower": 0.5,
+              "upper": 0.6000000000000001,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            },
+            {
+              "lower": 0.6000000000000001,
+              "upper": 0.7000000000000001,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            },
+            {
+              "lower": 0.7000000000000001,
+              "upper": 0.8,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            },
+            {
+              "lower": 0.8,
+              "upper": 0.9,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            },
+            {
+              "lower": 0.9,
+              "upper": 1.0,
+              "count": 1,
+              "mean_predicted": 0.9999951562729493,
+              "observed_rate": 1.0
+            }
+          ]
+        },
+        "undefined": {}
+      },
+      "test_metrics": {
+        "n": 860,
+        "n_positive": 1,
+        "n_negative": 859,
+        "prevalence": 0.0011627906976744186,
+        "average_precision": 1.0,
+        "ap_lift": 860.0,
+        "roc_auc": 1.0,
+        "precision_at_k": {
+          "10": 0.1,
+          "20": 0.05,
+          "50": 0.02,
+          "100": 0.01
+        },
+        "recall_at_k": {
+          "10": 1.0,
+          "20": 1.0,
+          "50": 1.0,
+          "100": 1.0
+        },
+        "precision_at_rate": {
+          "0.001": 1.0,
+          "0.005": 0.2,
+          "0.01": 0.1111111111111111,
+          "0.05": 0.023255813953488372
+        },
+        "recall_at_rate": {
+          "0.001": 1.0,
+          "0.005": 1.0,
+          "0.01": 1.0,
+          "0.05": 1.0
+        },
+        "at_threshold": {
+          "threshold": 0.0003919487520980026,
+          "precision": 0.125,
+          "recall": 1.0,
+          "f1": 0.2222222222222222,
+          "confusion": [
+            [
+              852,
+              7
+            ],
+            [
+              0,
+              1
+            ]
+          ],
+          "alerts": 8,
+          "alert_rate": 0.009302325581395349,
+          "false_positive_burden": 7.0
+        },
+        "calibration": {
+          "brier": 0.000923690680300559,
+          "expected_calibration_error": 0.0011052411887238712,
+          "bins": [
+            {
+              "lower": 0.0,
+              "upper": 0.1,
+              "count": 858,
+              "mean_predicted": 7.068510325942134e-05,
+              "observed_rate": 0.0
+            },
+            {
+              "lower": 0.1,
+              "upper": 0.2,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            },
+            {
+              "lower": 0.2,
+              "upper": 0.30000000000000004,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            },
+            {
+              "lower": 0.30000000000000004,
+              "upper": 0.4,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            },
+            {
+              "lower": 0.4,
+              "upper": 0.5,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            },
+            {
+              "lower": 0.5,
+              "upper": 0.6000000000000001,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            },
+            {
+              "lower": 0.6000000000000001,
+              "upper": 0.7000000000000001,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            },
+            {
+              "lower": 0.7000000000000001,
+              "upper": 0.8,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            },
+            {
+              "lower": 0.8,
+              "upper": 0.9,
+              "count": 1,
+              "mean_predicted": 0.889854759978895,
+              "observed_rate": 0.0
+            },
+            {
+              "lower": 0.9,
+              "upper": 1.0,
+              "count": 1,
+              "mean_predicted": 0.9999951562729493,
+              "observed_rate": 1.0
+            }
+          ]
+        },
+        "undefined": {}
+      },
+      "threshold": {
+        "value": 0.0003919487520980026,
+        "strategy": "alert_budget",
+        "params": {
+          "rate": 0.01
+        },
+        "selected_on": "validation",
+        "objective": "val_alert_rate",
+        "objective_value": 0.011627906976744186,
+        "reason": null,
+        "n_val_positives": 1
+      },
+      "calibration": {
+        "method": "none",
+        "fitted": true,
+        "produces_probabilities": true,
+        "diagnostics": {}
+      },
+      "leakage": [
+        {
+          "check": "feature_scope",
+          "severity": "info",
+          "message": "features were computed on the whole population, so structural and aggregate columns encode information about held-out entities (transductive feature regime)"
+        },
+        {
+          "check": "constant_or_perfect_features",
+          "severity": "warning",
+          "message": "14 feature column(s) separate the training classes perfectly; on a rare-positive dataset that is more often a leak than a discovery",
+          "detail": {
+            "columns": [
+              "aml_core_v1::txn_in",
+              "aml_core_v1::txn_out",
+              "aml_core_v1::txn_total",
+              "aml_core_v1::amount_in_sum",
+              "aml_core_v1::amount_out_sum",
+              "aml_core_v1::active_days",
+              "aml_core_v1::txn_per_active_day",
+              "aml_core_v1::fan_in",
+              "aml_core_v1::fan_out",
+              "aml_core_v1::same_day_in_out",
+              "aml_core_v1::degree_total",
+              "aml_core_v1::counterparty_count",
+              "aml_core_v1::reciprocal_partners",
+              "aml_core_v1::degree_centrality"
+            ],
+            "n_train_positive": 2
+          }
+        }
+      ],
+      "fit_report": {
+        "early_stopping_note": "early stopping disabled: only 2 training positives, an internal validation split would likely contain none",
+        "status": "fitted",
+        "backend": "sklearn_hist",
+        "backend_version": "1.9.0",
+        "n_train": 1720,
+        "n_train_positive": 2,
+        "n_features": 29
+      },
+      "runtime_seconds": {
+        "features": 1.00000761449337e-06,
+        "fit": 2.810716600040905,
+        "score": 0.06790569995064288
+      },
+      "checkpoint": null,
+      "notes": []
+    }
+  ],
+  "aggregate": {
+    "n": {
+      "mean": 860.0,
+      "std": 0.0,
+      "n_defined": 4,
+      "n_folds": 4
+    },
+    "n_positive": {
+      "mean": 1.0,
+      "std": 0.0,
+      "n_defined": 4,
+      "n_folds": 4
+    },
+    "n_negative": {
+      "mean": 859.0,
+      "std": 0.0,
+      "n_defined": 4,
+      "n_folds": 4
+    },
+    "prevalence": {
+      "mean": 0.0011627906976744186,
+      "std": 0.0,
+      "n_defined": 4,
+      "n_folds": 4
+    },
+    "average_precision": {
+      "mean": 1.0,
+      "std": 0.0,
+      "n_defined": 4,
+      "n_folds": 4
+    },
+    "ap_lift": {
+      "mean": 860.0,
+      "std": 0.0,
+      "n_defined": 4,
+      "n_folds": 4
+    },
+    "roc_auc": {
+      "mean": 1.0,
+      "std": 0.0,
+      "n_defined": 4,
+      "n_folds": 4
+    },
+    "precision_at_k.10": {
+      "mean": 0.1,
+      "std": 0.0,
+      "n_defined": 4,
+      "n_folds": 4
+    },
+    "precision_at_k.20": {
+      "mean": 0.05,
+      "std": 0.0,
+      "n_defined": 4,
+      "n_folds": 4
+    },
+    "precision_at_k.50": {
+      "mean": 0.02,
+      "std": 0.0,
+      "n_defined": 4,
+      "n_folds": 4
+    },
+    "precision_at_k.100": {
+      "mean": 0.01,
+      "std": 0.0,
+      "n_defined": 4,
+      "n_folds": 4
+    },
+    "recall_at_k.10": {
+      "mean": 1.0,
+      "std": 0.0,
+      "n_defined": 4,
+      "n_folds": 4
+    },
+    "recall_at_k.20": {
+      "mean": 1.0,
+      "std": 0.0,
+      "n_defined": 4,
+      "n_folds": 4
+    },
+    "recall_at_k.50": {
+      "mean": 1.0,
+      "std": 0.0,
+      "n_defined": 4,
+      "n_folds": 4
+    },
+    "recall_at_k.100": {
+      "mean": 1.0,
+      "std": 0.0,
+      "n_defined": 4,
+      "n_folds": 4
+    },
+    "precision_at_rate.0.001": {
+      "mean": 1.0,
+      "std": 0.0,
+      "n_defined": 4,
+      "n_folds": 4
+    },
+    "precision_at_rate.0.005": {
+      "mean": 0.2,
+      "std": 0.0,
+      "n_defined": 4,
+      "n_folds": 4
+    },
+    "precision_at_rate.0.01": {
+      "mean": 0.1111111111111111,
+      "std": 0.0,
+      "n_defined": 4,
+      "n_folds": 4
+    },
+    "precision_at_rate.0.05": {
+      "mean": 0.023255813953488372,
+      "std": 0.0,
+      "n_defined": 4,
+      "n_folds": 4
+    },
+    "recall_at_rate.0.001": {
+      "mean": 1.0,
+      "std": 0.0,
+      "n_defined": 4,
+      "n_folds": 4
+    },
+    "recall_at_rate.0.005": {
+      "mean": 1.0,
+      "std": 0.0,
+      "n_defined": 4,
+      "n_folds": 4
+    },
+    "recall_at_rate.0.01": {
+      "mean": 1.0,
+      "std": 0.0,
+      "n_defined": 4,
+      "n_folds": 4
+    },
+    "recall_at_rate.0.05": {
+      "mean": 1.0,
+      "std": 0.0,
+      "n_defined": 4,
+      "n_folds": 4
+    },
+    "at_threshold.threshold": {
+      "mean": 0.00018499165048089483,
+      "std": 0.0001215227588116006,
+      "n_defined": 4,
+      "n_folds": 4
+    },
+    "at_threshold.precision": {
+      "mean": 0.10531655844155843,
+      "std": 0.030974046181144542,
+      "n_defined": 4,
+      "n_folds": 4
+    },
+    "at_threshold.recall": {
+      "mean": 1.0,
+      "std": 0.0,
+      "n_defined": 4,
+      "n_folds": 4
+    },
+    "at_threshold.f1": {
+      "mean": 0.18913398692810457,
+      "std": 0.051026131128338925,
+      "n_defined": 4,
+      "n_folds": 4
+    },
+    "at_threshold.alerts": {
+      "mean": 10.5,
+      "std": 3.5,
+      "n_defined": 4,
+      "n_folds": 4
+    },
+    "at_threshold.alert_rate": {
+      "mean": 0.012209302325581397,
+      "std": 0.004069767441860465,
+      "n_defined": 4,
+      "n_folds": 4
+    },
+    "at_threshold.false_positive_burden": {
+      "mean": 9.5,
+      "std": 3.5,
+      "n_defined": 4,
+      "n_folds": 4
+    },
+    "calibration.brier": {
+      "mean": 0.000231642787238055,
+      "std": 0.0003995557408450269,
+      "n_defined": 4,
+      "n_folds": 4
+    },
+    "calibration.expected_calibration_error": {
+      "mean": 0.00029688334045859297,
+      "std": 0.0004674042842137643,
+      "n_defined": 4,
+      "n_folds": 4
+    }
+  },
+  "validation_aggregate": {
+    "n": {
+      "mean": 860.0,
+      "std": 0.0,
+      "n_defined": 4,
+      "n_folds": 4
+    },
+    "n_positive": {
+      "mean": 1.0,
+      "std": 0.0,
+      "n_defined": 4,
+      "n_folds": 4
+    },
+    "n_negative": {
+      "mean": 859.0,
+      "std": 0.0,
+      "n_defined": 4,
+      "n_folds": 4
+    },
+    "prevalence": {
+      "mean": 0.0011627906976744186,
+      "std": 0.0,
+      "n_defined": 4,
+      "n_folds": 4
+    },
+    "average_precision": {
+      "mean": 1.0,
+      "std": 0.0,
+      "n_defined": 4,
+      "n_folds": 4
+    },
+    "ap_lift": {
+      "mean": 860.0,
+      "std": 0.0,
+      "n_defined": 4,
+      "n_folds": 4
+    },
+    "roc_auc": {
+      "mean": 1.0,
+      "std": 0.0,
+      "n_defined": 4,
+      "n_folds": 4
+    },
+    "precision_at_k.10": {
+      "mean": 0.1,
+      "std": 0.0,
+      "n_defined": 4,
+      "n_folds": 4
+    },
+    "precision_at_k.20": {
+      "mean": 0.05,
+      "std": 0.0,
+      "n_defined": 4,
+      "n_folds": 4
+    },
+    "precision_at_k.50": {
+      "mean": 0.02,
+      "std": 0.0,
+      "n_defined": 4,
+      "n_folds": 4
+    },
+    "precision_at_k.100": {
+      "mean": 0.01,
+      "std": 0.0,
+      "n_defined": 4,
+      "n_folds": 4
+    },
+    "recall_at_k.10": {
+      "mean": 1.0,
+      "std": 0.0,
+      "n_defined": 4,
+      "n_folds": 4
+    },
+    "recall_at_k.20": {
+      "mean": 1.0,
+      "std": 0.0,
+      "n_defined": 4,
+      "n_folds": 4
+    },
+    "recall_at_k.50": {
+      "mean": 1.0,
+      "std": 0.0,
+      "n_defined": 4,
+      "n_folds": 4
+    },
+    "recall_at_k.100": {
+      "mean": 1.0,
+      "std": 0.0,
+      "n_defined": 4,
+      "n_folds": 4
+    },
+    "precision_at_rate.0.001": {
+      "mean": 1.0,
+      "std": 0.0,
+      "n_defined": 4,
+      "n_folds": 4
+    },
+    "precision_at_rate.0.005": {
+      "mean": 0.2,
+      "std": 0.0,
+      "n_defined": 4,
+      "n_folds": 4
+    },
+    "precision_at_rate.0.01": {
+      "mean": 0.1111111111111111,
+      "std": 0.0,
+      "n_defined": 4,
+      "n_folds": 4
+    },
+    "precision_at_rate.0.05": {
+      "mean": 0.023255813953488372,
+      "std": 0.0,
+      "n_defined": 4,
+      "n_folds": 4
+    },
+    "recall_at_rate.0.001": {
+      "mean": 1.0,
+      "std": 0.0,
+      "n_defined": 4,
+      "n_folds": 4
+    },
+    "recall_at_rate.0.005": {
+      "mean": 1.0,
+      "std": 0.0,
+      "n_defined": 4,
+      "n_folds": 4
+    },
+    "recall_at_rate.0.01": {
+      "mean": 1.0,
+      "std": 0.0,
+      "n_defined": 4,
+      "n_folds": 4
+    },
+    "recall_at_rate.0.05": {
+      "mean": 1.0,
+      "std": 0.0,
+      "n_defined": 4,
+      "n_folds": 4
+    },
+    "at_threshold.threshold": {
+      "mean": 0.00018499165048089483,
+      "std": 0.0001215227588116006,
+      "n_defined": 4,
+      "n_folds": 4
+    },
+    "at_threshold.precision": {
+      "mean": 0.10833333333333334,
+      "std": 0.004811252243246877,
+      "n_defined": 4,
+      "n_folds": 4
+    },
+    "at_threshold.recall": {
+      "mean": 1.0,
+      "std": 0.0,
+      "n_defined": 4,
+      "n_folds": 4
+    },
+    "at_threshold.f1": {
+      "mean": 0.19545454545454544,
+      "std": 0.00787295821622216,
+      "n_defined": 4,
+      "n_folds": 4
+    },
+    "at_threshold.alerts": {
+      "mean": 9.25,
+      "std": 0.4330127018922193,
+      "n_defined": 4,
+      "n_folds": 4
+    },
+    "at_threshold.alert_rate": {
+      "mean": 0.010755813953488373,
+      "std": 0.0005035031417351387,
+      "n_defined": 4,
+      "n_folds": 4
+    },
+    "at_threshold.false_positive_burden": {
+      "mean": 8.25,
+      "std": 0.4330127018922193,
+      "n_defined": 4,
+      "n_folds": 4
+    },
+    "calibration.brier": {
+      "mean": 3.100288512515836e-05,
+      "std": 5.0697193110904484e-05,
+      "n_defined": 4,
+      "n_folds": 4
+    },
+    "calibration.expected_calibration_error": {
+      "mean": 0.0001323155707822914,
+      "std": 0.00015000793104240682,
+      "n_defined": 4,
+      "n_folds": 4
+    }
+  },
+  "environment": {
+    "python": "3.11.8",
+    "platform": "Windows-10-10.0.26200-SP0",
+    "processor": "Intel64 Family 6 Model 190 Stepping 0, GenuineIntel",
+    "packages": {
+      "numpy": "2.3.5",
+      "pandas": "3.0.5",
+      "networkx": "3.6.1",
+      "sklearn": "1.9.0",
+      "torch": "2.13.0+cpu",
+      "torch_geometric": "2.8.0.post1",
+      "xgboost": null,
+      "lightgbm": null
+    },
+    "seeding": {
+      "seed": 42,
+      "python_random": true,
+      "numpy": true,
+      "torch": true,
+      "torch_deterministic_algorithms": false
+    }
+  },
+  "determinism": {
+    "seeded_sources": [
+      "python_random",
+      "numpy",
+      "torch (if installed)"
+    ],
+    "not_controlled": [
+      "floating-point reduction order across CPU threads",
+      "BLAS / MKL version differences",
+      "GPU kernel selection when CUDA is used"
+    ],
+    "torch_version": "2.13.0+cpu",
+    "torch_num_threads": 4,
+    "cuda_available": false
+  },
+  "notes": [
+    "features were computed on the whole population (transductive feature regime); see the leakage block.",
+    "the feature matrix is identical for every fold under this regime and was computed once; per-fold feature timings after fold 0 measure the reuse, not the computation."
+  ],
+  "started_at": "2026-09-06T07:16:25+00:00",
+  "finished_at": "2026-09-06T07:16:42+00:00",
+  "total_runtime_seconds": 17.047476499923505,
+  "git_commit": "fb09935837ba46e98fe19650c6c49564a884ac2f"
+}

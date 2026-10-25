@@ -1,0 +1,122 @@
+{
+  "name": "ibm_aml_sample",
+  "spec": {
+    "name": "ibm_aml_sample",
+    "version": "size8625091-ee960bc7",
+    "provenance": "file:C:\\Users\\bhara\\Downloads\\Laundering Data\\IBM_AML_sample.xlsx",
+    "label_definition": "positive = the account appears on at least one row flagged is_suspicious. Every row in this extract is flagged, so every entity is positive",
+    "synthetic": true,
+    "notes": [
+      "This is the laundering-pattern extract of IBM's synthetic AML data. It contains no negative class and cannot train or evaluate a classifier.",
+      "Amounts span 15 currencies and are not FX-converted."
+    ]
+  },
+  "domain": "money_laundering",
+  "data": {
+    "n_entities": 3183,
+    "n_transactions": 137936,
+    "n_positive": 3183,
+    "n_negative": 0,
+    "positive_rate": 1.0,
+    "has_graph_object": false,
+    "transaction_fields": [
+      "source_entity",
+      "target_entity",
+      "date",
+      "amount",
+      "payment_type",
+      "currency_orig",
+      "currency_dest",
+      "edge_key"
+    ],
+    "entity_fields": [],
+    "timestamp_range": {
+      "min": "2022-08-01 00:08:00",
+      "max": "2023-01-12 16:49:00",
+      "span_days": 164.0,
+      "n_dated": 137936,
+      "n_undated": 0
+    },
+    "missingness": {
+      "source_entity": 0.0,
+      "target_entity": 0.0,
+      "date": 0.0,
+      "amount": 0.0,
+      "payment_type": 0.0,
+      "currency_orig": 0.0,
+      "currency_dest": 0.0,
+      "edge_key": 0.0
+    },
+    "duplicate_structure": {
+      "n_distinct_ordered_pairs": 103550,
+      "mean_transactions_per_pair": 1.332071463061323,
+      "n_self_loops": 1709,
+      "n_fully_duplicated_rows": 0
+    },
+    "identity_representation": "entity ids are the source dataset's account/name identifiers as loaded; no resolution or merging was applied by the audit"
+  },
+  "labels": {
+    "definition": "positive = the account appears on at least one row flagged is_suspicious. Every row in this extract is flagged, so every entity is positive",
+    "granularity": "entity",
+    "derived_from_transaction_labels": false,
+    "n_positive": 3183,
+    "positive_rate": 1.0,
+    "supports_cross_validation": true,
+    "min_positives_for_cross_validation": 40,
+    "label_alias_columns_present": [],
+    "cross_validation_note": "every entity is positive; there is no negative class to learn against",
+    "entity_time_coverage": 1.0,
+    "forward_split_positives": {
+      "cut_at_q50": {
+        "cutoff": "2022-08-11 12:25:00",
+        "n_entities_after": 1592,
+        "n_positive_after": 1592
+      },
+      "cut_at_q60": {
+        "cutoff": "2022-08-15 01:35:12",
+        "n_entities_after": 1273,
+        "n_positive_after": 1273
+      },
+      "cut_at_q70": {
+        "cutoff": "2022-08-20 08:45:12",
+        "n_entities_after": 955,
+        "n_positive_after": 955
+      },
+      "cut_at_q80": {
+        "cutoff": "2022-08-30 16:10:12",
+        "n_entities_after": 637,
+        "n_positive_after": 637
+      }
+    },
+    "supports_time_forward_evaluation": true,
+    "supports_entity_disjoint_evaluation": true,
+    "prospective_or_retrospective": "retrospective: the flag was attached after the behaviour it describes was complete, so a feature computed over an entity's whole history sees the period the label was assigned from"
+  },
+  "structural_triviality": {
+    "prevalence_floor_average_precision": 1.0,
+    "single_quantity": {},
+    "combined_probe": null,
+    "verdict": "undefined",
+    "note": "the population is single-class; no ranking metric is defined and no triviality statement can be made"
+  },
+  "split_feasibility": {
+    "stratified_kfold": {
+      "usable": true,
+      "note": "3183 positives over 4 folds leaves about 795 per test partition"
+    },
+    "time_forward_holdout": {
+      "usable": true,
+      "note": "a forward cut leaves enough positives in the later partition"
+    },
+    "component_grouped_kfold": {
+      "usable": true,
+      "note": "components are the grouping unit; usable whenever k-fold is, but fold sizes follow the component-size distribution and can be very uneven"
+    }
+  },
+  "verdict": "BLOCKED",
+  "reason": "every entity is positive; there is no negative class, so no classifier can be trained or evaluated",
+  "recommended_use": "none until a negative population is obtained",
+  "limitations": [
+    "SYNTHETIC: rows were generated, not observed. No result on this dataset is evidence about real-world detection performance."
+  ]
+}

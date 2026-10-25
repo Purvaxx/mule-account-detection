@@ -1,0 +1,1247 @@
+{
+  "schema_version": "1.0",
+  "experiment": {
+    "name": "ibm_cal_ablation_a_txn",
+    "description": "Time-forward ablation A: transaction features only. Calendar-forward regime: every entity with history is scored at fixed origins (train 2022-09-05, validation 2022-09-07, test 2022-09-09) from transactions before the origin; label = involvement in a flagged transaction in [origin, origin + 2 days).",
+    "tags": [
+      "ablation",
+      "calendar-forward",
+      "ibm",
+      "ablation-a"
+    ],
+    "seed": 42,
+    "dataset": {
+      "name": "ibm_aml_hi_small",
+      "version": "size475664283-c9a6aae1",
+      "provenance": "file:C:\\Users\\bhara\\Downloads\\Laundering Data\\HI-Small_Trans.csv",
+      "label_definition": "positive = the (bank, account) entity is the payer or the payee of at least one transaction whose published 'Is Laundering' flag is 1. IBM labels transactions; this entity label is derived, and it makes a launderer's counterparty positive as well",
+      "synthetic": true,
+      "notes": [
+        "SYNTHETIC: IBM AMLworld virtual-world simulator (Altman et al., NeurIPS 2023 Datasets and Benchmarks). Not evidence about real-world detection.",
+        "Entity is the (bank, account) pair; account strings are not globally unique (8 collisions across banks).",
+        "Amounts are native across 15 currencies (37% USD) and are not FX-converted; the amount column is 'amount', not 'amount_usd'.",
+        "The typology names live in the separate HI-Small_Patterns.txt and are deliberately not loaded: their group headers state the generating mechanism and its degree/hop parameter.",
+        "Version is derived from file size and mtime, not a content hash; the content hash is in data/manifests/ibm_aml_hi_small.json."
+      ]
+    },
+    "features": {
+      "sets": [
+        "aml_txn_v1"
+      ],
+      "scope": "origin_window"
+    },
+    "split": {
+      "strategy": "calendar_forward",
+      "params": {
+        "origins": [
+          "2022-09-05",
+          "2022-09-07",
+          "2022-09-09"
+        ],
+        "horizon_days": 2,
+        "lookback_days": null,
+        "max_label_end": "2022-09-11"
+      },
+      "seed": 42
+    },
+    "model": {
+      "family": "gradient_boosting",
+      "params": {
+        "backend": "auto",
+        "n_estimators": 300,
+        "learning_rate": 0.05,
+        "max_depth": 6
+      },
+      "imbalance": "class_weight"
+    },
+    "threshold": {
+      "strategy": "alert_budget",
+      "params": {
+        "rate": 0.01
+      }
+    },
+    "calibration": {
+      "method": "platt",
+      "min_val_positives": 20
+    },
+    "evaluation": {
+      "k_values": [
+        100,
+        500,
+        1000,
+        5000
+      ],
+      "alert_rates": [
+        0.001,
+        0.005,
+        0.01,
+        0.05
+      ],
+      "calibration_bins": 10
+    }
+  },
+  "dataset": {
+    "spec": {
+      "name": "ibm_aml_hi_small",
+      "version": "size475664283-c9a6aae1",
+      "provenance": "file:C:\\Users\\bhara\\Downloads\\Laundering Data\\HI-Small_Trans.csv",
+      "label_definition": "positive = the (bank, account) entity is the payer or the payee of at least one transaction whose published 'Is Laundering' flag is 1. IBM labels transactions; this entity label is derived, and it makes a launderer's counterparty positive as well",
+      "synthetic": true,
+      "notes": [
+        "SYNTHETIC: IBM AMLworld virtual-world simulator (Altman et al., NeurIPS 2023 Datasets and Benchmarks). Not evidence about real-world detection.",
+        "Entity is the (bank, account) pair; account strings are not globally unique (8 collisions across banks).",
+        "Amounts are native across 15 currencies (37% USD) and are not FX-converted; the amount column is 'amount', not 'amount_usd'.",
+        "The typology names live in the separate HI-Small_Patterns.txt and are deliberately not loaded: their group headers state the generating mechanism and its degree/hop parameter.",
+        "Version is derived from file size and mtime, not a content hash; the content hash is in data/manifests/ibm_aml_hi_small.json."
+      ]
+    },
+    "n_entities": 515088,
+    "n_positive": 6357,
+    "n_negative": 508731,
+    "prevalence": 0.01234158046780356,
+    "n_edges": 5078345,
+    "has_graph": false,
+    "has_time": true,
+    "has_transaction_labels": true
+  },
+  "features": {
+    "scope": "origin_window",
+    "as_of": {
+      "train": "2022-09-05 00:00:00",
+      "val": "2022-09-07 00:00:00",
+      "test": "2022-09-09 00:00:00"
+    },
+    "windows": {
+      "train": [
+        null,
+        "2022-09-05 00:00:00"
+      ],
+      "val": [
+        null,
+        "2022-09-07 00:00:00"
+      ],
+      "test": [
+        null,
+        "2022-09-09 00:00:00"
+      ]
+    },
+    "n_columns": 17,
+    "sets": [
+      {
+        "name": "aml_txn_v1",
+        "version": "1.0",
+        "family": "transaction",
+        "time_scopable": true,
+        "n_columns": 17,
+        "columns": [
+          "aml_txn_v1::txn_in",
+          "aml_txn_v1::txn_out",
+          "aml_txn_v1::txn_total",
+          "aml_txn_v1::in_out_txn_ratio",
+          "aml_txn_v1::amount_in_sum",
+          "aml_txn_v1::amount_out_sum",
+          "aml_txn_v1::amount_total",
+          "aml_txn_v1::amount_in_mean",
+          "aml_txn_v1::amount_out_mean",
+          "aml_txn_v1::amount_mean",
+          "aml_txn_v1::amount_max",
+          "aml_txn_v1::amount_min",
+          "aml_txn_v1::amount_std",
+          "aml_txn_v1::amount_cv",
+          "aml_txn_v1::amount_log_mean",
+          "aml_txn_v1::amount_top1_share",
+          "aml_txn_v1::round_amount_share"
+        ]
+      }
+    ],
+    "snapshot_reuse": {
+      "train": [],
+      "val": [],
+      "test": []
+    },
+    "notes": [
+      "309747 NaN cells in the test snapshot were left in place; candidates impute inside their train-fitted preprocessing."
+    ]
+  },
+  "split": {
+    "strategy": "calendar_forward",
+    "params": {
+      "origins": [
+        "2022-09-05",
+        "2022-09-07",
+        "2022-09-09"
+      ],
+      "horizon_days": 2,
+      "lookback_days": null,
+      "max_label_end": "2022-09-11"
+    },
+    "seed": 42,
+    "regime": "calendar-forward",
+    "entity_disjoint": false,
+    "time_aware": true,
+    "graph_leakage_controlled": false,
+    "unit": "(entity, origin)",
+    "n_folds": 1,
+    "notes": [
+      "unit of prediction is the (entity, origin) pair: every entity with feature-window history is scored at each origin, so the same account recurs across train, validation and test with a different snapshot and label; the partitions are disjoint in time, not in entity.",
+      "label = the entity is payer or payee of at least one transaction flagged by the publisher and dated in [origin, origin + 2 days 00:00:00).",
+      "eligibility = at least one dated transaction in the feature window; window positives without one are excluded and counted, never scored.",
+      "features = transactions dated strictly before the origin; recency and tenure are measured from the origin.",
+      "train: 31 of 1459 window positives have no feature-window history and are excluded.",
+      "val: 32 of 1497 window positives have no feature-window history and are excluded.",
+      "test: 23 of 1397 window positives have no feature-window history and are excluded."
+    ],
+    "origins": {
+      "train": {
+        "role": "train",
+        "origin": "2022-09-05 00:00:00",
+        "feature_window": [
+          null,
+          "2022-09-05 00:00:00"
+        ],
+        "label_window": [
+          "2022-09-05 00:00:00",
+          "2022-09-07 00:00:00"
+        ],
+        "n_eligible": 511548,
+        "n_positive": 1428,
+        "prevalence": 0.002791526894836848,
+        "n_prior_involvement": 2215,
+        "n_positive_with_prior_involvement": 203,
+        "n_positive_new_involvement": 1225,
+        "n_window_positive": 1459,
+        "n_cold_start_positive": 31,
+        "n_feature_transactions": 2284182
+      },
+      "val": {
+        "role": "val",
+        "origin": "2022-09-07 00:00:00",
+        "feature_window": [
+          null,
+          "2022-09-07 00:00:00"
+        ],
+        "label_window": [
+          "2022-09-07 00:00:00",
+          "2022-09-09 00:00:00"
+        ],
+        "n_eligible": 512907,
+        "n_positive": 1465,
+        "prevalence": 0.002856268290352832,
+        "n_prior_involvement": 3471,
+        "n_positive_with_prior_involvement": 254,
+        "n_positive_new_involvement": 1211,
+        "n_window_positive": 1497,
+        "n_cold_start_positive": 32,
+        "n_feature_transactions": 3248921
+      },
+      "test": {
+        "role": "test",
+        "origin": "2022-09-09 00:00:00",
+        "feature_window": [
+          null,
+          "2022-09-09 00:00:00"
+        ],
+        "label_window": [
+          "2022-09-09 00:00:00",
+          "2022-09-11 00:00:00"
+        ],
+        "n_eligible": 514022,
+        "n_positive": 1374,
+        "prevalence": 0.0026730373408142064,
+        "n_prior_involvement": 4714,
+        "n_positive_with_prior_involvement": 249,
+        "n_positive_new_involvement": 1125,
+        "n_window_positive": 1397,
+        "n_cold_start_positive": 23,
+        "n_feature_transactions": 4214445
+      }
+    },
+    "folds": [
+      {
+        "fold_idx": 0,
+        "n_train": 511548,
+        "n_train_pos": 1428,
+        "n_val": 512907,
+        "n_val_pos": 1465,
+        "n_test": 514022,
+        "n_test_pos": 1374,
+        "train_window_end": "2022-09-05 00:00:00",
+        "val_window_end": "2022-09-07 00:00:00",
+        "test_window_end": "2022-09-09 00:00:00"
+      }
+    ]
+  },
+  "leakage": [
+    {
+      "check": "evaluation_regime",
+      "severity": "info",
+      "message": "split 'calendar_forward' is calendar-forward: rows are (entity, origin) samples scored at fixed calendar origins; partitions are disjoint in time, not in entity"
+    },
+    {
+      "check": "calendar_label_ordering",
+      "severity": "info",
+      "message": "train label window ends 2022-09-07 00:00:00, at or before the val origin 2022-09-07 00:00:00"
+    },
+    {
+      "check": "calendar_label_ordering",
+      "severity": "info",
+      "message": "val label window ends 2022-09-09 00:00:00, at or before the test origin 2022-09-09 00:00:00"
+    },
+    {
+      "check": "entity_overlap",
+      "severity": "info",
+      "message": "511548 of 514022 test entities were also scored at the train origin; expected under this regime, where the label and the feature snapshot, not the entity, are what is held out"
+    },
+    {
+      "check": "calendar_information_boundary",
+      "severity": "info",
+      "message": "train: 2284182 feature transactions dated 2022-09-01 00:00:00 .. 2022-09-04 23:59:00, all before the origin 2022-09-05 00:00:00"
+    },
+    {
+      "check": "calendar_information_boundary",
+      "severity": "info",
+      "message": "val: 3248921 feature transactions dated 2022-09-01 00:00:00 .. 2022-09-06 23:59:00, all before the origin 2022-09-07 00:00:00"
+    },
+    {
+      "check": "calendar_information_boundary",
+      "severity": "info",
+      "message": "test: 4214445 feature transactions dated 2022-09-01 00:00:00 .. 2022-09-08 23:59:00, all before the origin 2022-09-09 00:00:00"
+    },
+    {
+      "check": "feature_scope",
+      "severity": "info",
+      "message": "each origin's features were computed only from transactions dated before that origin"
+    }
+  ],
+  "folds": [
+    {
+      "fold_idx": 0,
+      "counts": {
+        "n_train": 511548,
+        "n_train_pos": 1428,
+        "n_val": 512907,
+        "n_val_pos": 1465,
+        "n_test": 514022,
+        "n_test_pos": 1374,
+        "n_test_no_prior_involvement": 509308,
+        "n_test_pos_no_prior_involvement": 1125,
+        "n_test_cold_start_pos_excluded": 23
+      },
+      "validation_metrics": {
+        "n": 512907,
+        "n_positive": 1465,
+        "n_negative": 511442,
+        "prevalence": 0.002856268290352832,
+        "average_precision": 0.016118699821832606,
+        "ap_lift": 5.6432723341410895,
+        "roc_auc": 0.6847121141904695,
+        "precision_at_k": {
+          "100": 0.17,
+          "500": 0.046,
+          "1000": 0.027,
+          "5000": 0.0108
+        },
+        "recall_at_k": {
+          "100": 0.011604095563139932,
+          "500": 0.015699658703071672,
+          "1000": 0.018430034129692834,
+          "5000": 0.03686006825938567
+        },
+        "precision_at_rate": {
+          "0.001": 0.04483430799220273,
+          "0.005": 0.015984405458089667,
+          "0.01": 0.010721247563352826,
+          "0.05": 0.0067456913358808395
+        },
+        "recall_at_rate": {
+          "0.001": 0.015699658703071672,
+          "0.005": 0.027986348122866895,
+          "0.01": 0.03754266211604096,
+          "0.05": 0.11808873720136519
+        },
+        "at_threshold": {
+          "threshold": 0.0074123640410277405,
+          "precision": 0.010719754977029096,
+          "recall": 0.03822525597269624,
+          "f1": 0.016743907908506505,
+          "confusion": [
+            [
+              506274,
+              5168
+            ],
+            [
+              1409,
+              56
+            ]
+          ],
+          "alerts": 5224,
+          "alert_rate": 0.010185082285872487,
+          "false_positive_burden": 92.28571428571429
+        },
+        "calibration": {
+          "brier": 0.002844117488482564,
+          "expected_calibration_error": 8.352005075382488e-06,
+          "bins": [
+            {
+              "lower": 0.0,
+              "upper": 0.1,
+              "count": 512907,
+              "mean_predicted": 0.0028646202954282145,
+              "observed_rate": 0.002856268290352832
+            },
+            {
+              "lower": 0.1,
+              "upper": 0.2,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            },
+            {
+              "lower": 0.2,
+              "upper": 0.30000000000000004,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            },
+            {
+              "lower": 0.30000000000000004,
+              "upper": 0.4,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            },
+            {
+              "lower": 0.4,
+              "upper": 0.5,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            },
+            {
+              "lower": 0.5,
+              "upper": 0.6000000000000001,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            },
+            {
+              "lower": 0.6000000000000001,
+              "upper": 0.7000000000000001,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            },
+            {
+              "lower": 0.7000000000000001,
+              "upper": 0.8,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            },
+            {
+              "lower": 0.8,
+              "upper": 0.9,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            },
+            {
+              "lower": 0.9,
+              "upper": 1.0,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            }
+          ]
+        },
+        "undefined": {}
+      },
+      "test_metrics": {
+        "n": 514022,
+        "n_positive": 1374,
+        "n_negative": 512648,
+        "prevalence": 0.0026730373408142064,
+        "average_precision": 0.01573675636530431,
+        "ap_lift": 5.887219054153167,
+        "roc_auc": 0.6827022098771144,
+        "precision_at_k": {
+          "100": 0.17,
+          "500": 0.04,
+          "1000": 0.022,
+          "5000": 0.009
+        },
+        "recall_at_k": {
+          "100": 0.012372634643377001,
+          "500": 0.01455604075691412,
+          "1000": 0.01601164483260553,
+          "5000": 0.03275109170305677
+        },
+        "precision_at_rate": {
+          "0.001": 0.038834951456310676,
+          "0.005": 0.011668611435239206,
+          "0.01": 0.00914219023536277,
+          "0.05": 0.006419733872850362
+        },
+        "recall_at_rate": {
+          "0.001": 0.01455604075691412,
+          "0.005": 0.021834061135371178,
+          "0.01": 0.03420669577874818,
+          "0.05": 0.12008733624454149
+        },
+        "at_threshold": {
+          "threshold": 0.0074123640410277405,
+          "precision": 0.008818091309913241,
+          "recall": 0.04512372634643377,
+          "f1": 0.014753123140987506,
+          "confusion": [
+            [
+              505679,
+              6969
+            ],
+            [
+              1312,
+              62
+            ]
+          ],
+          "alerts": 7031,
+          "alert_rate": 0.013678402869916074,
+          "false_positive_burden": 112.40322580645162
+        },
+        "calibration": {
+          "brier": 0.0026626108487364645,
+          "expected_calibration_error": 0.0001509387336544616,
+          "bins": [
+            {
+              "lower": 0.0,
+              "upper": 0.1,
+              "count": 514022,
+              "mean_predicted": 0.002823976074468668,
+              "observed_rate": 0.0026730373408142064
+            },
+            {
+              "lower": 0.1,
+              "upper": 0.2,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            },
+            {
+              "lower": 0.2,
+              "upper": 0.30000000000000004,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            },
+            {
+              "lower": 0.30000000000000004,
+              "upper": 0.4,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            },
+            {
+              "lower": 0.4,
+              "upper": 0.5,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            },
+            {
+              "lower": 0.5,
+              "upper": 0.6000000000000001,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            },
+            {
+              "lower": 0.6000000000000001,
+              "upper": 0.7000000000000001,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            },
+            {
+              "lower": 0.7000000000000001,
+              "upper": 0.8,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            },
+            {
+              "lower": 0.8,
+              "upper": 0.9,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            },
+            {
+              "lower": 0.9,
+              "upper": 1.0,
+              "count": 0,
+              "mean_predicted": null,
+              "observed_rate": null
+            }
+          ]
+        },
+        "undefined": {}
+      },
+      "threshold": {
+        "value": 0.0074123640410277405,
+        "strategy": "alert_budget",
+        "params": {
+          "rate": 0.01
+        },
+        "selected_on": "validation",
+        "objective": "val_alert_rate",
+        "objective_value": 0.010185082285872487,
+        "reason": null,
+        "n_val_positives": 1465
+      },
+      "calibration": {
+        "method": "platt",
+        "fitted": true,
+        "produces_probabilities": true,
+        "diagnostics": {
+          "n_fit": 512907,
+          "n_fit_positive": 1465,
+          "coef": 3.563698374333406,
+          "intercept": -7.50894024419684
+        }
+      },
+      "leakage": [
+        {
+          "check": "evaluation_regime",
+          "severity": "info",
+          "message": "split 'calendar_forward' is calendar-forward: rows are (entity, origin) samples scored at fixed calendar origins; partitions are disjoint in time, not in entity"
+        },
+        {
+          "check": "calendar_label_ordering",
+          "severity": "info",
+          "message": "train label window ends 2022-09-07 00:00:00, at or before the val origin 2022-09-07 00:00:00"
+        },
+        {
+          "check": "calendar_label_ordering",
+          "severity": "info",
+          "message": "val label window ends 2022-09-09 00:00:00, at or before the test origin 2022-09-09 00:00:00"
+        },
+        {
+          "check": "entity_overlap",
+          "severity": "info",
+          "message": "511548 of 514022 test entities were also scored at the train origin; expected under this regime, where the label and the feature snapshot, not the entity, are what is held out"
+        },
+        {
+          "check": "calendar_information_boundary",
+          "severity": "info",
+          "message": "train: 2284182 feature transactions dated 2022-09-01 00:00:00 .. 2022-09-04 23:59:00, all before the origin 2022-09-05 00:00:00"
+        },
+        {
+          "check": "calendar_information_boundary",
+          "severity": "info",
+          "message": "val: 3248921 feature transactions dated 2022-09-01 00:00:00 .. 2022-09-06 23:59:00, all before the origin 2022-09-07 00:00:00"
+        },
+        {
+          "check": "calendar_information_boundary",
+          "severity": "info",
+          "message": "test: 4214445 feature transactions dated 2022-09-01 00:00:00 .. 2022-09-08 23:59:00, all before the origin 2022-09-09 00:00:00"
+        },
+        {
+          "check": "feature_scope",
+          "severity": "info",
+          "message": "each origin's features were computed only from transactions dated before that origin"
+        }
+      ],
+      "fit_report": {
+        "status": "fitted",
+        "backend": "sklearn_hist",
+        "backend_version": "1.9.0",
+        "n_train": 511548,
+        "n_train_positive": 1428,
+        "n_features": 17
+      },
+      "runtime_seconds": {
+        "features": 13.809534900006838,
+        "fit": 9.991517800022848,
+        "score": 4.437327999970876
+      },
+      "checkpoint": null,
+      "notes": [
+        "platt calibration fitted on 512907 validation entities (1465 positive)"
+      ],
+      "subgroup_test_metrics": {
+        "no_prior_involvement": {
+          "definition": "test entities with no flagged transaction before the test origin; the population for which the task is forecasting first involvement",
+          "n": 509308,
+          "n_positive": 1125,
+          "metrics": {
+            "n": 509308,
+            "n_positive": 1125,
+            "n_negative": 508183,
+            "prevalence": 0.002208879499242109,
+            "average_precision": 0.004024324401611598,
+            "ap_lift": 1.821884988743111,
+            "roc_auc": 0.6692709857144638,
+            "precision_at_k": {
+              "100": 0.02,
+              "500": 0.01,
+              "1000": 0.006,
+              "5000": 0.005
+            },
+            "recall_at_k": {
+              "100": 0.0017777777777777779,
+              "500": 0.0044444444444444444,
+              "1000": 0.005333333333333333,
+              "5000": 0.022222222222222223
+            },
+            "precision_at_rate": {
+              "0.001": 0.00980392156862745,
+              "0.005": 0.004711425206124852,
+              "0.01": 0.004907734589713388,
+              "0.05": 0.005026309589256263
+            },
+            "recall_at_rate": {
+              "0.001": 0.0044444444444444444,
+              "0.005": 0.010666666666666666,
+              "0.01": 0.022222222222222223,
+              "0.05": 0.11377777777777778
+            },
+            "at_threshold": {
+              "threshold": 0.0074123640410277405,
+              "precision": 0.005227239727021925,
+              "recall": 0.032,
+              "f1": 0.008986520219670493,
+              "confusion": [
+                [
+                  501332,
+                  6851
+                ],
+                [
+                  1089,
+                  36
+                ]
+              ],
+              "alerts": 6887,
+              "alert_rate": 0.013522269432249249,
+              "false_positive_burden": 190.30555555555554
+            },
+            "calibration": {
+              "brier": 0.002202981384122908,
+              "expected_calibration_error": 0.0006022069938492053,
+              "bins": [
+                {
+                  "lower": 0.0,
+                  "upper": 0.1,
+                  "count": 509308,
+                  "mean_predicted": 0.0028110864930913143,
+                  "observed_rate": 0.002208879499242109
+                },
+                {
+                  "lower": 0.1,
+                  "upper": 0.2,
+                  "count": 0,
+                  "mean_predicted": null,
+                  "observed_rate": null
+                },
+                {
+                  "lower": 0.2,
+                  "upper": 0.30000000000000004,
+                  "count": 0,
+                  "mean_predicted": null,
+                  "observed_rate": null
+                },
+                {
+                  "lower": 0.30000000000000004,
+                  "upper": 0.4,
+                  "count": 0,
+                  "mean_predicted": null,
+                  "observed_rate": null
+                },
+                {
+                  "lower": 0.4,
+                  "upper": 0.5,
+                  "count": 0,
+                  "mean_predicted": null,
+                  "observed_rate": null
+                },
+                {
+                  "lower": 0.5,
+                  "upper": 0.6000000000000001,
+                  "count": 0,
+                  "mean_predicted": null,
+                  "observed_rate": null
+                },
+                {
+                  "lower": 0.6000000000000001,
+                  "upper": 0.7000000000000001,
+                  "count": 0,
+                  "mean_predicted": null,
+                  "observed_rate": null
+                },
+                {
+                  "lower": 0.7000000000000001,
+                  "upper": 0.8,
+                  "count": 0,
+                  "mean_predicted": null,
+                  "observed_rate": null
+                },
+                {
+                  "lower": 0.8,
+                  "upper": 0.9,
+                  "count": 0,
+                  "mean_predicted": null,
+                  "observed_rate": null
+                },
+                {
+                  "lower": 0.9,
+                  "upper": 1.0,
+                  "count": 0,
+                  "mean_predicted": null,
+                  "observed_rate": null
+                }
+              ]
+            },
+            "undefined": {}
+          }
+        }
+      }
+    }
+  ],
+  "aggregate": {
+    "n": {
+      "mean": 514022.0,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 1
+    },
+    "n_positive": {
+      "mean": 1374.0,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 1
+    },
+    "n_negative": {
+      "mean": 512648.0,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 1
+    },
+    "prevalence": {
+      "mean": 0.0026730373408142064,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 1
+    },
+    "average_precision": {
+      "mean": 0.01573675636530431,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 1
+    },
+    "ap_lift": {
+      "mean": 5.887219054153167,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 1
+    },
+    "roc_auc": {
+      "mean": 0.6827022098771144,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 1
+    },
+    "precision_at_k.100": {
+      "mean": 0.17,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 1
+    },
+    "precision_at_k.500": {
+      "mean": 0.04,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 1
+    },
+    "precision_at_k.1000": {
+      "mean": 0.022,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 1
+    },
+    "precision_at_k.5000": {
+      "mean": 0.009,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 1
+    },
+    "recall_at_k.100": {
+      "mean": 0.012372634643377001,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 1
+    },
+    "recall_at_k.500": {
+      "mean": 0.01455604075691412,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 1
+    },
+    "recall_at_k.1000": {
+      "mean": 0.01601164483260553,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 1
+    },
+    "recall_at_k.5000": {
+      "mean": 0.03275109170305677,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 1
+    },
+    "precision_at_rate.0.001": {
+      "mean": 0.038834951456310676,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 1
+    },
+    "precision_at_rate.0.005": {
+      "mean": 0.011668611435239206,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 1
+    },
+    "precision_at_rate.0.01": {
+      "mean": 0.00914219023536277,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 1
+    },
+    "precision_at_rate.0.05": {
+      "mean": 0.006419733872850362,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 1
+    },
+    "recall_at_rate.0.001": {
+      "mean": 0.01455604075691412,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 1
+    },
+    "recall_at_rate.0.005": {
+      "mean": 0.021834061135371178,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 1
+    },
+    "recall_at_rate.0.01": {
+      "mean": 0.03420669577874818,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 1
+    },
+    "recall_at_rate.0.05": {
+      "mean": 0.12008733624454149,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 1
+    },
+    "at_threshold.threshold": {
+      "mean": 0.0074123640410277405,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 1
+    },
+    "at_threshold.precision": {
+      "mean": 0.008818091309913241,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 1
+    },
+    "at_threshold.recall": {
+      "mean": 0.04512372634643377,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 1
+    },
+    "at_threshold.f1": {
+      "mean": 0.014753123140987506,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 1
+    },
+    "at_threshold.alerts": {
+      "mean": 7031.0,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 1
+    },
+    "at_threshold.alert_rate": {
+      "mean": 0.013678402869916074,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 1
+    },
+    "at_threshold.false_positive_burden": {
+      "mean": 112.40322580645162,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 1
+    },
+    "calibration.brier": {
+      "mean": 0.0026626108487364645,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 1
+    },
+    "calibration.expected_calibration_error": {
+      "mean": 0.0001509387336544616,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 1
+    }
+  },
+  "validation_aggregate": {
+    "n": {
+      "mean": 512907.0,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 1
+    },
+    "n_positive": {
+      "mean": 1465.0,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 1
+    },
+    "n_negative": {
+      "mean": 511442.0,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 1
+    },
+    "prevalence": {
+      "mean": 0.002856268290352832,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 1
+    },
+    "average_precision": {
+      "mean": 0.016118699821832606,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 1
+    },
+    "ap_lift": {
+      "mean": 5.6432723341410895,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 1
+    },
+    "roc_auc": {
+      "mean": 0.6847121141904695,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 1
+    },
+    "precision_at_k.100": {
+      "mean": 0.17,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 1
+    },
+    "precision_at_k.500": {
+      "mean": 0.046,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 1
+    },
+    "precision_at_k.1000": {
+      "mean": 0.027,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 1
+    },
+    "precision_at_k.5000": {
+      "mean": 0.0108,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 1
+    },
+    "recall_at_k.100": {
+      "mean": 0.011604095563139932,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 1
+    },
+    "recall_at_k.500": {
+      "mean": 0.015699658703071672,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 1
+    },
+    "recall_at_k.1000": {
+      "mean": 0.018430034129692834,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 1
+    },
+    "recall_at_k.5000": {
+      "mean": 0.03686006825938567,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 1
+    },
+    "precision_at_rate.0.001": {
+      "mean": 0.04483430799220273,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 1
+    },
+    "precision_at_rate.0.005": {
+      "mean": 0.015984405458089667,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 1
+    },
+    "precision_at_rate.0.01": {
+      "mean": 0.010721247563352826,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 1
+    },
+    "precision_at_rate.0.05": {
+      "mean": 0.0067456913358808395,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 1
+    },
+    "recall_at_rate.0.001": {
+      "mean": 0.015699658703071672,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 1
+    },
+    "recall_at_rate.0.005": {
+      "mean": 0.027986348122866895,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 1
+    },
+    "recall_at_rate.0.01": {
+      "mean": 0.03754266211604096,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 1
+    },
+    "recall_at_rate.0.05": {
+      "mean": 0.11808873720136519,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 1
+    },
+    "at_threshold.threshold": {
+      "mean": 0.0074123640410277405,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 1
+    },
+    "at_threshold.precision": {
+      "mean": 0.010719754977029096,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 1
+    },
+    "at_threshold.recall": {
+      "mean": 0.03822525597269624,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 1
+    },
+    "at_threshold.f1": {
+      "mean": 0.016743907908506505,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 1
+    },
+    "at_threshold.alerts": {
+      "mean": 5224.0,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 1
+    },
+    "at_threshold.alert_rate": {
+      "mean": 0.010185082285872487,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 1
+    },
+    "at_threshold.false_positive_burden": {
+      "mean": 92.28571428571429,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 1
+    },
+    "calibration.brier": {
+      "mean": 0.002844117488482564,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 1
+    },
+    "calibration.expected_calibration_error": {
+      "mean": 8.352005075382488e-06,
+      "std": 0.0,
+      "n_defined": 1,
+      "n_folds": 1
+    }
+  },
+  "environment": {
+    "python": "3.11.8",
+    "platform": "Windows-10-10.0.26200-SP0",
+    "processor": "Intel64 Family 6 Model 190 Stepping 0, GenuineIntel",
+    "packages": {
+      "numpy": "2.3.5",
+      "pandas": "3.0.5",
+      "networkx": "3.6.1",
+      "sklearn": "1.9.0",
+      "torch": "2.13.0+cpu",
+      "torch_geometric": "2.8.0.post1",
+      "xgboost": null,
+      "lightgbm": null
+    },
+    "seeding": {
+      "seed": 42,
+      "python_random": true,
+      "numpy": true,
+      "torch": true,
+      "torch_deterministic_algorithms": false
+    }
+  },
+  "determinism": {
+    "seeded_sources": [
+      "python_random",
+      "numpy",
+      "torch (if installed)"
+    ],
+    "not_controlled": [
+      "floating-point reduction order across CPU threads",
+      "BLAS / MKL version differences",
+      "GPU kernel selection when CUDA is used"
+    ],
+    "torch_version": "2.13.0+cpu",
+    "torch_num_threads": 4,
+    "cuda_available": false
+  },
+  "notes": [
+    "unit of prediction is the (entity, origin) pair: every entity with feature-window history is scored at each origin, so the same account recurs across train, validation and test with a different snapshot and label; the partitions are disjoint in time, not in entity.",
+    "label = the entity is payer or payee of at least one transaction flagged by the publisher and dated in [origin, origin + 2 days 00:00:00).",
+    "eligibility = at least one dated transaction in the feature window; window positives without one are excluded and counted, never scored.",
+    "features = transactions dated strictly before the origin; recency and tenure are measured from the origin.",
+    "train: 31 of 1459 window positives have no feature-window history and are excluded.",
+    "val: 32 of 1497 window positives have no feature-window history and are excluded.",
+    "test: 23 of 1397 window positives have no feature-window history and are excluded.",
+    "SYNTHETIC DATASET: these numbers describe generated data and are not evidence about real-world detection performance."
+  ],
+  "started_at": "2026-09-11T13:41:05+00:00",
+  "finished_at": "2026-09-11T13:41:52+00:00",
+  "total_runtime_seconds": 47.00843119993806,
+  "git_commit": "fb09935837ba46e98fe19650c6c49564a884ac2f"
+}

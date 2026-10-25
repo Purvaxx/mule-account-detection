@@ -1,0 +1,36 @@
+==================================================
+TGA AUDIT SUMMARY
+==================================================
+Total nodes: 3440
+Total runtime: 25.37 seconds
+
+Nodes with reciprocal temporal cycles: 132
+Nodes with >=3-edge temporal cycles: 40
+
+Max reciprocal cycle count: 98092
+Max longer-cycle count: 31335496
+
+==================================================
+CORE VS NON-CORE FEATURE DISTRIBUTIONS
+==================================================
+Feature: temporal_reciprocal_count
+Core values: [98092 17545 24318     0]
+Core Min: 0, Core Max: 98092
+Non-Core Min: 0, Non-Core Max: 70004
+
+Feature: temporal_cycle_count
+Core values: [ 4232395 31335496 20586329    34430]
+Core Min: 34430, Core Max: 31335496
+Non-Core Min: 0, Non-Core Max: 775432
+
+Feature: earliest_cycle_completion_days
+Core values: [  4.  47.  10. 294.]
+Core Min: 4.0, Core Max: 294.0
+Non-Core Min: -1.0, Non-Core Max: 695.0
+
+==================================================
+REDUNDANCY WITH MULTIGRAPH FEATURES
+==================================================
+Static reciprocal_out_count identified reciprocal edges for ALL 4 core nodes.
+TGA temporal_reciprocal_count identified 0 causal reciprocal cycles for the 4th core node.
+Conclusion: TGA correctly identifies that the 4th core node's reciprocal edges were NON-CAUSAL (reverse time flow). The features are mathematically orthogonal.

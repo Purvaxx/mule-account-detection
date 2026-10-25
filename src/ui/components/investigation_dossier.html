@@ -1,0 +1,174 @@
+<!--
+    Investigation dossier
+    =====================
+    The selected entity, disclosed in the order an analyst reads it: identity,
+    then the model's own output, then the confidence that run carries, then the
+    heuristic evidence, then observed structure, then relationships.
+
+    The heuristic flags are collapsed by default and opened one at a time.  They
+    are post-hoc structural observations for analyst review, never explanations
+    of the model's internal decision process.
+-->
+<div class="space-y-5" x-show="selectedEntity" x-cloak x-ref="dossier">
+
+    <div class="panel lead-edge overflow-hidden">
+
+        <!-- Identity -->
+        <div class="px-5 md:px-6 py-5 border-b border-system-border flex flex-wrap items-start justify-between gap-4">
+            <div class="min-w-0">
+                <p class="eyebrow">Investigation Dossier</p>
+                <h2 class="text-2xl font-bold text-system-heading mt-1.5 break-words" x-text="selectedEntity?.entity_id"></h2>
+                <div class="flex flex-wrap items-center gap-2 mt-3">
+                    <span class="badge" :class="selectedEntity?.predicted_class === 1 ? 'text-system-critical border-system-critical/45' : 'text-system-success border-system-success/40'">
+                        <span class="badge-dot"></span>
+                        <span x-text="selectedEntity?.predicted_class === 1 ? 'Flagged by model' : 'Not flagged'"></span>
+                    </span>
+                    <span class="badge font-mono tracking-normal num" x-text="'in ' + (selectedEntity?.in_degree ?? 0) + ' / out ' + (selectedEntity?.out_degree ?? 0)"></span>
+                    <span class="badge" x-show="trust?.level" :class="toneBadgeClass(trust?.level)" x-text="'Confidence ' + (trust?.level || '')"></span>
+                </div>
+            </div>
+            <button @click="focusEntityInNetwork()" class="btn btn-secondary flex-none">Focus in Network</button>
+        </div>
+
+        <!-- Risk + confidence -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-5 p-5 md:p-6">
+            <div class="space-y-4">
+                <p class="eyebrow">Model Output</p>
+                <div class="grid grid-cols-2 gap-3">
+                    <div class="well p-4">
+                        <p class="eyebrow flex items-center">Risk Score<button @click.stop="openHelp('risk_score')" class="hint" aria-label="What the risk score is">?</button></p>
+                        <p class="text-3xl font-mono num mt-2 tracking-tight"
+                           :class="selectedEntity?.predicted_class === 1 ? 'text-system-critical' : 'text-system-heading'"
+                           x-text="(selectedEntity?.risk_score ?? 0).toFixed(4)"></p>
+                        <div class="mt-3 h-1 rounded-full bg-system-border overflow-hidden">
+                            <div class="h-full transition-all duration-500"
+                                 :class="selectedEntity?.predicted_class === 1 ? 'bg-system-critical' : 'bg-system-accent'"
+                                 :style="'width:' + Math.min(100, Math.max(2, (selectedEntity?.risk_score ?? 0) * 100)) + '%'"></div>
+                        </div>
+                    </div>
+                    <div class="well p-4 flex flex-col">
+                        <p class="eyebrow flex items-center">Prediction<button @click.stop="openHelp('prediction')" class="hint" aria-label="What the prediction means">?</button></p>
+                        <p class="text-xl font-bold tracking-tight mt-2"
+                           :class="selectedEntity?.predicted_class === 1 ? 'text-system-critical' : 'text-system-success'"
+                           x-text="selectedEntity?.predicted_class === 1 ? 'SUSPICIOUS' : 'NORMAL'"></p>
+                        <p class="text-[0.625rem] text-system-faint mt-auto pt-3 leading-relaxed">
+                            Raw output of the frozen checkpoint, shown unmodified.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- On a workspace dataset the score is out-of-sample, and how far
+                     out is measured per run. Say so next to the number rather than only
+                     in a banner the analyst may have scrolled past. -->
+                <div x-show="trust?.level === 'LOW'" x-cloak
+                     class="text-[0.6875rem] text-system-body bg-system-critical/10 border border-system-critical/45 rounded-sm p-4 leading-relaxed">
+                    <span class="font-bold uppercase tracking-[0.14em] text-system-critical">Low confidence</span>
+                    <span class="block mt-1.5">
+                        The model flagged <span class="font-mono num" x-text="((trust?.flag_rate || 0) * 100).toFixed(0) + '%'"></span>
+                        of entities in this dataset, so this classification should not be read as an alert.
+                        Use the ranking to explore structure; see Confidence for what the run rests on.
+                    </span>
+                </div>
+                <div x-show="trust?.level === 'LIMITED'" x-cloak
+                     class="text-[0.6875rem] text-system-body bg-system-warning/10 border border-system-warning/45 rounded-sm p-4 leading-relaxed">
+                    <span class="font-bold uppercase tracking-[0.14em] text-system-warning">Limited confidence</span>
+                    <span class="block mt-1.5">
+                        This score is model output on a dataset the frozen model was not trained on, with
+                        stated limitations. See Confidence above.
+                    </span>
+                </div>
+
+                <p class="text-[0.625rem] text-system-faint leading-relaxed border-t border-system-border pt-3">
+                    <span class="font-bold uppercase tracking-[0.14em] text-system-muted">Disclaimer</span>
+                    The risk score is generated by the trained Graph Neural Network. It is a model
+                    probability, not a determination of fraud. The observations and heuristic flags below are
+                    post-hoc summaries for analyst review and are not explanations of the model's internal
+                    decision process.
+                </p>
+            </div>
+
+            <!-- Heuristic evidence -->
+            <div class="min-w-0">
+                <div class="flex items-center justify-between">
+                    <p class="eyebrow flex items-center">Heuristic Structural Evidence<button @click.stop="openHelp('heuristic_flags')" class="hint" aria-label="What heuristic flags are">?</button></p>
+                    <span class="badge" x-text="(selectedEntity?.flags?.length || 0) + ' observed'"></span>
+                </div>
+                <div class="mt-3 space-y-2">
+                    <template x-for="(flag, fi) in selectedEntity?.flags" :key="flag.title">
+                        <div class="well overflow-hidden">
+                            <button @click="toggleFlag(fi)"
+                                    class="w-full flex items-center justify-between gap-3 px-4 py-3 text-left hover:bg-system-hover/50 transition-colors"
+                                    :aria-expanded="openFlag === fi">
+                                <span class="flex items-center gap-2.5 min-w-0">
+                                    <span class="w-1 h-6 rounded-full bg-system-warning/70 flex-none"></span>
+                                    <span class="text-[0.6875rem] font-bold text-system-heading uppercase tracking-[0.1em] truncate" x-text="flag.title"></span>
+                                </span>
+                                <span class="flex items-center gap-2.5 flex-none">
+                                    <span class="text-[0.6875rem] font-mono num text-system-warning" x-text="flag.value"></span>
+                                    <svg class="w-3 h-3 text-system-faint transition-transform" :class="openFlag === fi ? 'rotate-180' : ''"
+                                         viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+                                        <path d="M2.5 4.5L6 8l3.5-3.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                    </svg>
+                                </span>
+                            </button>
+                            <div x-show="openFlag === fi" x-transition.opacity.duration.200ms class="px-4 pb-4 pl-7 space-y-2 border-t border-system-border pt-3">
+                                <p class="text-[0.6875rem] text-system-body leading-relaxed"><span class="text-system-muted">Observed:</span> <span x-text="flag.observed"></span></p>
+                                <p class="text-[0.6875rem] text-system-body leading-relaxed"><span class="text-system-muted">Context:</span> <span x-text="flag.why_it_matters"></span></p>
+                                <p class="text-[0.625rem] text-system-faint font-mono"><span class="uppercase tracking-[0.14em]">Rule:</span> <span x-text="flag.rule"></span></p>
+                            </div>
+                        </div>
+                    </template>
+                    <div x-show="!selectedEntity?.flags || selectedEntity?.flags.length === 0"
+                         class="well p-6 text-center">
+                        <p class="text-[0.6875rem] text-system-muted">No heuristic structural flags triggered for this entity.</p>
+                        <p class="text-[0.625rem] text-system-faint mt-1.5">Absence of a flag is not evidence of anything.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Observed structure -->
+        <div class="px-5 md:px-6 py-5 border-t border-system-border bg-system-sunken/40">
+            <p class="eyebrow mb-4">Observed Structural Features</p>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+                <div class="panel-quiet p-3.5">
+                    <p class="eyebrow flex items-center">Total Incoming<button @click.stop="openHelp('degree_metrics')" class="hint" aria-label="About degree metrics">?</button></p>
+                    <p class="font-mono num text-system-heading text-sm sm:text-base mt-2 truncate"
+                   :title="fmtUsd(selectedEntity?.total_incoming_usd)" x-text="fmtUsd(selectedEntity?.total_incoming_usd)"></p>
+                </div>
+                <div class="panel-quiet p-3.5">
+                    <p class="eyebrow flex items-center">Total Outgoing<button @click.stop="openHelp('degree_metrics')" class="hint" aria-label="About degree metrics">?</button></p>
+                    <p class="font-mono num text-system-heading text-sm sm:text-base mt-2 truncate"
+                   :title="fmtUsd(selectedEntity?.total_outgoing_usd)" x-text="fmtUsd(selectedEntity?.total_outgoing_usd)"></p>
+                </div>
+                <div class="panel-quiet p-3.5">
+                    <p class="eyebrow">In Transactions</p>
+                    <p class="font-mono num text-system-heading text-base mt-2" x-text="fmtInt(selectedEntity?.in_degree)"></p>
+                </div>
+                <div class="panel-quiet p-3.5">
+                    <p class="eyebrow">Out Transactions</p>
+                    <p class="font-mono num text-system-heading text-base mt-2" x-text="fmtInt(selectedEntity?.out_degree)"></p>
+                </div>
+                <div class="panel-quiet p-3.5">
+                    <p class="eyebrow flex items-center">Flow Imbalance<button @click.stop="openHelp('flow_imbalance')" class="hint" aria-label="About flow imbalance">?</button></p>
+                    <p class="font-mono num text-system-heading text-base mt-2" x-text="(selectedEntity?.flow_imbalance ?? 0).toFixed(4)"></p>
+                </div>
+                <div class="panel-quiet p-3.5">
+                    <p class="eyebrow flex items-center">Reciprocal Parties<button @click.stop="openHelp('reciprocal_parties')" class="hint" aria-label="About reciprocal parties">?</button></p>
+                    <p class="font-mono num text-system-heading text-base mt-2" x-text="Math.max(selectedEntity?.reciprocal_in ?? 0, selectedEntity?.reciprocal_out ?? 0)"></p>
+                </div>
+                <div class="panel-quiet p-3.5">
+                    <p class="eyebrow flex items-center">Max Parallel Txs<button @click.stop="openHelp('max_parallel_tx')" class="hint" aria-label="About parallel transactions">?</button></p>
+                    <p class="font-mono num text-system-heading text-base mt-2" x-text="fmtInt(selectedEntity?.max_parallel_edge)"></p>
+                </div>
+                <div class="panel-quiet p-3.5">
+                    <p class="eyebrow flex items-center">Mean Parallel Txs<button @click.stop="openHelp('mean_parallel_tx')" class="hint" aria-label="About parallel transactions">?</button></p>
+                    <p class="font-mono num text-system-heading text-base mt-2" x-text="(selectedEntity?.mean_parallel_edge ?? 0).toFixed(2)"></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Relationships -->
+        <!-- INCLUDE: src/ui/components/relationship_table.html -->
+    </div>
+</div>

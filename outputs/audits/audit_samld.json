@@ -1,0 +1,322 @@
+{
+  "name": "samld",
+  "spec": {
+    "name": "samld",
+    "version": "size202528964-19eed9ca",
+    "provenance": "file:C:\\Users\\bhara\\Downloads\\Laundering Data\\SAML-D.csv.zip",
+    "label_definition": "positive = the account is the sender or the receiver of at least one transaction whose published Is_laundering flag is 1. SAML-D labels transactions; this entity label is derived, and it makes a launderer's counterparty positive as well",
+    "synthetic": true,
+    "notes": [
+      "SAML-D is generated from declared typologies. Results on it are evidence about a simulator, not about real-world detection.",
+      "Amounts are native across 13 currencies (95.7% GBP) and are not FX-converted; the amount column is 'amount', not 'amount_usd'.",
+      "The published Laundering_type column is an exact alias of the label and is not loaded.",
+      "Version is derived from file size and mtime, not a content hash."
+    ]
+  },
+  "domain": "money_laundering",
+  "data": {
+    "n_entities": 855460,
+    "n_transactions": 9504852,
+    "n_positive": 7902,
+    "n_negative": 847558,
+    "positive_rate": 0.009237135576181235,
+    "has_graph_object": false,
+    "transaction_fields": [
+      "source_entity",
+      "target_entity",
+      "date",
+      "amount",
+      "Payment_type",
+      "Payment_currency",
+      "Received_currency",
+      "Sender_bank_location",
+      "Receiver_bank_location",
+      "edge_key"
+    ],
+    "entity_fields": [],
+    "timestamp_range": {
+      "min": "2022-10-07 10:35:19",
+      "max": "2023-08-23 10:57:12",
+      "span_days": 320.0,
+      "n_dated": 9504852,
+      "n_undated": 0
+    },
+    "missingness": {
+      "source_entity": 0.0,
+      "target_entity": 0.0,
+      "date": 0.0,
+      "amount": 0.0,
+      "Payment_type": 0.0,
+      "Payment_currency": 0.0,
+      "Received_currency": 0.0,
+      "Sender_bank_location": 0.0,
+      "Receiver_bank_location": 0.0,
+      "edge_key": 0.0
+    },
+    "duplicate_structure": {
+      "n_distinct_ordered_pairs": 887497,
+      "mean_transactions_per_pair": 10.709728596265677,
+      "n_self_loops": 0,
+      "n_fully_duplicated_rows": 0
+    },
+    "identity_representation": "entity ids are the source dataset's account/name identifiers as loaded; no resolution or merging was applied by the audit"
+  },
+  "labels": {
+    "definition": "positive = the account is the sender or the receiver of at least one transaction whose published Is_laundering flag is 1. SAML-D labels transactions; this entity label is derived, and it makes a launderer's counterparty positive as well",
+    "granularity": "entity",
+    "derived_from_transaction_labels": true,
+    "n_positive": 7902,
+    "positive_rate": 0.009237135576181235,
+    "supports_cross_validation": true,
+    "min_positives_for_cross_validation": 40,
+    "label_alias_columns_present": [
+      "Laundering_type"
+    ],
+    "entity_time_coverage": 1.0,
+    "forward_split_positives": {
+      "cut_at_q50": {
+        "cutoff": "2022-12-10 17:11:36",
+        "n_entities_after": 427730,
+        "n_positive_after": 911
+      },
+      "cut_at_q60": {
+        "cutoff": "2023-01-17 01:09:50",
+        "n_entities_after": 342184,
+        "n_positive_after": 607
+      },
+      "cut_at_q70": {
+        "cutoff": "2023-03-03 18:57:19.700000",
+        "n_entities_after": 256638,
+        "n_positive_after": 465
+      },
+      "cut_at_q80": {
+        "cutoff": "2023-04-26 17:24:55",
+        "n_entities_after": 171092,
+        "n_positive_after": 327
+      }
+    },
+    "supports_time_forward_evaluation": true,
+    "supports_entity_disjoint_evaluation": true,
+    "prospective_or_retrospective": "retrospective: the flag was attached after the behaviour it describes was complete, so a feature computed over an entity's whole history sees the period the label was assigned from",
+    "leakage_note": "columns ['Laundering_type'] reproduce the label and must never enter a feature matrix"
+  },
+  "structural_triviality": {
+    "prevalence_floor_average_precision": 0.009237135576181235,
+    "single_quantity": {
+      "transaction_count": {
+        "average_precision": 0.16550637292872705,
+        "direction": "descending",
+        "lift_over_prevalence": 17.91749959321803,
+        "roc_auc": 0.8855669791948959
+      },
+      "out_degree": {
+        "average_precision": 0.13045076209016476,
+        "direction": "descending",
+        "lift_over_prevalence": 14.12242583366899,
+        "roc_auc": 0.886790476812312
+      },
+      "in_degree": {
+        "average_precision": 0.062492194278669685,
+        "direction": "descending",
+        "lift_over_prevalence": 6.765321756217511,
+        "roc_auc": 0.6855261663922166
+      },
+      "fan_in": {
+        "average_precision": 0.16334733230915638,
+        "direction": "descending",
+        "lift_over_prevalence": 17.6837647300925,
+        "roc_auc": 0.8849383384663406
+      },
+      "fan_out": {
+        "average_precision": 0.18313190544498475,
+        "direction": "descending",
+        "lift_over_prevalence": 19.82561627840631,
+        "roc_auc": 0.922933381618674
+      },
+      "counterparty_count": {
+        "average_precision": 0.18199844211740407,
+        "direction": "descending",
+        "lift_over_prevalence": 19.70290904755182,
+        "roc_auc": 0.9366831184427957
+      },
+      "incoming_volume": {
+        "average_precision": 0.0648501823114354,
+        "direction": "descending",
+        "lift_over_prevalence": 7.0205944014351465,
+        "roc_auc": 0.7438772215789908
+      },
+      "outgoing_volume": {
+        "average_precision": 0.13274730306467386,
+        "direction": "descending",
+        "lift_over_prevalence": 14.371046302164757,
+        "roc_auc": 0.9024687189676185
+      },
+      "total_volume": {
+        "average_precision": 0.15520726883677194,
+        "direction": "descending",
+        "lift_over_prevalence": 16.80253229550809,
+        "roc_auc": 0.8895763613737848
+      },
+      "degree_centrality": {
+        "average_precision": 0.18199844211740407,
+        "direction": "descending",
+        "lift_over_prevalence": 19.70290904755182,
+        "roc_auc": 0.9366831184427957
+      },
+      "component_size": {
+        "average_precision": 0.04518536070152042,
+        "direction": "descending",
+        "lift_over_prevalence": 4.891706993890491,
+        "roc_auc": 0.7928992708731775
+      },
+      "first_activity": {
+        "average_precision": 0.039169366929719715,
+        "direction": "ascending",
+        "lift_over_prevalence": 4.240423517299169,
+        "roc_auc": 0.7852039514981481
+      },
+      "last_activity": {
+        "average_precision": 0.04162773165759033,
+        "direction": "descending",
+        "lift_over_prevalence": 4.5065628098965105,
+        "roc_auc": 0.8132017409626164
+      },
+      "active_span_days": {
+        "average_precision": 0.06580946903505099,
+        "direction": "descending",
+        "lift_over_prevalence": 7.124445505027173,
+        "roc_auc": 0.8117401529354157
+      },
+      "velocity_per_active_day": {
+        "average_precision": 0.010183275951678308,
+        "direction": "ascending",
+        "lift_over_prevalence": 1.1024278974465611,
+        "roc_auc": 0.5302169585660951
+      }
+    },
+    "combined_probe": {
+      "test_average_precision": 0.9970606835205271,
+      "test_roc_auc": 0.9999711900282995,
+      "n_train": 427730,
+      "n_train_positive": 3951,
+      "n_test": 427730,
+      "n_test_positive": 3951,
+      "quantities": [
+        "transaction_count",
+        "out_degree",
+        "in_degree",
+        "fan_in",
+        "fan_out",
+        "counterparty_count",
+        "incoming_volume",
+        "outgoing_volume",
+        "total_volume",
+        "degree_centrality",
+        "component_size",
+        "first_activity",
+        "last_activity",
+        "active_span_days",
+        "velocity_per_active_day"
+      ],
+      "quantities_dropped": [],
+      "probe": "untuned HistGradientBoostingClassifier on the simple quantities only; a stand-in for 'what falls out without modelling', not a candidate model"
+    },
+    "verdict": "trivially_recoverable",
+    "best_single_quantity": {
+      "name": "fan_out",
+      "average_precision": 0.18313190544498475
+    },
+    "class_free_bands": {
+      "fan_out": {
+        "negative_free_values": [
+          {
+            "value": 5.0,
+            "n_positive": 475,
+            "n_negative": 0
+          },
+          {
+            "value": 6.0,
+            "n_positive": 51,
+            "n_negative": 0
+          },
+          {
+            "value": 7.0,
+            "n_positive": 41,
+            "n_negative": 0
+          },
+          {
+            "value": 8.0,
+            "n_positive": 43,
+            "n_negative": 0
+          }
+        ],
+        "n_positive_in_negative_free_values": 610,
+        "note": "these values of this quantity contain no negative entity at all; a label that can be read off a hole in the negative distribution was written by the same process as the structure"
+      },
+      "counterparty_count": {
+        "negative_free_values": [
+          {
+            "value": 5.0,
+            "n_positive": 482,
+            "n_negative": 0
+          },
+          {
+            "value": 6.0,
+            "n_positive": 112,
+            "n_negative": 0
+          },
+          {
+            "value": 8.0,
+            "n_positive": 25,
+            "n_negative": 0
+          }
+        ],
+        "n_positive_in_negative_free_values": 619,
+        "note": "these values of this quantity contain no negative entity at all; a label that can be read off a hole in the negative distribution was written by the same process as the structure"
+      },
+      "degree_centrality": {
+        "negative_free_values": [
+          {
+            "value": 5.844815473330692e-06,
+            "n_positive": 482,
+            "n_negative": 0
+          },
+          {
+            "value": 7.013778567996829e-06,
+            "n_positive": 112,
+            "n_negative": 0
+          },
+          {
+            "value": 9.351704757329107e-06,
+            "n_positive": 25,
+            "n_negative": 0
+          }
+        ],
+        "n_positive_in_negative_free_values": 619,
+        "note": "these values of this quantity contain no negative entity at all; a label that can be read off a hole in the negative distribution was written by the same process as the structure"
+      }
+    }
+  },
+  "split_feasibility": {
+    "stratified_kfold": {
+      "usable": true,
+      "note": "7902 positives over 4 folds leaves about 1975 per test partition"
+    },
+    "time_forward_holdout": {
+      "usable": true,
+      "note": "a forward cut leaves enough positives in the later partition"
+    },
+    "component_grouped_kfold": {
+      "usable": true,
+      "note": "components are the grouping unit; usable whenever k-fold is, but fold sizes follow the component-size distribution and can be very uneven"
+    }
+  },
+  "verdict": "STRUCTURAL_VALIDATION_ONLY",
+  "reason": "an untuned probe on simple structural quantities alone reaches average precision 0.9971; the labels are a function of structure, so no experiment on this dataset can separate a good model from a bad one",
+  "recommended_use": "exercise and scale-test the pipeline; do not rank models on it",
+  "limitations": [
+    "SYNTHETIC: rows were generated, not observed. No result on this dataset is evidence about real-world detection performance.",
+    "The entity label is derived from transaction flags, which makes a flagged entity's counterparty positive as well.",
+    "The source file carries label-alias columns ['Laundering_type']; they are excluded at load time and must stay excluded."
+  ]
+}

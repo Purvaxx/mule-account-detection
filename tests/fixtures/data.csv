@@ -1,0 +1,3 @@
+id,date,payer_name,beneficiary_name,payer_account,beneficiary_account,amount_orig,old_balance_org,new_balance_orig,old_balance_dest,new_balance_dest,type,bank_country,time_of_day
+1,2020-01-01,A,C,123,789,100.0,1000.0,900.0,100.0,200.0,TRANSFER,US,MORNING
+2,2020-01-02,B,D,456,012,200.0,2000.0,1800.0,200.0,400.0,TRANSFER,US,EVENING

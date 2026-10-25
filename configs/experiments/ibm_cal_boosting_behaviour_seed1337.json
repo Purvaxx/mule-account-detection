@@ -1,0 +1,78 @@
+{
+  "name": "ibm_cal_boosting_behaviour_seed1337",
+  "description": "Gradient boosting without graph structure under the time-forward regime. Calendar-forward regime: every entity with history is scored at fixed origins (train 2022-09-05, validation 2022-09-07, test 2022-09-09) from transactions before the origin; label = involvement in a flagged transaction in [origin, origin + 2 days).",
+  "tags": [
+    "baseline",
+    "trees",
+    "no-graph",
+    "calendar-forward",
+    "ibm",
+    "seed-repeat"
+  ],
+  "seed": 1337,
+  "dataset": {
+    "name": "ibm_aml_hi_small",
+    "version": "resolved-at-run-time",
+    "provenance": "file:HI-Small_Trans.csv",
+    "label_definition": "positive = the (bank, account) entity is payer or payee of at least one transaction flagged Is Laundering inside the 2-day window after the origin (calendar_forward)",
+    "synthetic": true
+  },
+  "features": {
+    "sets": [
+      "aml_txn_v1",
+      "aml_temporal_v1",
+      "aml_flow_v1",
+      "aml_context_v1"
+    ],
+    "scope": "origin_window"
+  },
+  "split": {
+    "strategy": "calendar_forward",
+    "params": {
+      "origins": [
+        "2022-09-05",
+        "2022-09-07",
+        "2022-09-09"
+      ],
+      "horizon_days": 2,
+      "lookback_days": null,
+      "max_label_end": "2022-09-11"
+    },
+    "seed": 1337
+  },
+  "model": {
+    "family": "gradient_boosting",
+    "params": {
+      "backend": "auto",
+      "n_estimators": 300,
+      "learning_rate": 0.05,
+      "max_depth": 6
+    },
+    "imbalance": "class_weight"
+  },
+  "threshold": {
+    "strategy": "alert_budget",
+    "params": {
+      "rate": 0.01
+    }
+  },
+  "calibration": {
+    "method": "platt",
+    "min_val_positives": 20
+  },
+  "evaluation": {
+    "k_values": [
+      100,
+      500,
+      1000,
+      5000
+    ],
+    "alert_rates": [
+      0.001,
+      0.005,
+      0.01,
+      0.05
+    ],
+    "calibration_bins": 10
+  }
+}

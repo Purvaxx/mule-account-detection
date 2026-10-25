@@ -1,0 +1,69 @@
+{
+  "name": "samld_boosting_behaviour",
+  "description": "Gradient boosting on transaction, temporal, flow and context features only - no graph structure.",
+  "tags": [
+    "baseline",
+    "trees",
+    "no-graph",
+    "samld"
+  ],
+  "seed": 42,
+  "dataset": {
+    "name": "samld",
+    "version": "resolved-at-run-time",
+    "provenance": "file:SAML-D.csv.zip",
+    "label_definition": "positive = the account appears on at least one transaction flagged Is_laundering",
+    "synthetic": true
+  },
+  "features": {
+    "sets": [
+      "aml_txn_v1",
+      "aml_temporal_v1",
+      "aml_flow_v1",
+      "aml_context_v1"
+    ],
+    "scope": "global"
+  },
+  "split": {
+    "strategy": "stratified_kfold",
+    "params": {
+      "n_folds": 4
+    },
+    "seed": 42
+  },
+  "model": {
+    "family": "gradient_boosting",
+    "params": {
+      "backend": "auto",
+      "n_estimators": 300,
+      "learning_rate": 0.05,
+      "max_depth": 6
+    },
+    "imbalance": "class_weight"
+  },
+  "threshold": {
+    "strategy": "alert_budget",
+    "params": {
+      "rate": 0.01
+    }
+  },
+  "calibration": {
+    "method": "platt",
+    "min_val_positives": 20
+  },
+  "evaluation": {
+    "k_values": [
+      100,
+      500,
+      1000,
+      5000
+    ],
+    "alert_rates": [
+      0.001,
+      0.005,
+      0.01,
+      0.05
+    ],
+    "calibration_bins": 10
+  }
+}

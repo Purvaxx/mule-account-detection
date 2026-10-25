@@ -1,0 +1,31 @@
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.ipynb_checkpoints/
+.venv/
+venv/
+env/
+.env
+*.log
+
+# OS / editor
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/
+.idea/
+
+# Runtime dataset workspaces
+.workspaces/
+
+# Acquired benchmark datasets. These are large public downloads (HI-Small_Trans.csv
+# alone is 475 MB) and are never committed; `acquire_dataset.py` fetches them and
+# `data/manifests/*.json` records exactly what was fetched. The manifests ARE
+# committed - they are the provenance record.
+data/raw/
+data/processed/
+data/external/
+*.csv.zip

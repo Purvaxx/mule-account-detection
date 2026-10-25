@@ -1,0 +1,65 @@
+{
+  "name": "legacy_graphsage_exp3",
+  "description": "The Experiment 3 architecture and its 167-column representation, run under the same protocol as every other candidate. A benchmark of the architecture, NOT a restatement of the frozen checkpoint's historical result.",
+  "tags": [
+    "legacy",
+    "gnn",
+    "regression-reference"
+  ],
+  "seed": 42,
+  "dataset": {
+    "name": "reference_dkdata",
+    "version": "resolved-at-run-time",
+    "provenance": "file:../dkdata.json",
+    "label_definition": "positive = graph node attribute 'core' is True",
+    "synthetic": false
+  },
+  "features": {
+    "sets": [
+      "legacy_exp3_v1"
+    ],
+    "scope": "global"
+  },
+  "split": {
+    "strategy": "legacy_exp3_transductive",
+    "params": {
+      "n_folds": 4
+    },
+    "seed": 42
+  },
+  "model": {
+    "family": "legacy_graphsage",
+    "params": {
+      "hidden_dim": 64,
+      "dropout": 0.5,
+      "lr": 0.01,
+      "weight_decay": 0.0005,
+      "max_epochs": 200,
+      "patience": 50
+    },
+    "imbalance": "pos_weight"
+  },
+  "threshold": {
+    "strategy": "max_f1",
+    "params": {}
+  },
+  "calibration": {
+    "method": "none",
+    "min_val_positives": 20
+  },
+  "evaluation": {
+    "k_values": [
+      10,
+      20,
+      50,
+      100
+    ],
+    "alert_rates": [
+      0.001,
+      0.005,
+      0.01,
+      0.05
+    ],
+    "calibration_bins": 10
+  }
+}

@@ -1,0 +1,108 @@
+{
+  "name": "ibm_heuristic_floor",
+  "description": "Label-free AML rule score on IBM HI-Small. The floor every supervised candidate must clear.",
+  "tags": [
+    "baseline",
+    "unsupervised",
+    "ibm"
+  ],
+  "seed": 42,
+  "dataset": {
+    "name": "ibm_aml_hi_small",
+    "version": "resolved-at-run-time",
+    "provenance": "file:HI-Small_Trans.csv",
+    "label_definition": "positive = the (bank, account) entity appears on at least one transaction flagged Is Laundering",
+    "synthetic": true
+  },
+  "features": {
+    "sets": [
+      "aml_txn_v1",
+      "aml_temporal_v1",
+      "aml_flow_v1",
+      "aml_context_v1",
+      "aml_network_v1",
+      "aml_cycle_v1"
+    ],
+    "scope": "global"
+  },
+  "split": {
+    "strategy": "stratified_kfold",
+    "params": {
+      "n_folds": 4
+    },
+    "seed": 42
+  },
+  "model": {
+    "family": "structural_heuristic",
+    "params": {
+      "signals": [
+        [
+          "pass_through_ratio",
+          1
+        ],
+        [
+          "fan_in",
+          1
+        ],
+        [
+          "fan_out",
+          1
+        ],
+        [
+          "reciprocal_ratio",
+          1
+        ],
+        [
+          "txn_per_active_day",
+          1
+        ],
+        [
+          "burstiness",
+          1
+        ],
+        [
+          "min_in_to_out_hours",
+          -1
+        ],
+        [
+          "counterparty_diversity",
+          1
+        ],
+        [
+          "layering_share",
+          1
+        ],
+        [
+          "rapid_turnover_share",
+          1
+        ]
+      ]
+    },
+    "imbalance": "none"
+  },
+  "threshold": {
+    "strategy": "alert_budget",
+    "params": {
+      "rate": 0.01
+    }
+  },
+  "calibration": {
+    "method": "none",
+    "min_val_positives": 20
+  },
+  "evaluation": {
+    "k_values": [
+      100,
+      500,
+      1000,
+      5000
+    ],
+    "alert_rates": [
+      0.001,
+      0.005,
+      0.01,
+      0.05
+    ],
+    "calibration_bins": 10
+  }
+}

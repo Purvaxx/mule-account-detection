@@ -1,0 +1,249 @@
+{
+  "name": "financial_fraud_kaggle",
+  "spec": {
+    "name": "financial_fraud_kaggle",
+    "version": "size796050204-b7016ef2",
+    "provenance": "file:C:\\Users\\bhara\\Downloads\\Laundering Data\\financial_fraud_detection_dataset.csv",
+    "label_definition": "positive = the account appears on at least one transaction whose is_fraud flag is true. The published flag marks card-not-present fraud, not money laundering",
+    "synthetic": true,
+    "notes": [
+      "Card-fraud data with a single fraud_type. Not an AML benchmark.",
+      "The published velocity / spending-deviation / geo-anomaly score columns were generated with the label and are not loaded.",
+      "Currency is unstated; the amount column is 'amount'."
+    ]
+  },
+  "domain": "card_fraud",
+  "data": {
+    "n_entities": 899988,
+    "n_transactions": 5000000,
+    "n_positive": 295613,
+    "n_negative": 604375,
+    "positive_rate": 0.3284632683991342,
+    "has_graph_object": false,
+    "transaction_fields": [
+      "source_entity",
+      "target_entity",
+      "date",
+      "amount",
+      "transaction_type",
+      "payment_channel",
+      "edge_key"
+    ],
+    "entity_fields": [],
+    "timestamp_range": {
+      "min": "2023-01-01 00:09:26.241974",
+      "max": "2024-01-01 22:58:30.131850",
+      "span_days": 365.0,
+      "n_dated": 5000000,
+      "n_undated": 0
+    },
+    "missingness": {
+      "source_entity": 0.0,
+      "target_entity": 0.0,
+      "date": 0.0,
+      "amount": 0.0,
+      "transaction_type": 0.0,
+      "payment_channel": 0.0,
+      "edge_key": 0.0
+    },
+    "duplicate_structure": {
+      "n_distinct_ordered_pairs": 4999985,
+      "mean_transactions_per_pair": 1.000003000009,
+      "n_self_loops": 6,
+      "n_fully_duplicated_rows": 0
+    },
+    "identity_representation": "entity ids are the source dataset's account/name identifiers as loaded; no resolution or merging was applied by the audit"
+  },
+  "labels": {
+    "definition": "positive = the account appears on at least one transaction whose is_fraud flag is true. The published flag marks card-not-present fraud, not money laundering",
+    "granularity": "entity",
+    "derived_from_transaction_labels": true,
+    "n_positive": 295613,
+    "positive_rate": 0.3284632683991342,
+    "supports_cross_validation": true,
+    "min_positives_for_cross_validation": 40,
+    "label_alias_columns_present": [
+      "fraud_type",
+      "velocity_score",
+      "spending_deviation_score",
+      "geo_anomaly_score"
+    ],
+    "entity_time_coverage": 1.0,
+    "forward_split_positives": {
+      "cut_at_q50": {
+        "cutoff": "2023-01-24 04:39:04.869522432",
+        "n_entities_after": 449994,
+        "n_positive_after": 139439
+      },
+      "cut_at_q60": {
+        "cutoff": "2023-01-31 12:01:11.651750400",
+        "n_entities_after": 359995,
+        "n_positive_after": 109555
+      },
+      "cut_at_q70": {
+        "cutoff": "2023-02-09 22:08:14.234882816",
+        "n_entities_after": 269997,
+        "n_positive_after": 79995
+      },
+      "cut_at_q80": {
+        "cutoff": "2023-02-23 08:02:54.430744064",
+        "n_entities_after": 179998,
+        "n_positive_after": 51340
+      }
+    },
+    "supports_time_forward_evaluation": true,
+    "supports_entity_disjoint_evaluation": true,
+    "prospective_or_retrospective": "retrospective: the flag was attached after the behaviour it describes was complete, so a feature computed over an entity's whole history sees the period the label was assigned from",
+    "leakage_note": "columns ['fraud_type', 'velocity_score', 'spending_deviation_score', 'geo_anomaly_score'] reproduce the label and must never enter a feature matrix"
+  },
+  "structural_triviality": {
+    "prevalence_floor_average_precision": 0.3284632683991342,
+    "single_quantity": {
+      "transaction_count": {
+        "average_precision": 0.41521406005085754,
+        "direction": "descending",
+        "lift_over_prevalence": 1.2641110894211391,
+        "roc_auc": 0.6147184007056433
+      },
+      "out_degree": {
+        "average_precision": 0.3925824035271547,
+        "direction": "descending",
+        "lift_over_prevalence": 1.1952094535274054,
+        "roc_auc": 0.5882781631680742
+      },
+      "in_degree": {
+        "average_precision": 0.38059732059958196,
+        "direction": "descending",
+        "lift_over_prevalence": 1.1587211028330167,
+        "roc_auc": 0.5730890860070409
+      },
+      "fan_in": {
+        "average_precision": 0.38059511346419606,
+        "direction": "descending",
+        "lift_over_prevalence": 1.1587143832524784,
+        "roc_auc": 0.5730869819452976
+      },
+      "fan_out": {
+        "average_precision": 0.39258111592560146,
+        "direction": "descending",
+        "lift_over_prevalence": 1.195205533449646,
+        "roc_auc": 0.5882765619102236
+      },
+      "counterparty_count": {
+        "average_precision": 0.41521146716483354,
+        "direction": "descending",
+        "lift_over_prevalence": 1.2641031954303235,
+        "roc_auc": 0.614716451616073
+      },
+      "incoming_volume": {
+        "average_precision": 0.36339784830142163,
+        "direction": "descending",
+        "lift_over_prevalence": 1.1063576456282365,
+        "roc_auc": 0.5456245543956193
+      },
+      "outgoing_volume": {
+        "average_precision": 0.3707217340318521,
+        "direction": "descending",
+        "lift_over_prevalence": 1.1286550725707547,
+        "roc_auc": 0.555115640383273
+      },
+      "total_volume": {
+        "average_precision": 0.3833354796483938,
+        "direction": "descending",
+        "lift_over_prevalence": 1.1670573745329151,
+        "roc_auc": 0.5704191723680655
+      },
+      "degree_centrality": {
+        "average_precision": 0.41521146716483354,
+        "direction": "descending",
+        "lift_over_prevalence": 1.2641031954303235,
+        "roc_auc": 0.614716451616073
+      },
+      "component_size": {
+        "average_precision": null,
+        "reason": "quantity is constant across the population"
+      },
+      "first_activity": {
+        "average_precision": 0.3460340001107356,
+        "direction": "ascending",
+        "lift_over_prevalence": 1.0534937492318022,
+        "roc_auc": 0.5303368956333183
+      },
+      "last_activity": {
+        "average_precision": 0.34718555477154656,
+        "direction": "descending",
+        "lift_over_prevalence": 1.0569996348866073,
+        "roc_auc": 0.5326299922544347
+      },
+      "active_span_days": {
+        "average_precision": 0.3583630756010002,
+        "direction": "descending",
+        "lift_over_prevalence": 1.091029378559106,
+        "roc_auc": 0.5473501942810574
+      },
+      "velocity_per_active_day": {
+        "average_precision": 0.3982088382086221,
+        "direction": "descending",
+        "lift_over_prevalence": 1.212339023932308,
+        "roc_auc": 0.5956548868968827
+      }
+    },
+    "combined_probe": {
+      "test_average_precision": 0.42262396224927307,
+      "test_roc_auc": 0.6149458591533106,
+      "n_train": 449994,
+      "n_train_positive": 147807,
+      "n_test": 449994,
+      "n_test_positive": 147806,
+      "quantities": [
+        "transaction_count",
+        "out_degree",
+        "in_degree",
+        "fan_in",
+        "fan_out",
+        "counterparty_count",
+        "incoming_volume",
+        "outgoing_volume",
+        "total_volume",
+        "degree_centrality",
+        "first_activity",
+        "last_activity",
+        "active_span_days",
+        "velocity_per_active_day"
+      ],
+      "quantities_dropped": [
+        "component_size"
+      ],
+      "probe": "untuned HistGradientBoostingClassifier on the simple quantities only; a stand-in for 'what falls out without modelling', not a candidate model"
+    },
+    "verdict": "non_trivial",
+    "best_single_quantity": {
+      "name": "transaction_count",
+      "average_precision": 0.41521406005085754
+    },
+    "class_free_bands": {}
+  },
+  "split_feasibility": {
+    "stratified_kfold": {
+      "usable": true,
+      "note": "295613 positives over 4 folds leaves about 73903 per test partition"
+    },
+    "time_forward_holdout": {
+      "usable": true,
+      "note": "a forward cut leaves enough positives in the later partition"
+    },
+    "component_grouped_kfold": {
+      "usable": true,
+      "note": "components are the grouping unit; usable whenever k-fold is, but fold sizes follow the component-size distribution and can be very uneven"
+    }
+  },
+  "verdict": "STRUCTURAL_VALIDATION_ONLY",
+  "reason": "the declared label domain is 'card_fraud', not money laundering; a model ranked on it would be ranked for a different task, however well it scores",
+  "recommended_use": "use it to check that the pipeline produces a non-degenerate result on a non-trivial label; never quote it as AML evidence",
+  "limitations": [
+    "SYNTHETIC: rows were generated, not observed. No result on this dataset is evidence about real-world detection performance.",
+    "The entity label is derived from transaction flags, which makes a flagged entity's counterparty positive as well.",
+    "The source file carries label-alias columns ['fraud_type', 'velocity_score', 'spending_deviation_score', 'geo_anomaly_score']; they are excluded at load time and must stay excluded.",
+    "DOMAIN MISMATCH: this dataset's positive class is 'card_fraud'."
+  ]
+}

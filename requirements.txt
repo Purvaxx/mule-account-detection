@@ -1,0 +1,48 @@
+# Runtime and test dependencies.
+#
+# Verified environment: Python 3.11.8, Windows, CPU-only. Each version below is
+# the one the test suite was last run against and is stated as a lower bound,
+# not a pin.
+#
+# torch here is a CPU build (2.13.0+cpu, from https://download.pytorch.org/whl/cpu).
+# CUDA is not assumed anywhere in this project; the plain
+# PyPI wheel below also works.
+
+# --- Core data and graph ---
+pandas>=3.0.5
+numpy>=2.3.5
+networkx>=3.6.1
+# scipy arrives transitively with scikit-learn, but src/experiments/aml_features.py
+# and src/experiments/audit.py import it directly (sparse adjacency products and
+# connected components), so it is declared rather than assumed.
+scipy>=1.17.1
+
+# --- Model ---
+torch>=2.13.0
+torch-geometric>=2.8.0
+scikit-learn>=1.9.0
+
+# --- File formats ---
+# Workspace artifacts (canonical.parquet, predictions.parquet) are read and
+# written by pandas through a parquet engine. fastparquet is the engine this
+# project is verified against; pyarrow also satisfies pandas and takes
+# precedence when both are installed.
+fastparquet>=2026.5.0
+# Dataset uploads: openpyxl reads and writes .xlsx, xlrd reads .xls.
+openpyxl>=3.1.5
+xlrd>=2.0.1
+
+# --- Tests ---
+pytest>=9.0.2
+requests>=2.32.5
+
+# --- Optional: gradient-boosting backends (Layer 6 benchmarking) ---
+# Neither is installed in the verified environment. The `gradient_boosting`
+# candidate resolves its backend at fit time -- xgboost, then lightgbm, then
+# scikit-learn's HistGradientBoostingClassifier, which is always available --
+# and records which one ran in the experiment artifact. Install one only when a
+# comparison specifically calls for it; a result produced under a different
+# backend is a different model, not a tuned version of the same one.
+#
+# xgboost>=2.1.0
+# lightgbm>=4.5.0
